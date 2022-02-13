@@ -24,7 +24,8 @@ def userEmbed(handle: str, dischand: str):
     # obj.set_image(url=data["titlePhoto"])
     obj.set_thumbnail(url=data["avatar"])
     obj.add_field("Handle", data["handle"])
-    obj.add_field("Name", data["firstName"] + " " + data["lastName"])
+    if "firstName" in data and "lastName" in data:
+        obj.add_field("Name", data["firstName"] + " " + data["lastName"])
     if "country" in data:
         obj.add_field("Country", data["country"])
     if "city" in data:
