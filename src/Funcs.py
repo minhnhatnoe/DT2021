@@ -3,16 +3,16 @@ import json
 import requests
 
 rankcolor = {
-    "newbie": 13421772,
-    "pupil": 7864183,
-    "specialist": 12311927,
-    "expert": 16755370,
-    "candidate master": 16746751,
-    "master": 8965375,
-    "international master": 5618687,
-    "grandmaster": 7829503,
-    "international grandmaster": 3355647,
-    "legendary grandmaster": 170
+    "newbie": 0xCCCCCC,
+    "pupil": 0x77FF77,
+    "specialist": 0x77DDBB,
+    "expert": 0xAAAAFF,
+    "candidate master": 0xFF88FF,
+    "master": 0xFFCC88,
+    "international master": 0xFFBB55,
+    "grandmaster": 0xFF7777,
+    "international grandmaster": 0xFF3333,
+    "legendary grandmaster": 0xAA0000
 }
 
 def getuser(userlist):
