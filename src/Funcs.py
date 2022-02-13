@@ -5,7 +5,14 @@ import requests
 rankcolor = {
     "newbie": 13421772,
     "pupil": 7864183,
-    "specialist": 12311927
+    "specialist": 12311927,
+    "expert": 16755370,
+    "candidate master": 16746751,
+    "master": 8965375,
+    "international master": 5618687,
+    "grandmaster": 7829503,
+    "international grandmaster": 3355647,
+    "legendary grandmaster": 170
 }
 
 def getuser(userlist):
