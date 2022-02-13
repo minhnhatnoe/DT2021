@@ -35,20 +35,6 @@ class CFCommand(commands.Cog):
                 await inter.response.send_message(f"{dischand.mention} is {json_data[str(dischand.id)]}", embed=Funcs.userEmbed(json_data[str(dischand.id)], dischand))
             else:
                 await inter.response.send_message(f"{dischand.mention} has not been introduced yet")
-
-    @commands.slash_command()
-    async def ping(inter):
-        '''/ping: Get the bot's latency'''
-        await inter.response.send_message("Pong!")
-
-    @commands.slash_command()
-    async def helpme(inter):
-        '''/helpme: Get help'''
-        message = '''
-        Here are several things I can do:
-            1. /introduce <CF Handle>: Let the bot know your Codeforces handle
-            2. /query @<Discord>: Get someone's CF handle
-            3. /help: You just used this
-        '''
+                
 def setup(bot: commands.Bot):
     bot.add_cog(CFCommand(bot))
