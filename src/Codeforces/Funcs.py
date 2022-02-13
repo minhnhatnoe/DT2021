@@ -1,6 +1,6 @@
 from disnake import Embed
 import json
-import requests
+from requests import get as rqget
 
 rankcolor = {
     "newbie": 0xCCCCCC,
@@ -17,7 +17,7 @@ rankcolor = {
 
 def getuser(userlist):
     try:
-        fromnet = requests.get(f"https://codeforces.com/api/user.info?handles={';'.join(userlist)}").text
+        fromnet = rqget(f"https://codeforces.com/api/user.info?handles={';'.join(userlist)}").text
     except:
         raise("Network Error")
     json_data = json.loads(fromnet)
@@ -29,15 +29,20 @@ def userEmbed(handle: str, dischand: str):
     data = getuser([handle])[0]
     obj = Embed(title = dischand, color=rankcolor[data["rank"]], description=data["rank"].title())
     # obj.set_image(url=data["titlePhoto"])
-    obj.set_thumbnail(url=data["avatar"])
+    obj.set_thumbnail(url=data["titlePhoto"])
     obj.add_field("Handle", data["handle"])
     if "firstName" in data and "lastName" in data:
-        obj.add_field("Name", data["firstName"] + " " + data["lastName"])
-    if "country" in data:
-        obj.add_field("Country", data["country"])
-    if "city" in data:
-        obj.add_field("City", data["city"])
-    if "organization" in data:
-        obj.add_field("Organization", data["organization"])
-    obj.add_field("Rating", data["rating"])
+        if data["firstName"] != "" and data["lastName"] != "":
+            obj.add_field("Name", data["firstName"] + " " + data["lastName"])
+
+    fields = [
+        "country",
+        "city",
+        "organization",
+        "rating"
+    ]
+    for field in fields:
+        if field in data:
+            if data[field] != "":
+                obj.add_field(field.title(), data[field])
     return obj

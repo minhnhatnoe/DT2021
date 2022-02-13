@@ -1,10 +1,8 @@
-# Not sure if this can be run
-
 import json
 import disnake
 import os
 from dotenv import load_dotenv
-import Funcs
+from src.Codeforces import Funcs
 from disnake.ext import commands
 
 class CFCommand(commands.Cog):
@@ -15,7 +13,7 @@ class CFCommand(commands.Cog):
 
     @commands.slash_command()
     async def introduce(inter, handle: str):
-        # Scheme: /introduce <handle>
+        '''/introduce <CF Handle>: Let the bot know your Codeforces handle'''
         load_dotenv()
         path = os.environ.get("DATAPATH")
         with open(f"{path}\handle.json", "r+") as json_file:
@@ -28,7 +26,7 @@ class CFCommand(commands.Cog):
 
     @commands.slash_command()
     async def query(inter, dischand: disnake.User):
-        # Scheme: /query <handle>
+        '''/query @<Discord>: Get someone's CF handle'''
         load_dotenv()
         path = os.environ.get("DATAPATH")
         with open(f"{path}\handle.json", "r") as json_file:
@@ -38,5 +36,19 @@ class CFCommand(commands.Cog):
             else:
                 await inter.response.send_message(f"{dischand.mention} has not been introduced yet")
 
+    @commands.slash_command()
+    async def ping(inter):
+        '''/ping: Get the bot's latency'''
+        await inter.response.send_message("Pong!")
+
+    @commands.slash_command()
+    async def helpme(inter):
+        '''/helpme: Get help'''
+        message = '''
+        Here are several things I can do:
+            1. /introduce <CF Handle>: Let the bot know your Codeforces handle
+            2. /query @<Discord>: Get someone's CF handle
+            3. /help: You just used this
+        '''
 def setup(bot: commands.Bot):
     bot.add_cog(CFCommand(bot))
