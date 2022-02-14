@@ -1,4 +1,5 @@
 import json
+from tkinter import N
 import disnake
 import os
 from dotenv import load_dotenv
@@ -12,8 +13,12 @@ class CFCommand(commands.Cog):
         self.bot = bot
 
     @commands.slash_command()
+    async def cf(inter, *args):
+        pass
+
+    @cf.sub_command()
     async def introduce(inter, handle: str):
-        '''/introduce <CF Handle>: Let the bot know your Codeforces handle'''
+        '''/cf introduce <CF Handle>: Let the bot know your Codeforces handle'''
         load_dotenv()
         path = os.environ.get("DATAPATH")
         with open(f"{path}\handle.json", "r+") as json_file:
@@ -24,9 +29,9 @@ class CFCommand(commands.Cog):
             json_file.truncate()
         await inter.response.send_message(f"{inter.author.mention} has been introduced as {handle}")
 
-    @commands.slash_command()
+    @cf.sub_command()
     async def query(inter, dischand: disnake.User):
-        '''/query @<Discord>: Get someone's CF handle'''
+        '''/cf query @<Discord>: Get someone's CF handle'''
         load_dotenv()
         path = os.environ.get("DATAPATH")
         with open(f"{path}\handle.json", "r") as json_file:
