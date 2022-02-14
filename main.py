@@ -8,7 +8,7 @@ bot = commands.Bot(test_guilds=guilds)
 @bot.slash_command()
 async def ping(inter):
     '''/ping: Get the bot's latency'''
-    await inter.response.send_message("Pong!")
+    await inter.response.send_message(f"Pong! ({inter.bot.latency * 1000:.0f}ms)")
 
 @bot.slash_command()
 async def helpme(inter):
