@@ -1,5 +1,4 @@
 import json
-from tkinter import N
 import disnake
 import os
 from dotenv import load_dotenv
