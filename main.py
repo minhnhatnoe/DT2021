@@ -2,7 +2,9 @@ from disnake.ext import commands
 import os  # TODO: Minimize footprint of os
 from dotenv import load_dotenv
 
-guilds = [934020662765453312]
+load_dotenv()
+
+guilds = [int(v) for v in os.environ.get("TEST_GUILDS").split(", ")]
 bot = commands.Bot(test_guilds=guilds)
 
 @bot.slash_command()
