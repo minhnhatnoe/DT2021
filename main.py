@@ -21,7 +21,11 @@ async def helpme(inter):
     command_set = bot.get_guild_slash_commands(inter.guild.id)
     help_msg = []
     for cmd in command_set:
-        help_msg.append(cmd.description)
+        if cmd.options:
+            for opt in cmd.options:
+                help_msg.append(opt.description)
+        else:
+            help_msg.append(cmd.description)
     
     await inter.response.send_message(msg + "```" + "\n".join(help_msg) + "```")
 
