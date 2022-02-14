@@ -40,6 +40,6 @@ class CFCommand(commands.Cog):
                 await inter.response.send_message(f"{dischand.mention} is {json_data[str(dischand.id)]}", embed=Funcs.userEmbed(json_data[str(dischand.id)], dischand))
             else:
                 await inter.response.send_message(f"{dischand.mention} has not been introduced yet")
-                
+
 def setup(bot: commands.Bot):
     bot.add_cog(CFCommand(bot))

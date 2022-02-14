@@ -25,6 +25,11 @@ def getuser(userlist):
         raise("Server Error")
     return json_data["result"]
 
+def getcolor(userlist):
+    data = getuser(userlist)
+    colorlist = [rankcolor[user["rank"]] for user in data]
+    return colorlist
+
 def userEmbed(handle: str, dischand: str):
     data = getuser([handle])[0]
     obj = Embed(title = dischand, color=rankcolor[data["rank"]], description=data["rank"].title())
