@@ -1,5 +1,4 @@
 import json
-from tkinter import N
 import disnake
 import os
 from dotenv import load_dotenv
@@ -17,8 +16,8 @@ class CFCommand(commands.Cog):
         pass
 
     @cf.sub_command()
-    async def introduce(inter, handle: str):
-        '''/cf introduce <CF Handle>: Let the bot know your Codeforces handle'''
+    async def assign(inter, handle: str):
+        '''/cf assign <CF Handle>: Let the bot know your Codeforces handle'''
         load_dotenv()
         path = os.environ.get("DATAPATH")
         with open(f"{path}\handle.json", "r+") as json_file:
@@ -30,16 +29,16 @@ class CFCommand(commands.Cog):
         await inter.response.send_message(f"{inter.author.mention} has been introduced as {handle}")
 
     @cf.sub_command()
-    async def query(inter, dischand: disnake.User):
-        '''/cf query @<Discord>: Get someone's CF handle'''
+    async def info(inter, user: disnake.User):
+        '''/cf info @<Discord>: Get someone's CF handle'''
         load_dotenv()
         path = os.environ.get("DATAPATH")
         with open(f"{path}\handle.json", "r") as json_file:
             json_data = json.load(json_file)
-            if str(dischand.id) in json_data:
-                await inter.response.send_message(f"{dischand.mention} is {json_data[str(dischand.id)]}", embed=Funcs.userEmbed(json_data[str(dischand.id)], dischand))
+            if str(user.id) in json_data:
+                await inter.response.send_message(f"{user.mention} is {json_data[str(user.id)]}", embed=Funcs.userEmbed(json_data[str(user.id)], user))
             else:
-                await inter.response.send_message(f"{dischand.mention} has not been introduced yet")
-
+                await inter.response.send_message(f"{user.mention} has not been introduced yet")
+                
 def setup(bot: commands.Bot):
     bot.add_cog(CFCommand(bot))
