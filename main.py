@@ -12,13 +12,16 @@ async def ping(inter):
 
 @bot.slash_command()
 async def helpme(inter):
-    '''/helpme: Get help'''
-    message = '''
-    Here are several things I can do:
-        1. /introduce <CF Handle>: Let the bot know your Codeforces handle
-        2. /query @<Discord>: Get someone's CF handle
-        3. /help: You just used this
-    '''
+    '''/helpme: Show this help message'''
+
+    msg = 'Here are several things I can do:'
+
+    command_set = bot.get_guild_slash_commands(inter.guild.id)
+    help_msg = []
+    for cmd in command_set:
+        help_msg.append(cmd.description)
+    
+    await inter.response.send_message(msg + "```" + "\n".join(help_msg) + "```")
 
 @bot.event
 async def on_ready():
