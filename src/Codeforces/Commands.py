@@ -5,6 +5,16 @@ from dotenv import load_dotenv
 from src.Codeforces import Funcs
 from disnake.ext import commands
 
+class jsontask:
+    def gethandle(userid: str):
+        load_dotenv()
+        path = os.environ.get("DATAPATH")
+        with open(f"{path}\\handle.json", "r") as json_file:
+            json_data = json.load(json_file)
+            if userid in json_data:
+                return json_data[userid]
+            else:
+                return None
 class CFCommand(commands.Cog):
     "A cog for all of commands regarding Codeforces"
 
@@ -20,7 +30,7 @@ class CFCommand(commands.Cog):
         '''/cf assign <CF Handle>: Let the bot know your Codeforces handle'''
         load_dotenv()
         path = os.environ.get("DATAPATH")
-        with open(f"{path}\handle.json", "r+") as json_file:
+        with open(f"{path}\\handle.json", "r+") as json_file:
             json_data = json.load(json_file)
             json_file.seek(0)
             json_data[str(inter.author.id)] = handle
@@ -31,14 +41,11 @@ class CFCommand(commands.Cog):
     @cf.sub_command()
     async def info(inter, user: disnake.User):
         '''/cf info @<Discord>: Get someone's CF handle'''
-        load_dotenv()
-        path = os.environ.get("DATAPATH")
-        with open(f"{path}\handle.json", "r") as json_file:
-            json_data = json.load(json_file)
-            if str(user.id) in json_data:
-                await inter.response.send_message(f"{user.mention} is {json_data[str(user.id)]}", embed=Funcs.userEmbed(json_data[str(user.id)], user))
-            else:
-                await inter.response.send_message(f"{user.mention} has not been introduced yet")
+        handle = jsontask.gethandle(user.id)
+        if handle is None:
+            await inter.response.send_message(f"{user.mention} has not been introduced yet")
+        else:
+            await inter.response.send_message(f"{user.mention}'s handle is {handle}")
                 
 def setup(bot: commands.Bot):
     bot.add_cog(CFCommand(bot))

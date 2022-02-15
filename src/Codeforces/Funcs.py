@@ -25,22 +25,22 @@ def getuser(userlist):
         raise("Server Error")
     return json_data["result"]
 
-def getcolor(userlist):
+def getRoles(userlist):
     data = getuser(userlist)
-    colorlist = [rankcolor[user["rank"]] for user in data]
+    colorlist = [user["rank"] for user in data]
     return colorlist
 
 def userEmbed(handle: str, dischand: str):
     data = getuser([handle])[0]
+
     obj = Embed(title = dischand, color=rankcolor[data["rank"]], description=data["rank"].title())
-    # obj.set_image(url=data["titlePhoto"])
     obj.set_thumbnail(url=data["titlePhoto"])
-    obj.add_field("Handle", data["handle"])
     if "firstName" in data and "lastName" in data:
         if data["firstName"] != "" and data["lastName"] != "":
             obj.add_field("Name", data["firstName"] + " " + data["lastName"])
 
     fields = [
+        "handle"
         "country",
         "city",
         "organization",
