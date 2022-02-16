@@ -7,6 +7,7 @@ from disnake.ext import commands
 
 class jsontask:
     def gethandle(userid: str):
+        userid = str(userid)
         load_dotenv()
         path = os.environ.get("DATAPATH")
         with open(f"{path}\\handle.json", "r") as json_file:

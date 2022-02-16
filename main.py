@@ -4,6 +4,7 @@ import os  # TODO: Minimize footprint of os
 from dotenv import load_dotenv
 import json
 import src.Codeforces.Funcs
+import src.Codeforces.Commands
 
 class jsontask:
     def add_to_update(guildid: str, userid: str):
@@ -70,7 +71,7 @@ class jsontask:
 
 load_dotenv()
 guilds = [int(v) for v in os.environ.get("TEST_GUILDS").split(", ")]
-bot = commands.Bot(test_guilds=guilds)
+bot = commands.Bot(test_guilds=guilds, intents = disnake.Intents.all())
 
 rankcolor = {
     "newbie": 0xCCCCCC,
@@ -118,21 +119,26 @@ async def refresh(inter):
     tasklist = jsontask.get_update_list()
     for guildid in tasklist:
         rolelist = jsontask.get_roles(guildid)
-        guild = bot.get_guild(guildid)
+        guild = bot.get_guild(int(guildid))
+        print(int(guildid))
+        print(tasklist)
         if guild is None:
             print(f"{guildid} cannot be updated")
             continue
         if rolelist is None:
+            print("No rolelist found")
             # TODO: Add relevant roles 
             pass
         for userid in tasklist[guildid]:
-            user = guild.get_member(userid)
+            user = guild.get_member(int(userid))
             if user is None:
+                print(f"{userid} not found")
                 continue
             for role in user.roles:
                 if role.id in rolelist:
                     await user.remove_role(role)
-            rankname = src.Codeforces.Funcs.getRoles([userid])[0]
+            handle = src.Codeforces.Commands.jsontask.gethandle(userid)
+            rankname = src.Codeforces.Funcs.getRoles([handle])[0]
             rolefromrank = guild.get_role(rolelist[rankname])
             await user.add_roles(rolefromrank)
     await inter.response.send_message("All roles refreshed")

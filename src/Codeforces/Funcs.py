@@ -23,6 +23,7 @@ def getUserData(userlist):
     json_data = json.loads(fromnet)
     if json_data["status"] == "Failed":
         raise("Server Error")
+    print(userlist, fromnet)
     return json_data["result"]
 
 def getRoles(userlist):
