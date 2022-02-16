@@ -4,27 +4,7 @@ import os
 from dotenv import load_dotenv
 from src.Codeforces import Funcs
 from disnake.ext import commands
-
-class jsontask:
-    def gethandle(userid: str):
-        userid = str(userid)
-        load_dotenv()
-        path = os.environ.get("DATAPATH")
-        with open(f"{path}\\handle.json", "r") as json_file:
-            json_data = json.load(json_file)
-            if userid in json_data:
-                return json_data[userid]
-            else:
-                return None
-    def assignhandle(userid: str, handle: str):
-        load_dotenv()
-        path = os.environ.get("DATAPATH")
-        with open(f"{path}\\handle.json", "r+") as json_file:
-            json_data = json.load(json_file)
-            json_file.seek(0)
-            json_data[userid] = handle
-            json.dump(json_data, json_file)
-            json_file.truncate()
+from src import jsontask
 
 class CFCommand(commands.Cog):
     "A cog for all of commands regarding Codeforces"
