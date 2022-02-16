@@ -15,7 +15,7 @@ rankcolor = {
     "legendary grandmaster": 0xAA0000
 }
 
-def getuser(userlist):
+def getUserData(userlist):
     try:
         fromnet = rqget(f"https://codeforces.com/api/user.info?handles={';'.join(userlist)}").text
     except:
@@ -26,12 +26,12 @@ def getuser(userlist):
     return json_data["result"]
 
 def getRoles(userlist):
-    data = getuser(userlist)
-    colorlist = [user["rank"] for user in data]
-    return colorlist
+    data = getUserData(userlist)
+    ranklist = [user["rank"] for user in data]
+    return ranklist
 
-def userEmbed(handle: str, dischand: str):
-    data = getuser([handle])[0]
+def getUserEmbed(handle: str, dischand: str):
+    data = getUserData([handle])[0]
 
     obj = Embed(title = dischand, color=rankcolor[data["rank"]], description=data["rank"].title())
     obj.set_thumbnail(url=data["titlePhoto"])

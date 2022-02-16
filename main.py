@@ -7,18 +7,29 @@ import src.Codeforces.Funcs
 
 class jsontask:
     def add_to_update(guildid: str, userid: str):
+        guildid = str(guildid)
+        userid = str(userid)
+
         load_dotenv()
         path = os.environ.get("DATAPATH")
         with open(f"{path}\\update.json", "r+") as json_file:
             json_data = json.load(json_file)
             json_file.seek(0)
             if guildid not in json_data:
-                json_data[guildid] = []
+                json_data[str(guildid)] = []
             json_data[guildid].append(userid)
             json.dump(json_data, json_file)
             json_file.truncate()
+    
+    def get_update_list():
+        load_dotenv()
+        path = os.environ.get("DATAPATH")
+        with open(f"{path}\\update.json", "r") as json_file:
+            json_data = json.load(json_file)
+            return json_data
 
     def add_roles(guildid: str, rolelist: dict):
+        guildid = str(guildid)
         load_dotenv()
         path = os.environ.get("DATAPATH")
         with open(f"{path}\\role.json", "r+") as json_file:
@@ -28,20 +39,32 @@ class jsontask:
             json.dump(json_data, json_file)
             json_file.truncate()
 
-    def remove_guld(guildid: str):
+    def get_roles(guildid: str):
+        guildid = str(guildid)
+        load_dotenv()
+        path = os.environ.get("DATAPATH")
+        with open(f"{path}\\role.json", "r") as json_file:
+            json_data = json.load(json_file)
+            if guildid in json_data:
+                return json_data[guildid]
+            else:
+                return None
+
+    def remove_guild(guildid: str):
+        guildid = str(guildid)
         load_dotenv()
         path = os.environ.get("DATAPATH")
         with open(f"{path}\\role.json", "r+") as json_file:
             json_data = json.load(json_file)
             json_file.seek(0)
-            json_data.pop(str(guildid))
+            if str(guildid) in json_data: json_data.pop(str(guildid))
             json.dump(json_data, json_file)
             json_file.truncate()
         
         with open(f"{path}\\update.json", "r+") as json_file:
             json_data = json.load(json_file)
             json_file.seek(0)
-            json_data.pop(str(guildid))
+            if str(guildid) in json_data: json_data.pop(str(guildid))
             json.dump(json_data, json_file)
             json_file.truncate()
 
@@ -89,29 +112,39 @@ async def updateme(inter, user: disnake.User):
     jsontask.add_to_update(inter.guild.id, user.id)
     await inter.response.send_message(f"{user.mention} has been added to the update list")
 
-# @bot.slash_command()
-# async def refresh():
-#     '''/refresh: Refresh all color-based roles'''
-#     path = os.environ.get("DATAPATH")
-#     with open(f"{path}\\update.json", "r") as json_file:
-#         json_data = json.load(json_file)
-#         for guildid in json_data:
-#             guild = bot.get_guild(int(guildid))
-#             for userid in json_data[guild]:
-#                 user = guild.get_member(int(userid))
-#                 rolename = src.Codeforces.Funcs.getRoles(user, guild)[0]
-#                 guild.find_role() # TODO
-#                 user.add_roles()
-#     await bot.response.send_message("Refreshed all roles")
+@bot.slash_command()
+async def refresh(inter):
+    '''/refresh: Refresh all color-based roles'''
+    tasklist = jsontask.get_update_list()
+    for guildid in tasklist:
+        rolelist = jsontask.get_roles(guildid)
+        guild = bot.get_guild(guildid)
+        if guild is None:
+            print(f"{guildid} cannot be updated")
+            continue
+        if rolelist is None:
+            # TODO: Add relevant roles 
+            pass
+        for userid in tasklist[guildid]:
+            user = guild.get_member(userid)
+            if user is None:
+                continue
+            for role in user.roles:
+                if role.id in rolelist:
+                    await user.remove_role(role)
+            rankname = src.Codeforces.Funcs.getRoles([userid])[0]
+            rolefromrank = guild.get_role(rolelist[rankname])
+            await user.add_roles(rolefromrank)
+    await inter.response.send_message("All roles refreshed")
 
 @bot.event
 async def on_guild_join(guild):
     '''Add the bot to a guild'''
-    rolelist = []
-    for rank, color in rankcolor:
+    rolelist = {}
+    for rank, color in rankcolor.items():
         role = await guild.create_role(name=rank, color=color)
         rolelist[rank] = role.id
-    jsontask.add_guild(guild.id, rolelist)
+    jsontask.add_roles(guild.id, rolelist)
 
 @bot.event
 async def on_guild_remove(guild):

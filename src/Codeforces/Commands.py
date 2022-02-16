@@ -15,6 +15,16 @@ class jsontask:
                 return json_data[userid]
             else:
                 return None
+    def assignhandle(userid: str, handle: str):
+        load_dotenv()
+        path = os.environ.get("DATAPATH")
+        with open(f"{path}\\handle.json", "r+") as json_file:
+            json_data = json.load(json_file)
+            json_file.seek(0)
+            json_data[userid] = handle
+            json.dump(json_data, json_file)
+            json_file.truncate()
+
 class CFCommand(commands.Cog):
     "A cog for all of commands regarding Codeforces"
 
@@ -28,14 +38,7 @@ class CFCommand(commands.Cog):
     @cf.sub_command()
     async def assign(inter, handle: str):
         '''/cf assign <CF Handle>: Let the bot know your Codeforces handle'''
-        load_dotenv()
-        path = os.environ.get("DATAPATH")
-        with open(f"{path}\\handle.json", "r+") as json_file:
-            json_data = json.load(json_file)
-            json_file.seek(0)
-            json_data[str(inter.author.id)] = handle
-            json.dump(json_data, json_file)
-            json_file.truncate()
+        jsontask.assignhandle(inter.author.id, handle)
         await inter.response.send_message(f"{inter.author.mention} has been introduced as {handle}")
 
     @cf.sub_command()
