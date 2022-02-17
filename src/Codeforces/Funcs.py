@@ -25,9 +25,9 @@ async def getUserData(userlist):
         raise("Network Error")
 
     json_data = json.loads(fromnet)
-    if json_data["status"] == "Failed":
-        raise("Server Error")
-    # print(userlist, fromnet)
+    if json_data["status"] == "FAILED":
+        raise("Handle Error")
+    print(userlist, fromnet)
     return json_data["result"]
 
 async def getRoles(userlist):
