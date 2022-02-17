@@ -29,7 +29,7 @@ class CFCommand(commands.Cog):
         if handle is None:
             await inter.response.send_message(f"{user.mention} has not been introduced yet")
         else:
-            await inter.response.send_message(f"{user.mention}'s handle is {handle}")
+            await inter.response.send_message(f"{user.mention}'s handle is {handle}", embed = await Funcs.getUserEmbed(handle, user.name))
                 
 def setup(bot: commands.Bot):
     bot.add_cog(CFCommand(bot))
