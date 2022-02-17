@@ -18,12 +18,13 @@ class jsontask:
             json.dump(json_data, json_file)
             json_file.truncate()
     
-    def get_update_list():
+    def get_update_list(guildid: str):
+        guildid = str(guildid)
         load_dotenv()
         path = environ.get("DATAPATH")
         with open(f"{path}\\update.json", "r") as json_file:
             json_data = json.load(json_file)
-            return json_data
+            return json_data[guildid]
 
     def add_roles(guildid: str, rolelist: dict):
         guildid = str(guildid)
