@@ -8,7 +8,8 @@ import src.Codeforces.Commands
 from src.jsontask import jsontask
 
 load_dotenv()
-guilds = [int(v) for v in os.environ.get("TEST_GUILDS").split(", ")]
+guilds = [int(v) for v in os.environ.get("TEST_GUILDS").split(",")]
+print (guilds)
 bot = commands.Bot(test_guilds=guilds, intents = disnake.Intents.all())
 rankcolor = {
     "newbie": 0xCCCCCC,
@@ -28,13 +29,18 @@ async def on_guild_join(guild):
     '''Add the bot to a guild'''
     rolelist = {}
     for rank, color in rankcolor.items():
-        role = await guild.create_role(name=rank, color=color)
+        role = await guild.create_role(name=rank, color=color, hoist = True)
         rolelist[rank] = role.id
     jsontask.add_roles(guild.id, rolelist)
 
 @bot.event
-async def on_guild_remove(guild):
+async def on_guild_remove(guild: disnake.Guild):
     '''Remove the bot from a guild'''
+    guildroles = jsontask.get_roles(guild.id)
+    if guildroles is None: return
+    for rolename, roleid in guildroles.items():
+        role = guild.get_role(int(roleid))
+        await role.delete()
     jsontask.remove_guild(guild.id)
 
 @bot.event
