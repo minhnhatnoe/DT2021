@@ -5,22 +5,22 @@ import src.Codeforces.Commands
 import src.Codeforces.Funcs
 
 class GeneralCommand(commands.Cog):
-    "A cog for all of commands regarding Codeforces"
+    "A cog for all of commands regarding general Discord stuff"
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
     @commands.slash_command
-    def sus(inter, *args):
+    def sus(self, inter, *args):
         pass
 
     @sus.sub_command()
-    async def ping(inter):
+    async def ping(self, inter):
         '''/ping: Get the bot's latency'''
         await inter.response.send_message(f"Pong! ({inter.bot.latency * 1000:.0f}ms)")
 
     @sus.sub_command()
-    async def helpme(inter):
+    async def helpme(self, inter):
         '''/helpme: Show this help message'''
         msg = 'Here are several things I can do:'
 
@@ -36,13 +36,13 @@ class GeneralCommand(commands.Cog):
         await inter.response.send_message(msg + "```" + "\n".join(help_msg) + "```")
 
     @sus.sub_command()
-    async def updateme(inter, user: disnake.User):
+    async def updateme(self, inter, user: disnake.User):
         '''/updateme @<Discord>: Add someone to the handle update list'''
         jsontask.add_to_update(inter.guild.id, user.id)
         await inter.response.send_message(f"{user.mention} has been added to the update list")
 
     @sus.sub_command()
-    async def refresh(inter):
+    async def refresh(self, inter):
         '''/refresh: Refresh all color-based roles'''
         tasklist = jsontask.get_update_list()
         for guildid in tasklist:

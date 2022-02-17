@@ -17,13 +17,13 @@ class CFCommand(commands.Cog):
         pass
 
     @cf.sub_command()
-    async def assign(inter, handle: str):
+    async def assign(self, inter, handle: str):
         '''/cf assign <CF Handle>: Let the bot know your Codeforces handle'''
         jsontask.assignhandle(inter.author.id, handle)
         await inter.response.send_message(f"{inter.author.mention} has been introduced as {handle}")
 
     @cf.sub_command()
-    async def info(inter, user: disnake.User):
+    async def info(self, inter, user: disnake.User):
         '''/cf info @<Discord>: Get someone's CF handle'''
         handle = jsontask.gethandle(user.id)
         if handle is None:
