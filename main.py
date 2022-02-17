@@ -3,7 +3,7 @@ from disnake.ext import commands
 import os  # TODO: Minimize footprint of os
 from dotenv import load_dotenv
 import json
-import src.Codeforces.Funcs
+import src.sus
 import src.Codeforces.Commands
 from src.jsontask import jsontask
 
@@ -27,11 +27,7 @@ rankcolor = {
 @bot.event
 async def on_guild_join(guild):
     '''Add the bot to a guild'''
-    rolelist = {}
-    for rank, color in rankcolor.items():
-        role = await guild.create_role(name=rank, color=color, hoist = True)
-        rolelist[rank] = role.id
-    jsontask.add_roles(guild.id, rolelist)
+    await src.sus.makerole(guild)
 
 @bot.event
 async def on_guild_remove(guild: disnake.Guild):

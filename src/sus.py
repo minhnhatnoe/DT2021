@@ -3,6 +3,24 @@ from src.jsontask import jsontask
 import disnake
 import src.Codeforces.Commands
 import src.Codeforces.Funcs
+rankcolor = {
+    "newbie": 0xCCCCCC,
+    "pupil": 0x77FF77,
+    "specialist": 0x77DDBB,
+    "expert": 0xAAAAFF,
+    "candidate master": 0xFF88FF,
+    "master": 0xFFCC88,
+    "international master": 0xFFBB55,
+    "grandmaster": 0xFF7777,
+    "international grandmaster": 0xFF3333,
+    "legendary grandmaster": 0xAA0000
+}
+async def makeroles(guild):
+    rolelist = {}
+    for rank, color in rankcolor.items():
+        role = await guild.create_role(name=rank, color=color, hoist = True)
+        rolelist[rank] = role.id
+    jsontask.add_roles(guild.id, rolelist)
 
 class GeneralCommand(commands.Cog):
     "A cog for all of commands regarding general Discord stuff"
@@ -39,8 +57,7 @@ class GeneralCommand(commands.Cog):
             return 
         if rolelist is None:
             print(f"No rolelist found in {guildid}")
-            # TODO: Add relevant roles 
-            return 
+            await makeroles(inter.guild)
         for userid in tasklist:
             user = guild.get_member(int(userid))
             if user is None:
