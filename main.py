@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import json
 import src.Codeforces.Funcs
 import src.Codeforces.Commands
-from src import jsontask
+from src.jsontask import jsontask
 
 load_dotenv()
 guilds = [int(v) for v in os.environ.get("TEST_GUILDS").split(", ")]

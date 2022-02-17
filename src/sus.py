@@ -1,5 +1,5 @@
 from disnake.ext import commands
-from src import jsontask
+from src.jsontask import jsontask
 import disnake
 import src.Codeforces.Commands
 import src.Codeforces.Funcs
@@ -10,8 +10,8 @@ class GeneralCommand(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @commands.slash_command
-    def sus(self, inter, *args):
+    @commands.slash_command()
+    async def sus(inter, *args):
         pass
 
     @sus.sub_command()
@@ -65,8 +65,11 @@ class GeneralCommand(commands.Cog):
                 for role in user.roles:
                     if role.id in rolelist:
                         await user.remove_role(role)
-                handle = src.Codeforces.Commands.jsontask.gethandle(userid)
+                handle = src.Codeforces.Commands.jsontask.get_handle(userid)
                 rankname = src.Codeforces.Funcs.getRoles([handle])[0]
                 rolefromrank = guild.get_role(rolelist[rankname])
                 await user.add_roles(rolefromrank)
         await inter.response.send_message("All roles refreshed")
+
+def setup(bot: commands.Bot):
+    bot.add_cog(GeneralCommand(bot))

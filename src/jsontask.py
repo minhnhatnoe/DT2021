@@ -65,7 +65,17 @@ class jsontask:
             json.dump(json_data, json_file)
             json_file.truncate()
         
-    def gethandle(userid: str):
+    def assign_handle(userid: str, handle: str):
+        load_dotenv()
+        path = environ.get("DATAPATH")
+        with open(f"{path}\\handle.json", "r+") as json_file:
+            json_data = json.load(json_file)
+            json_file.seek(0)
+            json_data[userid] = handle
+            json.dump(json_data, json_file)
+            json_file.truncate()
+
+    def get_handle(userid: str):
         userid = str(userid)
         load_dotenv()
         path = environ.get("DATAPATH")
@@ -75,12 +85,3 @@ class jsontask:
                 return json_data[userid]
             else:
                 return None
-    def assignhandle(userid: str, handle: str):
-        load_dotenv()
-        path = environ.get("DATAPATH")
-        with open(f"{path}\\handle.json", "r+") as json_file:
-            json_data = json.load(json_file)
-            json_file.seek(0)
-            json_data[userid] = handle
-            json.dump(json_data, json_file)
-            json_file.truncate()
