@@ -66,6 +66,7 @@ class jsontask:
             json_file.truncate()
         
     def assign_handle(userid: str, handle: str):
+        userid = str(userid)
         load_dotenv()
         path = environ.get("DATAPATH")
         with open(f"{path}\\handle.json", "r+") as json_file:

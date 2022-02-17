@@ -20,22 +20,6 @@ class GeneralCommand(commands.Cog):
         await inter.response.send_message(f"Pong! ({inter.bot.latency * 1000:.0f}ms)")
 
     @sus.sub_command()
-    async def helpme(self, inter):
-        '''/helpme: Show this help message'''
-        msg = 'Here are several things I can do:'
-
-        command_set = self.bot.get_guild_slash_commands(inter.guild.id)
-        help_msg = []
-        for cmd in command_set:
-            if cmd.options:
-                for opt in cmd.options:
-                    help_msg.append(opt.description)
-            else:
-                help_msg.append(cmd.description)
-        
-        await inter.response.send_message(msg + "```" + "\n".join(help_msg) + "```")
-
-    @sus.sub_command()
     async def updateme(self, inter, user: disnake.User):
         '''/updateme @<Discord>: Add someone to the handle update list'''
         jsontask.add_to_update(inter.guild.id, user.id)
