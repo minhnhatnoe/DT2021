@@ -46,7 +46,7 @@ async def getUserEmbed(handle: str, dischand: str):
             obj.add_field("Name", data["firstName"] + " " + data["lastName"])
 
     fields = [
-        "handle"
+        "handle",
         "country",
         "city",
         "organization",
@@ -56,4 +56,6 @@ async def getUserEmbed(handle: str, dischand: str):
         if field in data:
             if data[field] != "":
                 obj.add_field(field.title(), data[field])
+        # else:
+        #     print(field)
     return obj
