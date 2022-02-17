@@ -1,6 +1,6 @@
 from disnake import Embed
 import json
-from requests import get as rqget
+import aiohttp
 
 rankcolor = {
     "newbie": 0xCCCCCC,
@@ -15,24 +15,29 @@ rankcolor = {
     "legendary grandmaster": 0xAA0000
 }
 
-def getUserData(userlist):
+async def getUserData(userlist):
     try:
-        fromnet = rqget(f"https://codeforces.com/api/user.info?handles={';'.join(userlist)}").text
+        # fromnet = rqget(f"https://codeforces.com/api/user.info?handles={';'.join(userlist)}").text
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f"https://codeforces.com/api/user.info?handles={';'.join(userlist)}") as response:
+                fromnet = await response.text()
     except:
         raise("Network Error")
+
     json_data = json.loads(fromnet)
-    if json_data["status"] == "Failed":
-        raise("Server Error")
-    # print(userlist, fromnet)
+    if json_data["status"] == "FAILED":
+        raise("Handle Error")
+    print(userlist, fromnet)
     return json_data["result"]
 
-def getRoles(userlist):
-    data = getUserData(userlist)
+async def getRoles(userlist):
+    data = await getUserData(userlist)
     ranklist = [user["rank"] for user in data]
     return ranklist
 
-def getUserEmbed(handle: str, dischand: str):
-    data = getUserData([handle])[0]
+async def getUserEmbed(handle: str, dischand: str):
+    data = await getUserData([handle])
+    data = data[0]
 
     obj = Embed(title = dischand, color=rankcolor[data["rank"]], description=data["rank"].title())
     obj.set_thumbnail(url=data["titlePhoto"])
@@ -41,7 +46,7 @@ def getUserEmbed(handle: str, dischand: str):
             obj.add_field("Name", data["firstName"] + " " + data["lastName"])
 
     fields = [
-        "handle"
+        "handle",
         "country",
         "city",
         "organization",
@@ -51,4 +56,6 @@ def getUserEmbed(handle: str, dischand: str):
         if field in data:
             if data[field] != "":
                 obj.add_field(field.title(), data[field])
+        # else:
+        #     print(field)
     return obj

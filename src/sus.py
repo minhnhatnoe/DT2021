@@ -3,6 +3,7 @@ from src.jsontask import jsontask
 import disnake
 import src.Codeforces.Commands
 import src.Codeforces.Funcs
+
 rankcolor = {
     "newbie": 0xCCCCCC,
     "pupil": 0x77FF77,
@@ -51,13 +52,15 @@ class GeneralCommand(commands.Cog):
         guildid = str(inter.guild.id)
         tasklist = jsontask.get_update_list(guildid)
         rolelist = jsontask.get_roles(guildid)
-        guild = self.bot.get_guild(int(guildid))
+        guild = await self.bot.get_guild(int(guildid))
+
         if guild is None:
             print(f"{guildid} cannot be updated")
             return 
         if rolelist is None:
             print(f"No rolelist found in {guildid}")
             await makeroles(inter.guild)
+            
         for userid in tasklist:
             user = guild.get_member(int(userid))
             if user is None:
@@ -69,9 +72,9 @@ class GeneralCommand(commands.Cog):
             handle = src.Codeforces.Commands.jsontask.get_handle(userid)
             cfquery[handle] = user
         
-        ranks = src.Codeforces.Funcs.getRoles([key for key in cfquery])
+        ranks = await src.Codeforces.Funcs.getRoles([key for key in cfquery])
         for (handle, user), rankname in zip(cfquery.items(), ranks):
-            rolefromrank = guild.get_role(rolelist[rankname])
+            rolefromrank = await guild.get_role(rolelist[rankname])
             await user.add_roles(rolefromrank)
         await inter.edit_original_message(content = "All roles refreshed")
 

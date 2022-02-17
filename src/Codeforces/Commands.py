@@ -19,8 +19,12 @@ class CFCommand(commands.Cog):
     @cf.sub_command()
     async def assign(self, inter, handle: str):
         '''/cf assign <CF Handle>: Let the bot know your Codeforces handle'''
-        jsontask.assign_handle(inter.author.id, handle)
-        await inter.response.send_message(f"{inter.author.mention} has been introduced as {handle}")
+        try:
+            embedobj = await Funcs.getUserEmbed(handle, inter.user.id)
+            await inter.response.send_message(f"{inter.author.mention} has been introduced as {handle}", embed = embedobj)
+            jsontask.assign_handle(inter.author.id, handle)
+        except:
+            await inter.response.send_message(f"Error occurred. Please carefully check provided handle")
 
     @cf.sub_command()
     async def info(self, inter, user: disnake.User):
@@ -29,7 +33,8 @@ class CFCommand(commands.Cog):
         if handle is None:
             await inter.response.send_message(f"{user.mention} has not been introduced yet")
         else:
-            await inter.response.send_message(f"{user.mention}'s handle is {handle}")
+            # await inter.response.send_message(f"{user.mention}'s handle is {handle}", embed = await Funcs.getUserEmbed(handle, user.name))
+            await inter.response.send_message(embed = await Funcs.getUserEmbed(handle, user.name))
                 
 def setup(bot: commands.Bot):
     bot.add_cog(CFCommand(bot))
