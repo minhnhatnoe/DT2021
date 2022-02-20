@@ -9,21 +9,7 @@ from src.jsontask import jsontask
 
 load_dotenv()
 guilds = [int(v) for v in os.environ.get("TEST_GUILDS").split(",")]
-print (guilds)
 bot = commands.Bot(test_guilds=guilds, intents = disnake.Intents.all())
-
-rankcolor = {
-    "newbie": 0xCCCCCC,
-    "pupil": 0x77FF77,
-    "specialist": 0x77DDBB,
-    "expert": 0xAAAAFF,
-    "candidate master": 0xFF88FF,
-    "master": 0xFFCC88,
-    "international master": 0xFFBB55,
-    "grandmaster": 0xFF7777,
-    "international grandmaster": 0xFF3333,
-    "legendary grandmaster": 0xAA0000
-}
 
 @bot.event
 async def on_guild_join(guild):
@@ -62,6 +48,7 @@ async def helpme(inter):
 
 bot.load_extension("src.Codeforces.Commands")
 bot.load_extension("src.sus")
+
 if __name__ == "__main__":
     load_dotenv()
     bot.run(os.environ.get("TOKEN"))
