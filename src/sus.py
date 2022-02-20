@@ -35,18 +35,18 @@ class GeneralCommand(commands.Cog):
 
     @sus.sub_command()
     async def ping(self, inter):
-        '''/ping: Get the bot's latency'''
+        '''/sus ping: Get the bot's latency'''
         await inter.response.send_message(f"Pong! ({inter.bot.latency * 1000:.0f}ms)")
 
     @sus.sub_command()
     async def updateme(self, inter, user: disnake.User):
-        '''/updateme @<Discord>: Add someone to the handle update list'''
+        '''/sus updateme @<Discord>: Add someone to the handle update list'''
         jsontask.add_to_update(inter.guild.id, user.id)
         await inter.response.send_message(f"{user.mention} has been added to the update list")
 
     @sus.sub_command()
     async def refresh(self, inter):
-        '''/refresh: Refresh all color-based roles'''
+        '''/sus refresh: Refresh all color-based roles'''
         await inter.response.defer()
         cfquery = {}
         guildid = str(inter.guild.id)
