@@ -52,7 +52,7 @@ class GeneralCommand(commands.Cog):
         guildid = str(inter.guild.id)
         tasklist = jsontask.get_update_list(guildid)
         rolelist = jsontask.get_roles(guildid)
-        guild = await self.bot.get_guild(int(guildid))
+        guild = self.bot.get_guild(int(guildid))
 
         if guild is None:
             print(f"{guildid} cannot be updated")
