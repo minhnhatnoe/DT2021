@@ -73,7 +73,7 @@ class GeneralCommand(commands.Cog):
             if handle is not None:
                 cfquery[handle] = user
         
-        ranks = await src.Codeforces.Funcs.getRoles([key for key in cfquery])
+        ranks = src.Codeforces.Funcs.getRoles([key for key in cfquery])
         for (handle, user), rankname in zip(cfquery.items(), ranks):
             rolefromrank = await guild.get_role(rolelist[rankname])
             await user.add_roles(rolefromrank)
