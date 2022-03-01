@@ -70,7 +70,8 @@ class GeneralCommand(commands.Cog):
                 if role.id in rolelist:
                     await user.remove_role(role)
             handle = src.Codeforces.Commands.jsontask.get_handle(userid)
-            cfquery[handle] = user
+            if handle is not None:
+                cfquery[handle] = user
         
         ranks = await src.Codeforces.Funcs.getRoles([key for key in cfquery])
         for (handle, user), rankname in zip(cfquery.items(), ranks):
