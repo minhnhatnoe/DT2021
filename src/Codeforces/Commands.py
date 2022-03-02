@@ -6,17 +6,8 @@ class CFCommand(commands.Cog):
         self.bot = bot
 
     @commands.slash_command()
-    async def introduce(inter, handle: str):
-        '''/introduce <CF Handle>: Let the bot know your Codeforces handle'''
-        load_dotenv()
-        path = os.environ.get("DATAPATH")
-        with open(f"{path}\handle.json", "r+") as json_file:
-            json_data = json.load(json_file)
-            json_file.seek(0)
-            json_data[str(inter.author.id)] = handle
-            json.dump(json_data, json_file)
-            json_file.truncate()
-        await inter.response.send_message(f"{inter.author.mention} has been introduced as {handle}")
+    async def cf(inter, *args):
+        pass
 
     @cf.sub_command()
     async def assign(self, inter, handle: str):
