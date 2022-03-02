@@ -1,5 +1,6 @@
 from src.imports import *
 rankcolor = {
+    "unrated": 0x000000,
     "newbie": 0xCCCCCC,
     "pupil": 0x77FF77,
     "specialist": 0x77DDBB,
@@ -31,6 +32,13 @@ class UserFuncs:
 
 
 class GuildFuncs:
+    async def make_roles(guild):
+        rolelist = {}
+        for rank, color in reversed(list(rankcolor.items())):
+            role = await guild.create_role(name=rank, color=color, hoist=True)
+            rolelist[rank] = role.id
+        GuildFuncs.add_roles(guild.id, rolelist)
+    
     def get_update_list(guildid: str):
         '''Get user update list in a guild'''
         guildid = str(guildid)
@@ -125,7 +133,7 @@ class CFExternal:
 
         json_data = json.loads(fromnet)
         if json_data["status"] == "FAILED":
-            raise("Handle Error")
+            raise Exception("Handle Error")
         return json_data["result"]
 
     async def get_roles(userlist):
@@ -138,7 +146,8 @@ class CFExternal:
         '''Create an embed that represent a user'''
         data = await CFExternal.get_user_data([handle])
         data = data[0]
-
+        if "rank" not in data:
+            data["rank"] = "unrated"
         obj = Embed(
             title=dischand, color=rankcolor[data["rank"]], description=data["rank"].title())
         obj.set_thumbnail(url=data["titlePhoto"])
@@ -158,6 +167,4 @@ class CFExternal:
             if field in data:
                 if data[field] != "":
                     obj.add_field(field.title(), data[field])
-            # else:
-            #     print(field)
         return obj

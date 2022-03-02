@@ -7,7 +7,7 @@ bot = commands.Bot(test_guilds=guilds, intents = disnake.Intents.all())
 @bot.event
 async def on_guild_join(guild):
     '''Add the bot to a guild'''
-    await Funcs.GuildFuncs.make_role(guild)
+    await Funcs.GuildFuncs.make_roles(guild)
 
 @bot.event
 async def on_guild_remove(guild: disnake.Guild):
@@ -15,7 +15,7 @@ async def on_guild_remove(guild: disnake.Guild):
     guildroles = Funcs.GuildFuncs.get_roles(guild.id)
     if guildroles is None: return
     for rolename, roleid in guildroles.items():
-        role = await guild.get_role(int(roleid))
+        role = guild.get_role(int(roleid))
         await role.delete()
     Funcs.GuildFuncs.remove_guild(guild.id)
 

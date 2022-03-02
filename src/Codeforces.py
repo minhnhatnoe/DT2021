@@ -13,14 +13,17 @@ class CFCommand(commands.Cog):
         pass
 
     @cf.sub_command()
-    async def assign(self, inter, handle: str):
+    async def assign(self, inter, user: disnake.User, handle: str):
         '''/cf assign <CF Handle>: Let the bot know your Codeforces handle'''
-        # try:
-        embedobj = await Funcs.CFExternal.get_user_embed(handle, inter.user.id)
-        await inter.response.send_message(f"{inter.author.mention} has been introduced as {handle}", embed=embedobj)
-        Funcs.CFInternal.assign_handle(inter.author.id, handle)
-        # except:
-        # await inter.response.send_message(f"Error occurred. Please carefully check provided handle")
+        try:
+            embedobj = await Funcs.CFExternal.get_user_embed(handle, user.id)
+            await inter.response.send_message(f"{user.mention} has been introduced as {handle}", embed=embedobj)
+            Funcs.CFInternal.assign_handle(user.id, handle)
+        except Exception as inst:
+            if str(inst) == "Handle Error":
+                await inter.response.send_message(f"Error occurred. Please carefully check provided handle")
+            else:
+                await inter.response.send_message(f"How did u trigger that?")
 
     @cf.sub_command()
     async def info(self, inter, user: disnake.User):

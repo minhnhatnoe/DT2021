@@ -2,14 +2,6 @@ from src.imports import *
 from src import Funcs
 
 
-async def make_roles(guild):
-    rolelist = {}
-    for rank, color in Funcs.rankcolor.items():
-        role = await guild.create_role(name=rank, color=color, hoist=True)
-        rolelist[rank] = role.id
-    Funcs.UserFuncs.add_roles(guild.id, rolelist)
-
-
 class GeneralCommand(commands.Cog):
     "A cog for all of commands regarding general Discord stuff"
 
@@ -17,23 +9,23 @@ class GeneralCommand(commands.Cog):
         self.bot = bot
 
     @commands.slash_command()
-    async def sus(inter, *args):
+    async def gen(inter, *args):
         pass
 
-    @sus.sub_command()
+    @gen.sub_command()
     async def ping(self, inter):
-        '''/sus ping: Get the bot's latency'''
+        '''/gen ping: Get the bot's latency'''
         await inter.response.send_message(f"Pong! ({inter.bot.latency * 1000:.0f}ms)")
 
-    @sus.sub_command()
-    async def updateme(self, inter, user: disnake.User):
-        '''/sus updateme @<Discord>: Add someone to the handle update list'''
+    @gen.sub_command()
+    async def update(self, inter, user: disnake.User):
+        '''/gen updateme @<Discord>: Add someone to the handle update list'''
         Funcs.UserFuncs.add_to_update(inter.guild.id, user.id)
         await inter.response.send_message(f"{user.mention} has been added to the update list")
 
-    @sus.sub_command()
+    @gen.sub_command()
     async def refresh(self, inter):
-        '''/sus refresh: Refresh all color-based roles'''
+        '''/gen refresh: Refresh all color-based roles'''
         await inter.response.defer()
         cfquery = {}
         guildid = str(inter.guild.id)
@@ -46,7 +38,7 @@ class GeneralCommand(commands.Cog):
             return
         if rolelist is None:
             print(f"No rolelist found in {guildid}")
-            await make_roles(inter.guild)
+            await Funcs.GuildFuncs.make_roles(inter.guild)
 
         for userid in tasklist:
             user = guild.get_member(int(userid))
@@ -54,8 +46,8 @@ class GeneralCommand(commands.Cog):
                 print(f"{userid} in {guildid} not found")
                 continue
             for role in user.roles:
-                if role.id in rolelist:
-                    await user.remove_role(role)
+                if role.id in rolelist.values():
+                    await user.remove_roles(role)
             handle = Funcs.CFInternal.get_handle(userid)
             if handle is not None:
                 cfquery[handle] = user
