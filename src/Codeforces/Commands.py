@@ -2,7 +2,7 @@ import json
 import disnake
 import os
 from dotenv import load_dotenv
-from src.Codeforces import Funcs
+from Codeforces import CFFuncs
 from disnake.ext import commands
 from JsonHandler import jsontask
 
@@ -20,7 +20,7 @@ class CFCommand(commands.Cog):
     async def assign(self, inter, handle: str):
         '''/cf assign <CF Handle>: Let the bot know your Codeforces handle'''
         try:
-            embedobj = await Funcs.getUserEmbed(handle, inter.user.id)
+            embedobj = await CFFuncs.getUserEmbed(handle, inter.user.id)
             await inter.response.send_message(f"{inter.author.mention} has been introduced as {handle}", embed = embedobj)
             jsontask.assign_handle(inter.author.id, handle)
         except:
@@ -34,7 +34,7 @@ class CFCommand(commands.Cog):
             await inter.response.send_message(f"{user.mention} has not been introduced yet")
         else:
             # await inter.response.send_message(f"{user.mention}'s handle is {handle}", embed = await Funcs.getUserEmbed(handle, user.name))
-            await inter.response.send_message(embed = await Funcs.getUserEmbed(handle, user.name))
+            await inter.response.send_message(embed = await CFFuncs.getUserEmbed(handle, user.name))
                 
 def setup(bot: commands.Bot):
     bot.add_cog(CFCommand(bot))

@@ -1,11 +1,4 @@
-import disnake
-from disnake.ext import commands
-import os  # TODO: Minimize footprint of os
-from dotenv import load_dotenv
-import json
-import src.sus
-import src.Codeforces.Commands
-import JsonHandler
+from include import *
 
 load_dotenv()
 guilds = [int(v) for v in os.environ.get("TEST_GUILDS").split(",")]
@@ -14,7 +7,7 @@ bot = commands.Bot(test_guilds=guilds, intents = disnake.Intents.all())
 @bot.event
 async def on_guild_join(guild):
     '''Add the bot to a guild'''
-    await src.sus.makerole(guild)
+    await JsonHandler.makerole(guild)
 
 @bot.event
 async def on_guild_remove(guild: disnake.Guild):
