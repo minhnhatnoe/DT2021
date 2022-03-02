@@ -28,12 +28,12 @@ class CFCommand(commands.Cog):
     @cf.sub_command()
     async def info(self, inter, user: disnake.User):
         '''/cf info @<Discord>: Get someone's CF handle'''
+        await inter.response.defer()
         handle = Funcs.CFInternal.get_handle(user.id)
         if handle is None:
-            await inter.response.send_message(f"{user.mention} has not been introduced yet")
+            await inter.edit_original_message(content = f"{user.mention} has not been introduced yet")
         else:
-            # await inter.response.send_message(f"{user.mention}'s handle is {handle}", embed = await Funcs.getUserEmbed(handle, user.name))
-            await inter.response.send_message(embed=await Funcs.CFExternal.get_user_embed(handle, user.name))
+            await inter.edit_original_message(embed=await Funcs.CFExternal.get_user_embed(handle, user.name))
 
 
 def setup(bot: commands.Bot):

@@ -13,6 +13,7 @@ rankcolor = {
     "legendary grandmaster": 0xAA0000
 }
 
+
 class UserFuncs:
     def add_to_update(guildid: str, userid: str):
         '''Add user to update list'''
@@ -26,7 +27,7 @@ class UserFuncs:
             json_file.seek(0)
             if guildid not in json_data:
                 json_data[str(guildid)] = []
-            json_data[guildid].append(userid)
+            json_data[str(guildid)].append(userid)
             json.dump(json_data, json_file)
             json_file.truncate()
 
@@ -38,14 +39,19 @@ class GuildFuncs:
             role = await guild.create_role(name=rank, color=color, hoist=True)
             rolelist[rank] = role.id
         GuildFuncs.add_roles(guild.id, rolelist)
-    
+
     def get_update_list(guildid: str):
         '''Get user update list in a guild'''
         guildid = str(guildid)
         load_dotenv()
         path = environ.get("DATAPATH")
-        with open(f"{path}\\update.json", "r") as json_file:
+        with open(f"{path}\\update.json", "r+") as json_file:
             json_data = json.load(json_file)
+            json_file.seek(0)
+            if guildid not in json_data:
+                json_data[guildid] = []
+                json.dump(json_data, json_file)
+                json_file.truncate()
             return json_data[guildid]
 
     def add_roles(guildid: str, rolelist: dict):
@@ -78,14 +84,6 @@ class GuildFuncs:
         load_dotenv()
         path = environ.get("DATAPATH")
         with open(f"{path}\\role.json", "r+") as json_file:
-            json_data = json.load(json_file)
-            json_file.seek(0)
-            if str(guildid) in json_data:
-                json_data.pop(str(guildid))
-            json.dump(json_data, json_file)
-            json_file.truncate()
-
-        with open(f"{path}\\update.json", "r+") as json_file:
             json_data = json.load(json_file)
             json_file.seek(0)
             if str(guildid) in json_data:
