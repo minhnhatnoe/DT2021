@@ -1,4 +1,11 @@
-from include import *
+import disnake
+from disnake.ext import commands
+import os  # TODO: Minimize footprint of os
+from dotenv import load_dotenv
+import json
+import src.sus
+import src.Codeforces.Commands
+from src.jsontask import jsontask
 
 load_dotenv()
 guilds = [int(v) for v in os.environ.get("TEST_GUILDS").split(",")]
@@ -7,17 +14,17 @@ bot = commands.Bot(test_guilds=guilds, intents = disnake.Intents.all())
 @bot.event
 async def on_guild_join(guild):
     '''Add the bot to a guild'''
-    await JsonHandler.makerole(guild)
+    await src.sus.makerole(guild)
 
 @bot.event
 async def on_guild_remove(guild: disnake.Guild):
     '''Remove the bot from a guild'''
-    guildroles = JsonHandler.get_roles(guild.id)
+    guildroles = jsontask.get_roles(guild.id)
     if guildroles is None: return
     for rolename, roleid in guildroles.items():
         role = await guild.get_role(int(roleid))
         await role.delete()
-    JsonHandler.remove_guild(guild.id)
+    jsontask.remove_guild(guild.id)
 
 @bot.event
 async def on_ready():

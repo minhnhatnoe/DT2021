@@ -1,8 +1,8 @@
 from disnake.ext import commands
-from JsonHandler import jsontask
+from src.jsontask import jsontask
 import disnake
 import src.Codeforces.Commands
-import Codeforces.CFFuncs
+import src.Codeforces.Funcs
 
 rankcolor = {
     "newbie": 0xCCCCCC,
@@ -16,6 +16,12 @@ rankcolor = {
     "international grandmaster": 0xFF3333,
     "legendary grandmaster": 0xAA0000
 }
+async def makeroles(guild):
+    rolelist = {}
+    for rank, color in rankcolor.items():
+        role = await guild.create_role(name=rank, color=color, hoist = True)
+        rolelist[rank] = role.id
+    jsontask.add_roles(guild.id, rolelist)
 
 class GeneralCommand(commands.Cog):
     "A cog for all of commands regarding general Discord stuff"
@@ -53,8 +59,7 @@ class GeneralCommand(commands.Cog):
             return 
         if rolelist is None:
             print(f"No rolelist found in {guildid}")
-            
-            await src.General.GuildFuncs.makeroles(inter.guild)
+            await makeroles(inter.guild)
             
         for userid in tasklist:
             user = guild.get_member(int(userid))
@@ -68,7 +73,7 @@ class GeneralCommand(commands.Cog):
             if handle is not None:
                 cfquery[handle] = user
         
-        ranks = await src.Codeforces.CFFuncs.getRoles([key for key in cfquery])
+        ranks = await src.Codeforces.Funcs.getRoles([key for key in cfquery])
         for (handle, user), rankname in zip(cfquery.items(), ranks):
             rolefromrank = guild.get_role(rolelist[rankname])
             await user.add_roles(rolefromrank)
