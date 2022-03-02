@@ -1,4 +1,5 @@
 from src.imports import *
+from src import Funcs
 class CFCommand(commands.Cog):
     "A cog for all of commands regarding Codeforces"
 
