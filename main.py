@@ -19,12 +19,12 @@ async def on_guild_join(guild):
 @bot.event
 async def on_guild_remove(guild: disnake.Guild):
     '''Remove the bot from a guild'''
-    guildroles = jsontask.get_roles(guild.id)
+    guildroles = JsonHandler.get_roles(guild.id)
     if guildroles is None: return
     for rolename, roleid in guildroles.items():
         role = await guild.get_role(int(roleid))
         await role.delete()
-    jsontask.remove_guild(guild.id)
+    JsonHandler.remove_guild(guild.id)
 
 @bot.event
 async def on_ready():
