@@ -1,5 +1,5 @@
 from disnake.ext import commands
-from src.jsontask import jsontask
+from JsonHandler import jsontask
 import disnake
 import src.Codeforces.Commands
 import src.Codeforces.Funcs

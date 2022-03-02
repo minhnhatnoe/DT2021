@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from src.Codeforces import Funcs
 from disnake.ext import commands
-from src.jsontask import jsontask
+from JsonHandler import jsontask
 
 class CFCommand(commands.Cog):
     "A cog for all of commands regarding Codeforces"
