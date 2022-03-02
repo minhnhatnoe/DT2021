@@ -27,7 +27,6 @@ async def getUserData(userlist):
     json_data = json.loads(fromnet)
     if json_data["status"] == "FAILED":
         raise("Handle Error")
-    print(userlist, fromnet)
     return json_data["result"]
 
 async def getRoles(userlist):
