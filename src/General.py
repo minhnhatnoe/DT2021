@@ -1,23 +1,14 @@
 from src.imports import *
+from src import Funcs
 
-rankcolor = {
-    "newbie": 0xCCCCCC,
-    "pupil": 0x77FF77,
-    "specialist": 0x77DDBB,
-    "expert": 0xAAAAFF,
-    "candidate master": 0xFF88FF,
-    "master": 0xFFCC88,
-    "international master": 0xFFBB55,
-    "grandmaster": 0xFF7777,
-    "international grandmaster": 0xFF3333,
-    "legendary grandmaster": 0xAA0000
-}
+
 async def make_roles(guild):
     rolelist = {}
-    for rank, color in rankcolor.items():
-        role = await guild.create_role(name=rank, color=color, hoist = True)
+    for rank, color in Funcs.rankcolor.items():
+        role = await guild.create_role(name=rank, color=color, hoist=True)
         rolelist[rank] = role.id
     Funcs.UserFuncs.add_roles(guild.id, rolelist)
+
 
 class GeneralCommand(commands.Cog):
     "A cog for all of commands regarding general Discord stuff"
@@ -52,11 +43,11 @@ class GeneralCommand(commands.Cog):
 
         if guild is None:
             print(f"{guildid} cannot be updated")
-            return 
+            return
         if rolelist is None:
             print(f"No rolelist found in {guildid}")
             await make_roles(inter.guild)
-            
+
         for userid in tasklist:
             user = guild.get_member(int(userid))
             if user is None:
@@ -68,12 +59,13 @@ class GeneralCommand(commands.Cog):
             handle = Funcs.CFInternal.get_handle(userid)
             if handle is not None:
                 cfquery[handle] = user
-        
+
         ranks = await Funcs.CFExternal.get_roles([key for key in cfquery])
         for (handle, user), rankname in zip(cfquery.items(), ranks):
             rolefromrank = guild.get_role(rolelist[rankname])
             await user.add_roles(rolefromrank)
-        await inter.edit_original_message(content = "All roles refreshed")
+        await inter.edit_original_message(content="All roles refreshed")
+
 
 def setup(bot: commands.Bot):
     bot.add_cog(GeneralCommand(bot))

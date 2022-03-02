@@ -1,5 +1,4 @@
 from src.imports import *
-
 rankcolor = {
     "newbie": 0xCCCCCC,
     "pupil": 0x77FF77,
@@ -29,7 +28,8 @@ class UserFuncs:
             json_data[guildid].append(userid)
             json.dump(json_data, json_file)
             json_file.truncate()
-    
+
+
 class GuildFuncs:
     def get_update_list(guildid: str):
         '''Get user update list in a guild'''
@@ -72,16 +72,19 @@ class GuildFuncs:
         with open(f"{path}\\role.json", "r+") as json_file:
             json_data = json.load(json_file)
             json_file.seek(0)
-            if str(guildid) in json_data: json_data.pop(str(guildid))
+            if str(guildid) in json_data:
+                json_data.pop(str(guildid))
             json.dump(json_data, json_file)
             json_file.truncate()
-        
+
         with open(f"{path}\\update.json", "r+") as json_file:
             json_data = json.load(json_file)
             json_file.seek(0)
-            if str(guildid) in json_data: json_data.pop(str(guildid))
+            if str(guildid) in json_data:
+                json_data.pop(str(guildid))
             json.dump(json_data, json_file)
             json_file.truncate()
+
 
 class CFInternal:
     def assign_handle(userid: str, handle: str):
@@ -107,7 +110,8 @@ class CFInternal:
                 return json_data[userid]
             else:
                 return None
-            
+
+
 class CFExternal:
     async def get_user_data(userlist):
         '''Get user data abt someone from CF'''
@@ -135,11 +139,13 @@ class CFExternal:
         data = await CFExternal.get_user_data([handle])
         data = data[0]
 
-        obj = Embed(title = dischand, color=rankcolor[data["rank"]], description=data["rank"].title())
+        obj = Embed(
+            title=dischand, color=rankcolor[data["rank"]], description=data["rank"].title())
         obj.set_thumbnail(url=data["titlePhoto"])
         if "firstName" in data and "lastName" in data:
             if data["firstName"] != "" and data["lastName"] != "":
-                obj.add_field("Name", data["firstName"] + " " + data["lastName"])
+                obj.add_field(
+                    "Name", data["firstName"] + " " + data["lastName"])
 
         fields = [
             "handle",

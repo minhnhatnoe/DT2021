@@ -1,4 +1,5 @@
 from src.imports import *
+from src import Funcs
 load_dotenv()
 guilds = [int(v) for v in environ.get("TEST_GUILDS").split(",")]
 bot = commands.Bot(test_guilds=guilds, intents = disnake.Intents.all())
@@ -6,17 +7,17 @@ bot = commands.Bot(test_guilds=guilds, intents = disnake.Intents.all())
 @bot.event
 async def on_guild_join(guild):
     '''Add the bot to a guild'''
-    await src.sus.makerole(guild)
+    await Funcs.GuildFuncs.make_role(guild)
 
 @bot.event
 async def on_guild_remove(guild: disnake.Guild):
     '''Remove the bot from a guild'''
-    guildroles = JsonHandler.get_roles(guild.id)
+    guildroles = Funcs.GuildFuncs.get_roles(guild.id)
     if guildroles is None: return
     for rolename, roleid in guildroles.items():
         role = await guild.get_role(int(roleid))
         await role.delete()
-    JsonHandler.remove_guild(guild.id)
+    Funcs.GuildFuncs.remove_guild(guild.id)
 
 @bot.event
 async def on_ready():
@@ -38,7 +39,7 @@ async def helpme(inter):
     
     await inter.response.send_message(msg + "```" + "\n".join(help_msg) + "```")
 
-bot.load_extension("src.Codeforces.Commands")
+bot.load_extension("src.Codeforces")
 bot.load_extension("src.General")
 
 if __name__ == "__main__":
