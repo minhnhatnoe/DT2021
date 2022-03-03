@@ -1,13 +1,11 @@
 '''Master Bot code'''
 from os import environ
+from datetime import datetime
 from dotenv import load_dotenv
 import disnake
-from disnake.ext import commands
-from src import keep_alive
-import disnake
 from disnake.ext import commands, tasks
-from datetime import datetime
-from src import Funcs
+from src import keep_alive
+from src.funcs import GuildFuncs, CFExternal, CFInternal, UserFuncs
 load_dotenv()
 guilds = [int(v) for v in environ.get("TEST_GUILDS").split(",")]
 bot = commands.Bot(test_guilds=guilds, intents=disnake.Intents.all())
@@ -16,20 +14,20 @@ bot = commands.Bot(test_guilds=guilds, intents=disnake.Intents.all())
 @tasks.loop(minutes=30)
 async def refresh_all_roles():
     '''Refresh all roles, periodically'''
-    await Funcs.GuildFuncs.refresh_roles(bot=bot)
+    await GuildFuncs.refresh_roles(bot=bot)
     print("Refreshed all guilds on: ", datetime.now())
 
 
 @bot.event
 async def on_guild_join(guild):
     '''Add the bot to a guild'''
-    await Funcs.GuildFuncs.make_roles(guild)
+    await GuildFuncs.make_roles(guild)
 
 
 @bot.event
 async def on_guild_remove(guild: disnake.Guild):
     '''Remove the bot from a guild'''
-    Funcs.GuildFuncs.remove_guild(guild.id)
+    GuildFuncs.remove_guild(guild.id)
 
 
 @bot.event
@@ -57,8 +55,8 @@ async def helpme(inter):
     await inter.response.send_message(msg + "```" + "\n".join(help_msg) + "```")
 
 
-bot.load_extension("src.Codeforces")
-bot.load_extension("src.General")
+bot.load_extension("src.cf_cmd")
+bot.load_extension("src.gen_cmd")
 if __name__ == "__main__":
     load_dotenv()
     keep_alive.keep_alive()
