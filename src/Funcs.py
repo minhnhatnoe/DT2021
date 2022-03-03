@@ -1,11 +1,11 @@
 import aiohttp
 import json
-from os import environ
+from os import environ, stat
 from dotenv import load_dotenv
 from disnake import Embed
 from disnake.ext import commands
 
-rankcolor = {
+RANKCOLOR = {
     "unrated": 0x000000,
     "newbie": 0xCCCCCC,
     "pupil": 0x77FF77,
@@ -21,6 +21,7 @@ rankcolor = {
 
 
 class UserFuncs:
+    @staticmethod
     def add_to_update(guildid: str, userid: str):
         '''Add user to update list'''
         guildid = str(guildid)
@@ -37,6 +38,7 @@ class UserFuncs:
             json.dump(json_data, json_file)
             json_file.truncate()
 
+    @staticmethod
     def delete_from_update(guildid: str, userid: str):
         '''Remove from update list'''
         guildid = str(guildid)
@@ -54,6 +56,7 @@ class UserFuncs:
             json.dump(json_data, json_file)
             json_file.truncate()
 
+    @staticmethod
     async def clear_user_role(guild, user):
         guildid = guild.id
         userid = user.id
@@ -68,6 +71,7 @@ class UserFuncs:
 
 
 class GuildFuncs:
+    @staticmethod
     async def refresh_roles(guildlist=None, bot: commands.bot = None):
         if guildlist is None:
             guildlist = [bot.get_guild(int(guildid))
@@ -104,13 +108,15 @@ class GuildFuncs:
                     rolefromrank = guild.get_role(rolelist[rankname])
                     await user.add_roles(rolefromrank)
 
+    @staticmethod
     async def make_roles(guild):
         rolelist = {}
-        for rank, color in reversed(list(rankcolor.items())):
+        for rank, color in reversed(list(RANKCOLOR.items())):
             role = await guild.create_role(name=rank, color=color, hoist=True)
             rolelist[rank] = role.id
         GuildFuncs.add_roles(guild.id, rolelist)
 
+    @staticmethod
     def get_update_list(guildid: str):
         '''Get user update list in a guild'''
         guildid = str(guildid)
@@ -126,9 +132,11 @@ class GuildFuncs:
 
             retval = []
             for key, value in json_data[guildid].items():
-                if value: retval.append(key)
+                if value:
+                    retval.append(key)
             return retval
 
+    @staticmethod
     def get_guild_list():
         load_dotenv()
         path = environ.get("DATAPATH")
@@ -136,6 +144,7 @@ class GuildFuncs:
             json_data = json.load(json_file)
             return json_data.keys()
 
+    @staticmethod
     def add_roles(guildid: str, rolelist: dict):
         '''Record role ids of a guild'''
         guildid = str(guildid)
@@ -148,6 +157,7 @@ class GuildFuncs:
             json.dump(json_data, json_file)
             json_file.truncate()
 
+    @staticmethod
     def get_roles(guildid: str):
         '''Get role ids of a guild'''
         guildid = str(guildid)
@@ -160,6 +170,7 @@ class GuildFuncs:
             else:
                 return None
 
+    @staticmethod
     def remove_guild(guildid: str):
         '''Delete data abt a guild'''
         guildid = str(guildid)
@@ -175,6 +186,7 @@ class GuildFuncs:
 
 
 class CFInternal:
+    @staticmethod
     def assign_handle(userid: str, handle: str):
         '''Assign CF handle to user'''
         userid = str(userid)
@@ -187,6 +199,7 @@ class CFInternal:
             json.dump(json_data, json_file)
             json_file.truncate()
 
+    @staticmethod
     def get_handle(userid: str):
         '''Query a CF handle of someone'''
         userid = str(userid)
@@ -201,6 +214,7 @@ class CFInternal:
 
 
 class CFExternal:
+    @staticmethod
     async def get_user_data(userlist):
         '''Get user data abt someone from CF'''
         try:
@@ -215,6 +229,7 @@ class CFExternal:
             raise Exception("Handle Error")
         return json_data["result"]
 
+    @staticmethod
     async def get_roles(userlist):
         '''Get role of someone based on their CF ranking'''
         data = await CFExternal.get_user_data(userlist)
@@ -226,6 +241,7 @@ class CFExternal:
                 ranklist.append("unrated")
         return ranklist
 
+    @staticmethod
     async def get_user_embed(handle: str, dischand: str):
         '''Create an embed that represent a user'''
         data = await CFExternal.get_user_data([handle])
@@ -233,7 +249,7 @@ class CFExternal:
         if "rank" not in data:
             data["rank"] = "unrated"
         obj = Embed(
-            title=dischand, color=rankcolor[data["rank"]], description=data["rank"].title())
+            title=dischand, color=RANKCOLOR[data["rank"]], description=data["rank"].title())
         obj.set_thumbnail(url=data["titlePhoto"])
         if "firstName" in data and "lastName" in data:
             if data["firstName"] != "" and data["lastName"] != "":
