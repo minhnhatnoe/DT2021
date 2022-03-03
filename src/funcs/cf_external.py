@@ -1,3 +1,4 @@
+'''Codeforces API interaction'''
 import json
 from disnake import Embed
 import aiohttp
@@ -16,6 +17,8 @@ RANKCOLOR = {
     "legendary grandmaster": 0xAA0000
 }
 
+class CFApi(Exception):
+    "Base class for all exception raised from communicating with CF API"
 
 async def get_user_data(userlist):
     '''Get user data abt someone from CF'''
@@ -25,12 +28,12 @@ async def get_user_data(userlist):
                 f"https://codeforces.com/api/user.info?handles={';'.join(userlist)}"
             ) as response:
                 fromnet = await response.text()
-    except:
-        raise Exception("Network Error")
+    except Exception as ex_type:
+        raise CFApi(Exception("Network Error")) from ex_type
 
     json_data = json.loads(fromnet)
     if json_data["status"] == "FAILED":
-        raise Exception("Handle Error")
+        raise CFApi(Exception("Handle Error"))
     return json_data["result"]
 
 

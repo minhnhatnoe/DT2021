@@ -1,3 +1,4 @@
+'''Codeforces Json file read/write'''
 from os import environ
 import json
 from dotenv import load_dotenv
@@ -25,5 +26,4 @@ def get_handle(userid: str):
         json_data = json.load(json_file)
         if userid in json_data:
             return json_data[userid]
-        else:
-            return None
+        return None

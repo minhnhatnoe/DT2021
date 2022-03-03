@@ -3,21 +3,7 @@ from os import environ
 import json
 from dotenv import load_dotenv
 from disnake.ext import commands
-from src.funcs import CFInternal, CFExternal
-
-RANKCOLOR = {
-    "unrated": 0x000000,
-    "newbie": 0xCCCCCC,
-    "pupil": 0x77FF77,
-    "specialist": 0x77DDBB,
-    "expert": 0xAAAAFF,
-    "candidate master": 0xFF88FF,
-    "master": 0xFFCC88,
-    "international master": 0xFFBB55,
-    "grandmaster": 0xFF7777,
-    "international grandmaster": 0xFF3333,
-    "legendary grandmaster": 0xAA0000
-}
+from src.funcs import cf_external, cf_internal
 
 
 async def refresh_roles(guildlist=None, bot: commands.bot = None):
@@ -47,12 +33,12 @@ async def refresh_roles(guildlist=None, bot: commands.bot = None):
                 if role.id in rolelist.values():
                     await user.remove_roles(role)
 
-            handle = CFInternal.get_handle(userid)
+            handle = cf_internal.get_handle(userid)
             if handle is not None:
                 cfquery[handle] = user
 
         if len(cfquery) != 0:
-            ranks = await CFExternal.get_roles(cfquery.keys())
+            ranks = await cf_external.get_roles(cfquery.keys())
             for (handle, user), rankname in zip(cfquery.items(), ranks):
                 rolefromrank = guild.get_role(rolelist[rankname])
                 await user.add_roles(rolefromrank)
@@ -61,7 +47,7 @@ async def refresh_roles(guildlist=None, bot: commands.bot = None):
 async def make_roles(guild):
     '''Add roles to a guild, also adding them to the database'''
     rolelist = {}
-    for rank, color in reversed(list(RANKCOLOR.items())):
+    for rank, color in reversed(list(cf_external.RANKCOLOR.items())):
         role = await guild.create_role(name=rank, color=color, hoist=True)
         rolelist[rank] = role.id
     add_roles(guild.id, rolelist)
@@ -118,8 +104,7 @@ def get_roles(guildid: str):
         json_data = json.load(json_file)
         if guildid in json_data:
             return json_data[guildid]
-        else:
-            return None
+        return None
 
 
 def remove_guild(guildid: str):
