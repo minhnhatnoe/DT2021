@@ -21,9 +21,9 @@ class UserFuncs:
         guildid = str(guildid)
         userid = str(userid)
 
-        load_dotenv()
+        # load_dotenv()
         path = environ.get("DATAPATH")
-        with open(f"{path}\\update.json", "r+") as json_file:
+        with open(f"{path}/update.json", "r+") as json_file:
             json_data = json.load(json_file)
             json_file.seek(0)
             if guildid not in json_data:
@@ -37,9 +37,9 @@ class UserFuncs:
         guildid = str(guildid)
         userid = str(userid)
 
-        load_dotenv()
+        # load_dotenv()
         path = environ.get("DATAPATH")
-        with open(f"{path}\\update.json", "r+") as json_file:
+        with open(f"{path}/update.json", "r+") as json_file:
             json_data = json.load(json_file)
             json_file.seek(0)
             if guildid not in json_data:
@@ -109,9 +109,9 @@ class GuildFuncs:
     def get_update_list(guildid: str):
         '''Get user update list in a guild'''
         guildid = str(guildid)
-        load_dotenv()
+        # load_dotenv()
         path = environ.get("DATAPATH")
-        with open(f"{path}\\update.json", "r+") as json_file:
+        with open(f"{path}/update.json", "r+") as json_file:
             json_data = json.load(json_file)
             json_file.seek(0)
             if guildid not in json_data:
@@ -125,18 +125,18 @@ class GuildFuncs:
             return retval
 
     def get_guild_list():
-        load_dotenv()
+        # load_dotenv()
         path = environ.get("DATAPATH")
-        with open(f"{path}\\update.json", "r") as json_file:
+        with open(f"{path}/update.json", "r") as json_file:
             json_data = json.load(json_file)
             return json_data.keys()
 
     def add_roles(guildid: str, rolelist: dict):
         '''Record role ids of a guild'''
         guildid = str(guildid)
-        load_dotenv()
+        # load_dotenv()
         path = environ.get("DATAPATH")
-        with open(f"{path}\\role.json", "r+") as json_file:
+        with open(f"{path}/role.json", "r+") as json_file:
             json_data = json.load(json_file)
             json_file.seek(0)
             json_data[guildid] = rolelist
@@ -146,9 +146,9 @@ class GuildFuncs:
     def get_roles(guildid: str):
         '''Get role ids of a guild'''
         guildid = str(guildid)
-        load_dotenv()
+        # load_dotenv()
         path = environ.get("DATAPATH")
-        with open(f"{path}\\role.json", "r") as json_file:
+        with open(f"{path}/role.json", "r") as json_file:
             json_data = json.load(json_file)
             if guildid in json_data:
                 return json_data[guildid]
@@ -158,9 +158,9 @@ class GuildFuncs:
     def remove_guild(guildid: str):
         '''Delete data abt a guild'''
         guildid = str(guildid)
-        load_dotenv()
+        # load_dotenv()
         path = environ.get("DATAPATH")
-        with open(f"{path}\\role.json", "r+") as json_file:
+        with open(f"{path}/role.json", "r+") as json_file:
             json_data = json.load(json_file)
             json_file.seek(0)
             if str(guildid) in json_data:
@@ -173,9 +173,9 @@ class CFInternal:
     def assign_handle(userid: str, handle: str):
         '''Assign CF handle to user'''
         userid = str(userid)
-        load_dotenv()
+        # load_dotenv()
         path = environ.get("DATAPATH")
-        with open(f"{path}\\handle.json", "r+") as json_file:
+        with open(f"{path}/handle.json", "r+") as json_file:
             json_data = json.load(json_file)
             json_file.seek(0)
             json_data[userid] = handle
@@ -185,9 +185,9 @@ class CFInternal:
     def get_handle(userid: str):
         '''Query a CF handle of someone'''
         userid = str(userid)
-        load_dotenv()
+        # load_dotenv()
         path = environ.get("DATAPATH")
-        with open(f"{path}\\handle.json", "r") as json_file:
+        with open(f"{path}/handle.json", "r") as json_file:
             json_data = json.load(json_file)
             if userid in json_data:
                 return json_data[userid]
@@ -199,12 +199,12 @@ class CFExternal:
     async def get_user_data(userlist):
         '''Get user data abt someone from CF'''
         try:
-            # fromnet = rqget(f"https://codeforces.com/api/user.info?handles={';'.join(userlist)}").text
+            # fromnet = rqget(f"https:/codeforces.com/api/user.info?handles={';'.join(userlist)}").text
             async with aiohttp.ClientSession() as session:
                 async with session.get(f"https://codeforces.com/api/user.info?handles={';'.join(userlist)}") as response:
                     fromnet = await response.text()
         except:
-            raise("Network Error")
+            raise Exception("Network Error")
 
         json_data = json.loads(fromnet)
         if json_data["status"] == "FAILED":
