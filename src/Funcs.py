@@ -96,7 +96,6 @@ class GuildFuncs:
             if len(cfquery) != 0:
                 ranks = await CFExternal.get_roles(cfquery.keys())
                 for (handle, user), rankname in zip(cfquery.items(), ranks):
-                    print(handle, user, rankname, ": ", rolelist[rankname])
                     rolefromrank = guild.get_role(rolelist[rankname])
                     await user.add_roles(rolefromrank)
 
