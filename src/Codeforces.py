@@ -19,6 +19,7 @@ class CFCommand(commands.Cog):
             embedobj = await Funcs.CFExternal.get_user_embed(handle, user.id)
             await inter.response.send_message(f"{user.mention} has been introduced as {handle}", embed=embedobj)
             Funcs.CFInternal.assign_handle(user.id, handle)
+            Funcs.UserFuncs.add_to_update(inter.guild.id, user.id)
         except Exception as inst:
             if str(inst) == "Handle Error":
                 await inter.response.send_message(f"Error occurred. Please carefully check provided handle")

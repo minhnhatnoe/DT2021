@@ -5,7 +5,7 @@ guilds = [int(v) for v in environ.get("TEST_GUILDS").split(",")]
 bot = commands.Bot(test_guilds=guilds, intents=disnake.Intents.all())
 
 
-@tasks.loop(minutes=1)
+@tasks.loop(minutes=30)
 async def refresh_all_roles():
     print("Refreshed all guilds on: ", datetime.now())
     await Funcs.GuildFuncs.refresh_roles(bot=bot)

@@ -19,9 +19,16 @@ class GeneralCommand(commands.Cog):
 
     @gen.sub_command()
     async def update(self, inter, user: disnake.User):
-        '''/gen updateme @<Discord>: Add someone to the handle update list'''
+        '''/gen update @<Discord>: Add someone to the handle update list'''
         Funcs.UserFuncs.add_to_update(inter.guild.id, user.id)
         await inter.response.send_message(f"{user.mention} has been added to the update list")
+
+    @gen.sub_command()
+    async def notupdate(self, inter, user: disnake.User):
+        '''gen/ notupdate @<Discord>: Remove someone from the update list'''
+        Funcs.UserFuncs.delete_from_update(inter.guild.id, user.id)
+        await Funcs.UserFuncs.clear_user_role(inter.guild, user)
+        await inter.response.send_message(f"{user.mention} has been removed from the update list")
 
     @gen.sub_command()
     async def silent(self, inter, user: disnake.User):
