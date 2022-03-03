@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from src.funcs import guild_funcs
 
 
-def update_change(guildid: str, userid: str):
+def update_change(guildid: str, userid: str, val):
     '''Add user to update list'''
     guildid = str(guildid)
     userid = str(userid)
@@ -17,7 +17,7 @@ def update_change(guildid: str, userid: str):
         json_file.seek(0)
         if guildid not in json_data:
             json_data[guildid] = {}
-        json_data[guildid][userid] = True
+        json_data[guildid][userid] = val
         json.dump(json_data, json_file)
         json_file.truncate()
 
