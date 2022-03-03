@@ -27,22 +27,49 @@ class UserFuncs:
             json_data = json.load(json_file)
             json_file.seek(0)
             if guildid not in json_data:
-                json_data[str(guildid)] = []
-            json_data[str(guildid)].append(userid)
+                json_data[guildid] = {}
+            json_data[guildid][userid] = True
             json.dump(json_data, json_file)
             json_file.truncate()
 
+    def delete_from_update(guildid: str, userid: str):
+        '''Remove from update list'''
+        guildid = str(guildid)
+        userid = str(userid)
+
+        load_dotenv()
+        path = environ.get("DATAPATH")
+        with open(f"{path}\\update.json", "r+") as json_file:
+            json_data = json.load(json_file)
+            json_file.seek(0)
+            if guildid not in json_data:
+                json_data[guildid] = {}
+            if userid in json_data[guildid]:
+                json_data[guildid][userid] = False
+            json.dump(json_data, json_file)
+            json_file.truncate()
+
+    async def clear_user_role(guild, user):
+        guildid = guild.id
+        userid = user.id
+        tasklist = GuildFuncs.get_update_list(guildid)
+
+        rolelist = GuildFuncs.get_roles(guildid)
+        if rolelist is None:
+            return
+        for role in user.roles:
+            if role.id in rolelist.values():
+                await user.remove_roles(role)
+
 
 class GuildFuncs:
-    async def refresh_roles(guildlist = None, bot: commands.bot = None):
+    async def refresh_roles(guildlist=None, bot: commands.bot = None):
         if guildlist is None:
-            guildlist = [bot.get_guild(int(guildid)) for guildid in GuildFuncs.get_guild_list()]
-        
+            guildlist = [bot.get_guild(int(guildid))
+                         for guildid in GuildFuncs.get_guild_list()]
+
         for guild in guildlist:
-            guildid = str(guild.id)
-            if guild is None:
-                print(f"{guildid} cannot be updated")
-                return
+            guildid = guild.id
             tasklist = GuildFuncs.get_update_list(guildid)
 
             rolelist = GuildFuncs.get_roles(guildid)
@@ -61,14 +88,15 @@ class GuildFuncs:
                 for role in user.roles:
                     if role.id in rolelist.values():
                         await user.remove_roles(role)
-                
+
                 handle = CFInternal.get_handle(userid)
                 if handle is not None:
                     cfquery[handle] = user
 
             if len(cfquery) != 0:
-                ranks = await CFExternal.get_roles([key for key in cfquery])
+                ranks = await CFExternal.get_roles(cfquery.keys())
                 for (handle, user), rankname in zip(cfquery.items(), ranks):
+                    print(handle, user, rankname, ": ", rolelist[rankname])
                     rolefromrank = guild.get_role(rolelist[rankname])
                     await user.add_roles(rolefromrank)
 
@@ -88,10 +116,14 @@ class GuildFuncs:
             json_data = json.load(json_file)
             json_file.seek(0)
             if guildid not in json_data:
-                json_data[guildid] = []
+                json_data[guildid] = {}
                 json.dump(json_data, json_file)
                 json_file.truncate()
-            return json_data[guildid]
+
+            retval = []
+            for key, value in json_data[guildid].items():
+                if value: retval.append(key)
+            return retval
 
     def get_guild_list():
         load_dotenv()
