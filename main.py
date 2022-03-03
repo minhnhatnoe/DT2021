@@ -1,6 +1,11 @@
-from src.imports import *
-from src import Funcs
+'''Master Bot code'''
+from os import environ
+from datetime import datetime
+from dotenv import load_dotenv
+import disnake
+from disnake.ext import commands, tasks
 from src import keep_alive
+from src.funcs import guild_funcs
 load_dotenv()
 guilds = [int(v) for v in environ.get("TEST_GUILDS").split(",")]
 bot = commands.Bot(test_guilds=guilds, intents=disnake.Intents.all())
@@ -8,24 +13,26 @@ bot = commands.Bot(test_guilds=guilds, intents=disnake.Intents.all())
 
 @tasks.loop(minutes=30)
 async def refresh_all_roles():
-    await Funcs.GuildFuncs.refresh_roles(bot=bot)
+    '''Refresh all roles, periodically'''
+    await guild_funcs.refresh_roles(bot=bot)
     print("Refreshed all guilds on: ", datetime.now())
 
 
 @bot.event
 async def on_guild_join(guild):
     '''Add the bot to a guild'''
-    await Funcs.GuildFuncs.make_roles(guild)
-  
+    await guild_funcs.make_roles(guild)
+
 
 @bot.event
 async def on_guild_remove(guild: disnake.Guild):
     '''Remove the bot from a guild'''
-    Funcs.GuildFuncs.remove_guild(guild.id)
+    guild_funcs.remove_guild(guild.id)
 
 
 @bot.event
 async def on_ready():
+    '''Notify the user that the bot has logged in and start to periodically refresh roles'''
     print("Logged in")
     if not refresh_all_roles.is_running():
         refresh_all_roles.start()
@@ -47,9 +54,9 @@ async def helpme(inter):
 
     await inter.response.send_message(msg + "```" + "\n".join(help_msg) + "```")
 
-bot.load_extension("src.Codeforces")
-bot.load_extension("src.General")
 
+bot.load_extension("src.cf_cmd")
+bot.load_extension("src.gen_cmd")
 if __name__ == "__main__":
     load_dotenv()
     keep_alive.keep_alive()
