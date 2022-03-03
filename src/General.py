@@ -33,38 +33,7 @@ class GeneralCommand(commands.Cog):
     async def refresh(self, inter):
         '''/gen refresh: Refresh all color-based roles'''
         await inter.response.defer()
-        cfquery = {}
-        guildid = str(inter.guild.id)
-
-        guild = self.bot.get_guild(int(guildid))
-        if guild is None:
-            print(f"{guildid} cannot be updated")
-            return
-        tasklist = Funcs.GuildFuncs.get_update_list(guildid)
-
-        rolelist = Funcs.GuildFuncs.get_roles(guildid)
-        if rolelist is None:
-            print(f"No rolelist found in {guildid}")
-            await Funcs.GuildFuncs.make_roles(inter.guild)
-            rolelist = Funcs.GuildFuncs.get_roles(guildid)
-
-        for userid in tasklist:
-            user = guild.get_member(int(userid))
-            if user is None:
-                print(f"{userid} in {guildid} not found")
-                continue
-            for role in user.roles:
-                if role.id in rolelist.values():
-                    await user.remove_roles(role)
-            handle = Funcs.CFInternal.get_handle(userid)
-            if handle is not None:
-                cfquery[handle] = user
-
-        if len(cfquery) != 0:
-            ranks = await Funcs.CFExternal.get_roles([key for key in cfquery])
-            for (handle, user), rankname in zip(cfquery.items(), ranks):
-                rolefromrank = guild.get_role(rolelist[rankname])
-                await user.add_roles(rolefromrank)
+        await Funcs.GuildFuncs.refresh_roles([inter.guild])
         await inter.edit_original_message(content="All roles refreshed")
 
     @gen.sub_command()

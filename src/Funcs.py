@@ -1,3 +1,4 @@
+from json import load
 from src.imports import *
 rankcolor = {
     "unrated": 0x000000,
@@ -33,6 +34,44 @@ class UserFuncs:
 
 
 class GuildFuncs:
+    async def refresh_roles(guildlist = None, bot: commands.bot = None):
+        if guildlist is None:
+            guildlist = [bot.get_guild(int(guildid)) for guildid in GuildFuncs.get_guild_list()]
+        
+        for guild in guildlist:
+            guildid = str(guild.id)
+            if guild is None:
+                print(f"{guildid} cannot be updated")
+                return
+            tasklist = GuildFuncs.get_update_list(guildid)
+
+            rolelist = GuildFuncs.get_roles(guildid)
+            if rolelist is None:
+                print(f"No rolelist found in {guildid}")
+                await GuildFuncs.make_roles(guild)
+                rolelist = GuildFuncs.get_roles(guildid)
+
+            cfquery = {}
+            for userid in tasklist:
+                user = guild.get_member(int(userid))
+                if user is None:
+                    print(f"{userid} in {guildid} not found")
+                    continue
+
+                for role in user.roles:
+                    if role.id in rolelist.values():
+                        await user.remove_roles(role)
+                
+                handle = CFInternal.get_handle(userid)
+                if handle is not None:
+                    cfquery[handle] = user
+
+            if len(cfquery) != 0:
+                ranks = await CFExternal.get_roles([key for key in cfquery])
+                for (handle, user), rankname in zip(cfquery.items(), ranks):
+                    rolefromrank = guild.get_role(rolelist[rankname])
+                    await user.add_roles(rolefromrank)
+
     async def make_roles(guild):
         rolelist = {}
         for rank, color in reversed(list(rankcolor.items())):
@@ -53,6 +92,13 @@ class GuildFuncs:
                 json.dump(json_data, json_file)
                 json_file.truncate()
             return json_data[guildid]
+
+    def get_guild_list():
+        load_dotenv()
+        path = environ.get("DATAPATH")
+        with open(f"{path}\\update.json", "r") as json_file:
+            json_data = json.load(json_file)
+            return json_data.keys()
 
     def add_roles(guildid: str, rolelist: dict):
         '''Record role ids of a guild'''
@@ -137,7 +183,12 @@ class CFExternal:
     async def get_roles(userlist):
         '''Get role of someone based on their CF ranking'''
         data = await CFExternal.get_user_data(userlist)
-        ranklist = [user["rank"] for user in data]
+        ranklist = []
+        for user in data:
+            if "rank" in user:
+                ranklist.append(user["rank"])
+            else:
+                ranklist.append("unrated")
         return ranklist
 
     async def get_user_embed(handle: str, dischand: str):
