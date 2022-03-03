@@ -1,4 +1,6 @@
-from src.imports import *
+from disnake.ext import commands
+import disnake
+
 from src import Funcs
 
 

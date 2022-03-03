@@ -1,6 +1,11 @@
-from src.imports import *
+from os import environ
+from dotenv import load_dotenv
+import disnake
+from disnake.ext import commands, tasks
+from datetime import datetime
 from src import Funcs
 from src import keep_alive
+
 load_dotenv()
 guilds = [int(v) for v in environ.get("TEST_GUILDS").split(",")]
 bot = commands.Bot(test_guilds=guilds, intents=disnake.Intents.all())
@@ -16,7 +21,7 @@ async def refresh_all_roles():
 async def on_guild_join(guild):
     '''Add the bot to a guild'''
     await Funcs.GuildFuncs.make_roles(guild)
-  
+
 
 @bot.event
 async def on_guild_remove(guild: disnake.Guild):

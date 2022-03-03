@@ -1,5 +1,10 @@
-from json import load
-from src.imports import *
+import aiohttp
+import json
+from os import environ
+from dotenv import load_dotenv
+from disnake import Embed
+from disnake.ext import commands
+
 rankcolor = {
     "unrated": 0x000000,
     "newbie": 0xCCCCCC,
