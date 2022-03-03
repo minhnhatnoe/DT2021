@@ -25,7 +25,7 @@ class CFCommand(commands.Cog):
                 embed=embedobj
             )
             cf_internal.assign_handle(user.id, handle)
-            user_funcs.add_to_update(inter.guild.id, user.id)
+            user_funcs.update_change(inter.guild.id, user.id, True)
         except cf_external.CFApi as inst:
             if str(inst) == "Handle Error":
                 await inter.response.send_message(
