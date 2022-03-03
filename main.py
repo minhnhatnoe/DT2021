@@ -1,7 +1,7 @@
 from src.imports import *
 from src import Funcs
 from src import keep_alive
-# load_dotenv()
+load_dotenv()
 guilds = [int(v) for v in environ.get("TEST_GUILDS").split(",")]
 bot = commands.Bot(test_guilds=guilds, intents=disnake.Intents.all())
 
@@ -51,6 +51,6 @@ bot.load_extension("src.Codeforces")
 bot.load_extension("src.General")
 
 if __name__ == "__main__":
-    # load_dotenv()
+    load_dotenv()
     keep_alive.keep_alive()
     bot.run(environ.get("TOKEN"))
