@@ -57,6 +57,8 @@ async def helpme(inter):
 
 bot.load_extension("src.cf_cmd")
 bot.load_extension("src.gen_cmd")
+bot.load_extension('src.codechef_cmd')
+
 if __name__ == "__main__":
     load_dotenv()
     keep_alive.keep_alive()
