@@ -2,7 +2,9 @@
 
 import disnake
 from disnake.ext import commands
-from src.funcs.json_file import load_from_json, write_to_json
+from src.utils.json_file import load_from_json, write_to_json
+import src.utils.guild_functions as guild_functions
+import src.utils.codechef_external as codechef
 
 class CodechefCommand(commands.Cog):
     '''A cog for all commands relating to Codechef'''
@@ -49,10 +51,27 @@ class CodechefCommand(commands.Cog):
             raise Exception("No role list found for the guild")
         # TODO: Support adding roles to new guilds
 
-        role_list = data[str(current_guild_id)]
-        member_list = load_from_json("/Codechef/username")
+        all_guild_member_list = load_from_json("/Codechef/username")
 
-        # TODO: update corresponding roles 
+        all_codechef_role = set()
+        for star in range(1, 8):
+            all_codechef_role.add(guild_functions.get_role_with_name(inter.guild, f"Codechef {star}*"))
+
+        for member_list in all_guild_member_list.values():
+            for member_id in member_list.keys():
+                member_id = int(member_id)
+                member = inter.guild.get_member(member_id)
+                codechef_username = member_list[str(member_id)]
+                # TODO: add error handling
+
+                star_text = codechef.CodechefData(codechef_username).get_user_star()
+
+                role = guild_functions.get_role_with_name(inter.guild, f"Codechef {star_text}")
+
+                await guild_functions.modify_role(member, all_codechef_role, {role})
+
+        await inter.edit_original_message(content = "All roles refreshed")
+
         
 
 
