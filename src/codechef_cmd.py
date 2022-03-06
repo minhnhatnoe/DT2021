@@ -43,12 +43,7 @@ class CodechefCommand(commands.Cog):
     async def refresh_all(inter):
         '''/cc refresh_all: Refresh all roles for Codechef ranks'''
         await inter.response.defer()
-
-        data = load_from_json("/Codechef/roles")
-        current_guild_id = inter.guild.id
-
-        if str(current_guild_id) not in data:
-            raise Exception("No role list found for the guild")
+        
         # TODO: Support adding roles to new guilds
 
         all_guild_member_list = load_from_json("/Codechef/username")

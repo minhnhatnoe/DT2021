@@ -11,7 +11,7 @@ def get_role_with_name(guild: disnake.Guild, role_name: str) -> disnake.Role:
     
     raise Exception("Role not found")
 
-async def modify_role(member: disnake.Member, remove_role_list: set[disnake.Role], add_role_list: set[disnake.Role]) -> None:
+async def modify_role(member: disnake.Member, remove_role_list, add_role_list) -> None:
     for role in remove_role_list:
         if role in member.roles:
             if role not in add_role_list:
