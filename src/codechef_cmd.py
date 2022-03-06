@@ -35,6 +35,27 @@ class CodechefCommand(commands.Cog):
             content = f"{user.mention} has been assigned to {username}"
         )
 
+    # Currently not working
+    
+    @codechef.sub_command()
+    async def refresh_all(inter):
+        '''/cc refresh_all: Refresh all roles for Codechef ranks'''
+        await inter.response.defer()
+
+        data = load_from_json("/Codechef/roles")
+        current_guild_id = inter.guild.id
+
+        if str(current_guild_id) not in data:
+            raise Exception("No role list found for the guild")
+        # TODO: Support adding roles to new guilds
+
+        role_list = data[str(current_guild_id)]
+        member_list = load_from_json("/Codechef/username")
+
+        # TODO: update corresponding roles 
+        
+
+
 def setup(bot: commands.Bot):
     '''Add the cog to bot'''
     bot.add_cog(CodechefCommand(bot))
