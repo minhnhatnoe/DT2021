@@ -6,6 +6,7 @@ import disnake
 from disnake.ext import commands, tasks
 from src import keep_alive
 from src.utils.Codeforces import guild_funcs
+
 load_dotenv()
 guilds = [int(v) for v in environ.get("TEST_GUILDS").split(",")]
 bot = commands.Bot(test_guilds=guilds, intents=disnake.Intents.all())

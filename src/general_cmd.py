@@ -7,11 +7,17 @@ import disnake
 from src import user_funcs
 from src.utils.Codeforces import guild_funcs
 
-update_choice = {
+UPDATECHOICES = {
     "None": 0,
     "Codeforces": 1,
     "Codechef": 2
 }
+
+
+async def autocomplete_update(inter: disnake.ApplicationCommandInteraction, string: str):
+    '''Autocomplete function for update platform choice'''
+    string = string.lower()
+    return [choice for choice in UPDATECHOICES.keys() if string in choice.lower()]
 
 
 class GeneralCommand(commands.Cog):
@@ -29,23 +35,14 @@ class GeneralCommand(commands.Cog):
         '''/gen ping: Get the bot's latency'''
         await inter.response.send_message(f"Pong! ({inter.bot.latency * 1000:.0f}ms)")
 
-    async def autocomplete_update(interaction: disnake.ApplicationCommandInteraction, string: str):
-        '''Autocomplete function for update platform choice'''
-        return list(
-            filter(
-                lambda platform: string in platform,
-                update_choice.keys()
-            )
-        )
-
     @gen.sub_command()
-    async def update(inter, user: disnake.User, choice: str = Param(
-        description="Update choice", autocomplete=autocomplete_update
+    async def update(inter, user: disnake.User, choice: str = commands.Param(
+        autocomplete=autocomplete_update
     )):
         '''/gen update @<Discord>: Add someone to the handle update list'''
-        if choice in update_choice:
+        if choice in UPDATECHOICES:
             user_funcs.update_change(
-                inter.guild.id, user.id, update_choice[choice])
+                inter.guild.id, user.id, UPDATECHOICES[choice])
             await inter.response.send_message(
                 f"{user.mention} has been added to the update with {choice}"
             )
@@ -53,10 +50,18 @@ class GeneralCommand(commands.Cog):
             await inter.response.send_message(f"{choice} is not a valid option")
 
     @gen.sub_command()
-    async def silent(inter, user: disnake.User):
-        '''/gen silent @<Discord>: same as update, but no mention'''
-        user_funcs.update_change(inter.guild.id, user.id, True)
-        await inter.response.send_message(f"{user.name} has been added to the update list")
+    async def silent(inter, user: disnake.User, choice: str = commands.Param(
+        autocomplete=autocomplete_update
+    )):
+        '''/gen update @<Discord>: Add someone to the handle update list'''
+        if choice in UPDATECHOICES:
+            user_funcs.update_change(
+                inter.guild.id, user.id, UPDATECHOICES[choice])
+            await inter.response.send_message(
+                f"{user.name} has been added to the update with {choice}"
+            )
+        else:
+            await inter.response.send_message(f"{choice} is not a valid option")
 
     @gen.sub_command()
     async def refresh(inter):
