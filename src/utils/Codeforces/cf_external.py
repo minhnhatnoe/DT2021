@@ -18,7 +18,7 @@ async def get_user_data(userlist):
         raise CFApi(Exception("Network Error")) from ex_type
 
     json_data = json.loads(from_net)
-    
+
     if json_data["status"] == "FAILED":
         raise CFApi(Exception("Handle Error"))
     return json_data["result"]
@@ -50,13 +50,7 @@ async def generate_user_embed(handle: str, dischand: str):
             obj.add_field(
                 "Name", data["firstName"] + " " + data["lastName"])
 
-    fields = [
-        "handle",
-        "country",
-        "city",
-        "organization",
-        "rating"
-    ]
+    fields = ["handle", "country", "city", "organization", "rating"]
     for field in fields:
         if field in data:
             if data[field] != "":

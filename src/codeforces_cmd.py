@@ -1,4 +1,5 @@
 '''Commands regarding Codeforces'''
+from email import message
 import disnake
 from disnake.ext import commands
 from src.utils import user_funcs
@@ -21,19 +22,17 @@ class CodeforcesCommand(commands.Cog):
         '''/cf assign <CF Handle>: Let the bot know your Codeforces handle'''
         try:
             embed_obj = await cf_external.generate_user_embed(handle, user.id)
-            await inter.response.send_message(
-                f"{user.mention} has been introduced as {handle}", embed=embed_obj)
-                
             user_funcs.assign_handle(user.id, handle, 1)
+            # Policy: add user to update list after assignment
             user_funcs.update_change(inter.guild.id, user.id, 1)
-        
+            await inter.response.send_message(f"{user.mention} introduced as {handle}", embed=embed_obj)
         except cf_external.CFApi as inst:
+            message_content = str()
             if str(inst) == "Handle Error":
-                await inter.response.send_message(
-                    "Error occurred. Please carefully check provided handle")
+                message_content = "Error occurred. Check provided handle"
             else:
-                await inter.response.send_message(
-                    f"How did u trigger that? (Error code: {str(inst)})")
+                message_content = f"How did u trigger that? (Error code: {str(inst)})"
+            await inter.response.send_message(message_content)
 
     @codeforces.sub_command()
     async def info(inter, user: disnake.User):
@@ -41,13 +40,11 @@ class CodeforcesCommand(commands.Cog):
         await inter.response.defer()
         handle = user_funcs.get_handle(user.id)
         if handle is None:
-            await inter.edit_original_message(
-                content=f"{user.mention} has not been introduced yet"
-            )
+            message_content = f"{user.mention} not introduced yet"
+            await inter.edit_original_message(content=message_content)
         else:
-            await inter.edit_original_message(
-                embed=await cf_external.get_user_embed(handle, user.name)
-            )
+            embed_obj = await cf_external.generate_user_embed(handle, user.name)
+            await inter.edit_original_message(embed=embed_obj)
 
 
 def setup(bot: commands.Bot):

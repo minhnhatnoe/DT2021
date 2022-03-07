@@ -1,5 +1,6 @@
 '''General commands regarding the bot'''
 from ast import Param
+from email import message
 from enum import auto
 from turtle import update
 from disnake.ext import commands
@@ -37,50 +38,47 @@ class GeneralCommand(commands.Cog):
 
     @gen.sub_command()
     async def update(inter, user: disnake.User, choice: str = commands.Param(
-        autocomplete=autocomplete_update
-    )):
+            autocomplete=autocomplete_update)):
         '''/gen update @<Discord>: Add someone to the handle update list'''
+        message_content = str()
+
         if choice in UPDATECHOICES:
             user_funcs.update_change(
                 inter.guild.id, user.id, UPDATECHOICES[choice])
-            await inter.response.send_message(
-                f"{user.mention} has been added to the update with {choice}"
-            )
+            message_content = f"{user.mention} will be updated by {choice}"
         else:
-            await inter.response.send_message(f"{choice} is not a valid option")
+            message_content = f"{choice} is not a valid option"
+        await inter.response.send_message(message_content)
 
     @gen.sub_command()
     async def silent(inter, user: disnake.User, choice: str = commands.Param(
-        autocomplete=autocomplete_update
-    )):
+            autocomplete=autocomplete_update)):
         '''/gen update @<Discord>: Add someone to the handle update list'''
+        message_content = str()
+
         if choice in UPDATECHOICES:
-            user_funcs.update_change(
-                inter.guild.id, user.id, UPDATECHOICES[choice])
-            await inter.response.send_message(
-                f"{user.name} has been added to the update with {choice}"
-            )
+            guild_id = inter.guild.id
+            user_id = user.id
+            user_funcs.update_change(guild_id, user_id, UPDATECHOICES[choice])
+            message_content = f"{user.name} has been added to the update with {choice}"
         else:
-            await inter.response.send_message(f"{choice} is not a valid option")
+            message_content = f"{choice} is not a valid option"
+        await inter.response.send_message(message_content)
 
     @gen.sub_command()
-    async def refresh(inter):
+    async def refresh(self, inter):
         '''/gen refresh: Refresh all color-based roles'''
         await inter.response.defer()
-        await guild_funcs.refresh_roles([inter.guild])
+        await guild_funcs.refresh_roles(self.bot)
         await inter.edit_original_message(content="All roles refreshed")
 
     @gen.sub_command()
-    async def clear(inter):
-        '''/gen clear: Clear all roles created in the server'''
+    async def clear(inter: disnake.CommandInteraction):
+        '''/gen clear: Clear all roles with matching names from server'''
         await inter.response.defer()
         guild = inter.guild
-        guildroles = guild_funcs.get_roles(guild.id)
-        if guildroles is None:
-            return
-        for roleid in guildroles.values():
-            role = guild.get_role(int(roleid))
-            if role is not None:
+        for role in guild.roles:
+            if role.name in guild_funcs.RANKCOLOR:
                 await role.delete()
         guild_funcs.remove_guild(guild.id)
         await inter.edit_original_message(content="All roles cleared")
