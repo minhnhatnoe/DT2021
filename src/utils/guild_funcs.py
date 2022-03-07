@@ -1,8 +1,8 @@
 '''All functions regarding a guild'''
-import json
 import disnake
 from disnake.ext import commands
 from src.utils import json_file
+from src.utils.user_funcs import bulk_get_handle
 
 RANKCOLOR = {
     "unrated": 0x000000,
@@ -21,20 +21,26 @@ RANKCOLOR = {
 async def refresh_roles(bot: commands.Bot):
     '''Refresh all roles in a guild. Provide either guildlist or bot'''
     task_list = get_task_list()
-    # A set of role-handle pairs
+    # Some sets of disnake.user-handle pairs
     process_list = {0: {}, 1: {}, 2: {}}
 
+    # Get the list of users and partition them to the respective platform
     for guild_id, users in task_list.items():
         guild = bot.get_guild(int(guild_id)) # TODO: Handle deleted guilds
 
-        for user_id, user_choice in task_list[guild_id].items():
+        for user_id, user_choice in users.items():
             user = guild.get_member(int(user_id))
             if user is None:
                 print(f"{user_id} in {guild_id} not found")
                 continue
             process_list[user_choice][user] = None
 
-    # TODO: Process handles, then get role from rank
+    for platform in [1, 2]:
+        user_id_list = [user.id for user in process_list[platform].keys()]
+        handles = bulk_get_handle(user_id_list, platform)
+        
+    
+    # TODO: get rank, then get role
 
 def get_task_list():
     '''Get the total update list'''

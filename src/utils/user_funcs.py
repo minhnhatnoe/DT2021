@@ -1,4 +1,4 @@
-'''Functions concerning a particular user'''
+'''Functions concerning users as individuals'''
 from src.utils import json_file
 
 def update_change(guild_id: str, user_id: str, update_type: int):
@@ -28,3 +28,13 @@ def get_handle(user_id: str, handle_type: int):
 
     json_data = json_file.load_from_json(file_names[handle_type])
     return json_data[str(user_id)]
+
+def bulk_get_handle(user_ids, handle_type: int):
+    '''Query a bunch of user's handle, 1 is codeforces, 2 is codechef
+    Returns a dict of user_id-handle pair'''
+    if handle_type not in [1, 2]:
+        raise Handle(Exception("Invalid handle type"))
+    
+    json_data = json_file.load_from_json(file_names[handle_type])
+    result = dict([(str(user_id), json_data[str(user_id)]) for user_id in user_ids])
+    return result
