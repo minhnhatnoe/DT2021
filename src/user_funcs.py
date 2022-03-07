@@ -2,11 +2,11 @@
 from os import environ
 import json
 from dotenv import load_dotenv
-from src.funcs import guild_funcs
+from src.utils.Codeforces import guild_funcs
 
 
-def update_change(guildid: str, userid: str, val):
-    '''Add user to update list'''
+def update_change(guildid: str, userid: str, val: int):
+    '''Add user to update list. 0 is None, 1 is Codeforces, 2 is Codechef'''
     guildid = str(guildid)
     userid = str(userid)
 
@@ -22,12 +22,12 @@ def update_change(guildid: str, userid: str, val):
         json_file.truncate()
 
 
-async def clear_user_role(guild, user):
-    '''Clear role of a user from a guild'''
-    rolelist = guild_funcs.get_roles(guild.id)
+# async def clear_user_role(guild, user):
+#     '''Clear role of a user from a guild'''
+#     rolelist = guild_funcs.get_roles(guild.id)
 
-    if rolelist is None:
-        return
-    for role in user.roles:
-        if role.id in rolelist.values():
-            await user.remove_roles(role)
+#     if rolelist is None:
+#         return
+#     for role in user.roles:
+#         if role.id in rolelist.values():
+#             await user.remove_roles(role)

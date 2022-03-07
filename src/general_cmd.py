@@ -1,7 +1,17 @@
 '''General commands regarding the bot'''
+from ast import Param
+from enum import auto
+from turtle import update
 from disnake.ext import commands
 import disnake
-from src.funcs import guild_funcs, user_funcs
+from src import user_funcs
+from src.utils.Codeforces import guild_funcs
+
+update_choice = {
+    "None": 0,
+    "Codeforces": 1,
+    "Codechef": 2
+}
 
 
 class GeneralCommand(commands.Cog):
@@ -19,18 +29,28 @@ class GeneralCommand(commands.Cog):
         '''/gen ping: Get the bot's latency'''
         await inter.response.send_message(f"Pong! ({inter.bot.latency * 1000:.0f}ms)")
 
-    @gen.sub_command()
-    async def update(inter, user: disnake.User):
-        '''/gen update @<Discord>: Add someone to the handle update list'''
-        user_funcs.update_change(inter.guild.id, user.id, True)
-        await inter.response.send_message(f"{user.mention} has been added to the update list")
+    async def autocomplete_update(interaction: disnake.ApplicationCommandInteraction, string: str):
+        '''Autocomplete function for update platform choice'''
+        return list(
+            filter(
+                lambda platform: string in platform,
+                update_choice.keys()
+            )
+        )
 
     @gen.sub_command()
-    async def notupdate(inter, user: disnake.User):
-        '''gen/ notupdate @<Discord>: Remove someone from the update list'''
-        user_funcs.update_change(inter.guild.id, user.id, False)
-        await user_funcs.clear_user_role(inter.guild, user)
-        await inter.response.send_message(f"{user.mention} has been removed from the update list")
+    async def update(inter, user: disnake.User, choice: str = Param(
+        description="Update choice", autocomplete=autocomplete_update
+    )):
+        '''/gen update @<Discord>: Add someone to the handle update list'''
+        if choice in update_choice:
+            user_funcs.update_change(
+                inter.guild.id, user.id, update_choice[choice])
+            await inter.response.send_message(
+                f"{user.mention} has been added to the update with {choice}"
+            )
+        else:
+            await inter.response.send_message(f"{choice} is not a valid option")
 
     @gen.sub_command()
     async def silent(inter, user: disnake.User):

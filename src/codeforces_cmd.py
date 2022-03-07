@@ -1,7 +1,9 @@
 '''Commands regarding Codeforces'''
 import disnake
 from disnake.ext import commands
-from src.funcs import cf_external, cf_internal, user_funcs
+from src import user_funcs
+from src.utils.Codeforces import cf_internal
+from src.utils.Codeforces import cf_external
 
 
 class CFCommand(commands.Cog):

@@ -3,8 +3,8 @@
 import disnake
 from disnake.ext import commands
 from src.utils.json_file import load_from_json, write_to_json
-import src.utils.guild_functions as guild_functions
-import src.utils.codechef_external as codechef
+import src.utils.Codechef.guild_functions as guild_functions
+import src.utils.Codechef.codechef_external as codechef
 
 class CodechefCommand(commands.Cog):
     '''A cog for all commands relating to Codechef'''

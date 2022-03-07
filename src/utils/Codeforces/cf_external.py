@@ -17,8 +17,10 @@ RANKCOLOR = {
     "legendary grandmaster": 0xAA0000
 }
 
+
 class CFApi(Exception):
     "Base class for all exception raised from communicating with CF API"
+
 
 async def get_user_data(userlist):
     '''Get user data abt someone from CF'''

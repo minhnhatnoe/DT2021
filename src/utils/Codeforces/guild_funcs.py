@@ -3,7 +3,8 @@ from os import environ
 import json
 from dotenv import load_dotenv
 from disnake.ext import commands
-from src.funcs import cf_external, cf_internal
+from src.utils.Codeforces import cf_internal
+from src.utils.Codeforces import cf_external
 
 
 async def refresh_roles(guildlist=None, bot: commands.bot = None):
