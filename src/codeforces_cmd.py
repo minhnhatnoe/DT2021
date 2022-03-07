@@ -1,7 +1,7 @@
 '''Commands regarding Codeforces'''
 import disnake
 from disnake.ext import commands
-from src import user_funcs
+from src.utils import user_funcs
 from src.utils.Codeforces import cf_internal
 from src.utils.Codeforces import cf_external
 
@@ -21,13 +21,13 @@ class CFCommand(commands.Cog):
     async def assign(inter, user: disnake.User, handle: str):
         '''/cf assign <CF Handle>: Let the bot know your Codeforces handle'''
         try:
-            embedobj = await cf_external.get_user_embed(handle, user.id)
+            embed_obj = await cf_external.generate_user_embed(handle, user.id)
             await inter.response.send_message(
                 f"{user.mention} has been introduced as {handle}",
-                embed=embedobj
+                embed=embed_obj
             )
             cf_internal.assign_handle(user.id, handle)
-            user_funcs.update_change(inter.guild.id, user.id, True)
+            user_funcs.update_change(inter.guild.id, user.id, 1)
         except cf_external.CFApi as inst:
             if str(inst) == "Handle Error":
                 await inter.response.send_message(

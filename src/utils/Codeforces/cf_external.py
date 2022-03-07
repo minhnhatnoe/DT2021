@@ -36,7 +36,7 @@ async def get_roles(userlist):
     return ranklist
 
 
-async def get_user_embed(handle: str, dischand: str):
+async def generate_user_embed(handle: str, dischand: str):
     '''Create an embed that represent a user'''
     data = await get_user_data([handle])
     data = data[0]

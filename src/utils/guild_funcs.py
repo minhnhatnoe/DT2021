@@ -25,6 +25,7 @@ RANKCOLOR = {
 async def refresh_roles(bot: commands.Bot):
     '''Refresh all roles in a guild. Provide either guildlist or bot'''
     task_list = get_task_list()
+    # A set of role-handle pairs
     process_list = {0: {}, 1: {}, 2: {}}
 
     for guild_id, users in task_list.items():
@@ -36,10 +37,9 @@ async def refresh_roles(bot: commands.Bot):
             if user is None:
                 print(f"{user_id} in {guild_id} not found")
                 continue
+            process_list[user_choice][user] = None
 
-            process_list[user_choice][user] = None # Then process handles
-    
-
+    # TODO: Process handles, then get role from rank
 
 def get_task_list():
     '''Get the total update list'''

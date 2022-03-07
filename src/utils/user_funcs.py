@@ -1,33 +1,30 @@
 '''Functions concerning a particular user'''
-from os import environ
-import json
-from dotenv import load_dotenv
-from src.utils import guild_funcs
+from src.utils import json_file
 
-
-def update_change(guildid: str, userid: str, val: int):
+def update_change(guild_id: str, user_id: str, update_type: int):
     '''Add user to update list. 0 is None, 1 is Codeforces, 2 is Codechef'''
-    guildid = str(guildid)
-    userid = str(userid)
+    json_data = json_file.load_from_json("update")
+    json_data[str(guild_id)][str(user_id)] = update_type
+    json_file.write_to_json("update")
 
-    load_dotenv()
-    path = environ.get("DATAPATH")
-    with open(f"{path}/update.json", "r+") as json_file:
-        json_data = json.load(json_file)
-        json_file.seek(0)
-        if guildid not in json_data:
-            json_data[guildid] = {}
-        json_data[guildid][userid] = val
-        json.dump(json_data, json_file)
-        json_file.truncate()
+class Handle(Exception):
+    '''Class for throwing handle-related Exceptions'''
+
+file_names = ["", "cfhandle", "cchandle"]
+def assign_handle(user_id: str, handle: str, handle_type: int):
+    '''Assign handle to user, 1 is codeforces, 2 is codechef'''
+    if handle_type not in [1, 2]:
+        raise Handle(Exception("Invalid handle type"))
+
+    json_data = json_file.load_from_json("cfhandle")
+    json_data[str(user_id)] = handle
+    json_file.write_to_json("cfhandle", json_data)
 
 
-# async def clear_user_role(guild, user):
-#     '''Clear role of a user from a guild'''
-#     rolelist = guild_funcs.get_roles(guild.id)
+def get_handle(user_id: str, handle_type: int):
+    '''Query user's handle, 1 is codeforces, 2 is codechef'''
+    if handle_type not in [1, 2]:
+        raise Handle(Exception("Invalid handle type"))
 
-#     if rolelist is None:
-#         return
-#     for role in user.roles:
-#         if role.id in rolelist.values():
-#             await user.remove_roles(role)
+    json_data = json_file.load_from_json("cfhandle")
+    return json_data[str(user_id)]
