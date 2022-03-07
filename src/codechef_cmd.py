@@ -5,7 +5,7 @@ from disnake.ext import commands
 from src.utils.json_file import load_from_json, write_to_json
 import src.utils.Codechef.guild_functions as guild_functions
 import src.utils.Codechef.codechef_external as codechef
-
+from src.utils import user_funcs
 class CodechefCommand(commands.Cog):
     '''A cog for all commands relating to Codechef'''
 
@@ -21,23 +21,8 @@ class CodechefCommand(commands.Cog):
     async def assign(inter, user: disnake.User, username: str):
         '''/cc assign <Discord user> <Codechef username>: Assign an user to an username'''
         await inter.response.defer()
-
-        data = load_from_json("/Codechef/username")
-        current_guild_id = inter.guild.id
-        userid = user.id
-
-        if str(current_guild_id) not in data:
-            data[str(current_guild_id)] = dict()
-
-        data[str(current_guild_id)][str(userid)] = username
-
-        write_to_json("/Codechef/username", data)
-
-        await inter.edit_original_message(
-            content = f"{user.mention} has been assigned to {username}"
-        )
-
-    # Currently not working
+        user_funcs.assign_handle(user.id, username, 2)
+        user_funcs.update_change(inter.guild.id, user.id, 2)
     
     @codechef.sub_command()
     async def refresh_all(inter):

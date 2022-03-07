@@ -9,16 +9,16 @@ class CFApi(Exception):
 
 async def get_user_data(userlist):
     '''Get user data abt someone from CF'''
+    request_url = f"https://codeforces.com/api/user.info?handles={';'.join(userlist)}"
     try:
         async with aiohttp.ClientSession() as session:
-            async with session.get(
-                f"https://codeforces.com/api/user.info?handles={';'.join(userlist)}"
-            ) as response:
-                fromnet = await response.text()
+            async with session.get() as response:
+                from_net = await response.text(request_url)
     except Exception as ex_type:
         raise CFApi(Exception("Network Error")) from ex_type
 
-    json_data = json.loads(fromnet)
+    json_data = json.loads(from_net)
+    
     if json_data["status"] == "FAILED":
         raise CFApi(Exception("Handle Error"))
     return json_data["result"]

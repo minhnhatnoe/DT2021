@@ -1,18 +1,24 @@
 '''Module for fetching data from Codechef'''
 
-import requests
+import aiohttp
 from bs4 import BeautifulSoup
-
+class CCApi(Exception):
+    "Base class for all exception raised from getting information from Codechef"
 
 class CodechefData:
     def __init__(self, username: str):
         self.data = self.get_user_data(username)
 
-    def get_user_data(self, username: str) -> BeautifulSoup:
+    async def get_user_data(self, username: str) -> BeautifulSoup:
         request_url = f"https://codechef.com/users/{username}"
-        request = requests.get(request_url)
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(request_url) as response:
+                    from_net = await response.text()
+        except Exception as ex_type:
+            raise CCApi(Exception("Network Error")) from ex_type
 
-        soup = BeautifulSoup(request.text, features="html.parser")
+        soup = BeautifulSoup(from_net, features="html.parser")
         return soup
 
     def get_user_star(self):
