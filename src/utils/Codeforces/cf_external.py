@@ -2,22 +2,7 @@
 import json
 from disnake import Embed
 import aiohttp
-
-RANKCOLOR = {
-    "unrated": 0x000000,
-    "newbie": 0xCCCCCC,
-    "pupil": 0x77FF77,
-    "specialist": 0x77DDBB,
-    "expert": 0xAAAAFF,
-    "candidate master": 0xFF88FF,
-    "master": 0xFFCC88,
-    "international master": 0xFFBB55,
-    "grandmaster": 0xFF7777,
-    "international grandmaster": 0xFF3333,
-    "legendary grandmaster": 0xAA0000
-}
-
-
+import src.utils.guild_funcs
 class CFApi(Exception):
     "Base class for all exception raised from communicating with CF API"
 
@@ -58,7 +43,7 @@ async def get_user_embed(handle: str, dischand: str):
     if "rank" not in data:
         data["rank"] = "unrated"
     obj = Embed(
-        title=dischand, color=RANKCOLOR[data["rank"]], description=data["rank"].title())
+        title=dischand, color=src.utils.guild_funcs.RANKCOLOR[data["rank"]], description=data["rank"].title())
     obj.set_thumbnail(url=data["titlePhoto"])
     if "firstName" in data and "lastName" in data:
         if data["firstName"] != "" and data["lastName"] != "":

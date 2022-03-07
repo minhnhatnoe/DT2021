@@ -4,8 +4,8 @@ from enum import auto
 from turtle import update
 from disnake.ext import commands
 import disnake
-from src import user_funcs
-from src.utils.Codeforces import guild_funcs
+from src.utils import user_funcs
+from src.utils import guild_funcs
 
 UPDATECHOICES = {
     "None": 0,

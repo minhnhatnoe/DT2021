@@ -2,7 +2,7 @@
 from os import environ
 import json
 from dotenv import load_dotenv
-from src.utils.Codeforces import guild_funcs
+from src.utils import guild_funcs
 
 
 def update_change(guildid: str, userid: str, val: int):
