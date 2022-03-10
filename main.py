@@ -4,7 +4,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 import disnake
 from disnake.ext import commands, tasks
-from src import keep_alive
+# from src import keep_alive
 from src.utils import guild_funcs
 
 load_dotenv()
@@ -58,9 +58,9 @@ async def helpme(inter):
 
 bot.load_extension("src.codeforces_cmd")
 bot.load_extension("src.general_cmd")
-bot.load_extension('src.codechef_cmd')
+# bot.load_extension('src.codechef_cmd')
 
 if __name__ == "__main__":
     load_dotenv()
-    keep_alive.keep_alive()
+    # keep_alive.keep_alive()
     bot.run(environ.get("TOKEN"))

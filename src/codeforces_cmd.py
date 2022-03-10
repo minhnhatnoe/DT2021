@@ -38,7 +38,7 @@ class CodeforcesCommand(commands.Cog):
     async def info(inter, user: disnake.User):
         '''/cf info @<Discord>: Get someone's CF handle'''
         await inter.response.defer()
-        handle = user_funcs.get_handle(user.id)
+        handle = user_funcs.get_handle(user.id, 1)
         if handle is None:
             message_content = f"{user.mention} not introduced yet"
             await inter.edit_original_message(content=message_content)

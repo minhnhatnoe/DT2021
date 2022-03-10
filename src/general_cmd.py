@@ -80,7 +80,6 @@ class GeneralCommand(commands.Cog):
         for role in guild.roles:
             if role.name in guild_funcs.RANKCOLOR:
                 await role.delete()
-        guild_funcs.remove_guild(guild.id)
         await inter.edit_original_message(content="All roles cleared")
 
 
