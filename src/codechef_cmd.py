@@ -2,9 +2,6 @@
 
 import disnake
 from disnake.ext import commands
-from src.utils.json_file import load_from_json, write_to_json
-from src.utils import guild_funcs
-from src.utils.Codechef import cc_external
 from src.utils import user_funcs
 
 
@@ -16,16 +13,16 @@ class CodechefCommand(commands.Cog):
         self.bot = bot
 
     @commands.slash_command(name="cc")
-    async def codechef(inter, *args):
+    async def codechef(inter: disnake.CommandInteraction, *args):
         '''Slash command group for Codechef command'''
 
     @codechef.sub_command()
-    async def assign(inter, user: disnake.User, username: str):
+    async def assign(inter: disnake.CommandInteraction, user: disnake.User, username: str):
         '''/cc assign <Discord user> <Codechef username>: Assign an user to an username'''
         await inter.response.defer()
-        user_funcs.assign_handle(user.id, username, 2)
-        user_funcs.update_change(inter.guild.id, user.id, 2)
-
+        user_funcs.assign_handle(user, username, 2)
+        user_funcs.update_change(user, 2)
+        await inter.edit_original_message(content=f"{user.mention} is linked with Codechef account {username}")
 
 def setup(bot: commands.Bot):
     '''Add the cog to bot'''

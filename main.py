@@ -58,7 +58,7 @@ async def helpme(inter):
 
 bot.load_extension("src.codeforces_cmd")
 bot.load_extension("src.general_cmd")
-# bot.load_extension('src.codechef_cmd')
+bot.load_extension("src.codechef_cmd")
 
 if __name__ == "__main__":
     load_dotenv()

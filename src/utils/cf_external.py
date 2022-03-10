@@ -1,9 +1,9 @@
 '''Codeforces API interaction'''
 import json
+import disnake
 from disnake import Embed
 import aiohttp
-import src.utils.guild_funcs
-
+from src.utils.constants import *
 
 class CFApi(Exception):
     "Base class for all exception raised from communicating with CF API"
@@ -37,14 +37,14 @@ async def generate_dict_of_rank(user_list):
     return result
 
 
-async def generate_user_embed(handle: str, dischand: str):
+async def generate_user_embed(handle: str, member: disnake.Member):
     '''Create an embed that represent a user'''
     data = await get_user_data([handle])
     data = data[0]
     if "rank" not in data:
         data["rank"] = "unrated"
     obj = Embed(
-        title=dischand, color=src.utils.guild_funcs.RANKCOLOR[data["rank"]], description=data["rank"].title())
+        title=member.display_name, color=RANKCOLOR[data["rank"]], description=data["rank"].title())
     obj.set_thumbnail(url=data["titlePhoto"])
     if "firstName" in data and "lastName" in data:
         if data["firstName"] != "" and data["lastName"] != "":
