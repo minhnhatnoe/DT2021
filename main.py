@@ -20,7 +20,7 @@ async def refresh_all_roles():
 
 
 @bot.event
-async def on_guild_join(guild):
+async def on_guild_join(guild: disnake.Guild):
     '''Add the bot to a guild'''
     await guild_funcs.make_roles(guild)
 
@@ -40,7 +40,7 @@ async def on_ready():
 
 
 @bot.slash_command(name='help')
-async def helpme(inter):
+async def helpme(inter: disnake.CommandInteraction):
     '''/help: Show this help message'''
     msg = 'Here are several things I can do:'
 
