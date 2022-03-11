@@ -10,7 +10,7 @@ def dependencies_check():
         import disnake
         import flask
         import aiohttp
-        import requests
+        import bs4
     except ImportError:
         # Determine OS, documentation: https://docs.python.org/3/library/platform.html
         running_os = platform.system()
@@ -30,14 +30,25 @@ def create_dotenv():
     '''Create the required dotenv file'''
     bot_token = input("Specify bot's token: ")
     test_guilds = input(
-        "Specify test guilds for this bot (Seperate by comma): ")
-    data_path = input("Specify database path (defaults to Data): ")
+        "Specify test guilds for this bot (Seperated by comma): ")
+    data_path = input("Specify database path (defaults to ./Data): ")
     with open(".env", "w") as env_file:
         env_file.write(
             f'TOKEN = {bot_token}\nDATAPATH = {data_path}\nTEST_GUILDS = {test_guilds}')
 
 
+def data_create():
+    from dotenv import load_dotenv
+    from os import environ
+    load_dotenv()
+    path = environ.get("DATAPATH")
+    for filepath in ["/update", "/cfhandle", "/cchandle"]:
+        with open(f"{path}{filepath}.json", "w") as file:
+            file.write("{}")
+
+
 if __name__ == '__main__':
-    print("Installing ")
+    print("Installing")
     dependencies_check()
     create_dotenv()
+    data_create()
