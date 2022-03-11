@@ -4,7 +4,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 import disnake
 from disnake.ext import commands, tasks
-# from src import keep_alive
+from src import keep_alive
 from src.utils import guild_funcs
 
 load_dotenv()
