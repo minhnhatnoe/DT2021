@@ -3,7 +3,7 @@ import json
 import disnake
 from disnake import Embed
 from disnake.ext import commands
-from src.utils.constants import *
+from src.utils.constants import RANKCOLOR
 from src.utils import network
 
 
@@ -28,7 +28,7 @@ async def get_user_data(bot: commands.Bot, user_list):
 async def generate_dict_of_rank(bot: commands.Bot, user_list):
     '''Generate a dict of handle-rank from CF, accepting dict of str only'''
     data = await get_user_data(bot, user_list)
-    result = dict()
+    result = {}
     for person in data:
         if "rank" not in person:
             person["rank"] = "unrated"

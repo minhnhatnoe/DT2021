@@ -21,7 +21,7 @@ async def refresh_all_roles():
 @bot.event
 async def on_guild_join(guild: disnake.Guild):
     '''Add the bot to a guild'''
-    await guild_funcs.make_roles(guild)
+    await guild_funcs.create_roles(guild)
 
 
 @bot.event

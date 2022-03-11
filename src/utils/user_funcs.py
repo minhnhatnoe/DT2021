@@ -1,7 +1,7 @@
 '''Functions concerning users as individuals'''
 import disnake
 from src.utils import json_file
-from src.utils.constants import *
+from src.utils.constants import RANKCOLOR
 
 
 def update_change(member: disnake.Member, update_type: int):
@@ -55,7 +55,7 @@ def write_handle(users, handle_type: int):
         raise Handle(Exception("Invalid handle type"))
     json_data = json_file.load_from_json(file_names[handle_type])
 
-    for (user, guild), user_data in users.items():
+    for (user, guild), user_data in users.items():  # pylint: disable=unused-variable
         if str(user.id) in json_data:
             user_data["handle"] = json_data[str(user.id)]
         else:
@@ -63,7 +63,7 @@ def write_handle(users, handle_type: int):
 
 
 async def change_role(member: disnake.Member, roles_to_add) -> None:
-    '''Remove current role and add specified role if differs. 
+    '''Remove current role and add specified role if differs.
     All roles are added and removed at once to reduce request count'''
     # TODO: Limit to 2 requests per call
     # roles_to_remove = list()

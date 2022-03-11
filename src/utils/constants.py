@@ -1,3 +1,4 @@
+'''Commonly used constants'''
 RANKCOLOR = {
     "Codechef 0*": 0x000000,
     "Codechef 1*": 0x000000,
