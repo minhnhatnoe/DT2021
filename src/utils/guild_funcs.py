@@ -33,7 +33,7 @@ async def refresh_roles(bot: commands.Bot):
         write_handle(change_queries[platform], platform)
 
     for platform in [1, 2]:
-        await write_role(change_queries[platform], platform)
+        await write_role(bot, change_queries[platform], platform)
         for (user, guild), user_data in change_queries[platform].items():
             if "role" in user_data:
                 role = user_data["role"]
@@ -44,18 +44,18 @@ def get_role_with_name(guild: disnake.Guild, role_name: str) -> disnake.Role:
     for role in guild.roles:
         if role.name == role_name:
             return role
-
+    print("Guildfuncs 47:", guild.id, role_name)
     raise Exception("Role not found")
 
 
-async def write_role(platform_queries, platform: int):
+async def write_role(bot: commands.Bot, platform_queries, platform: int):
     '''Recieves a dict of {(user, guild): {handle}}, add property role of disnake.Role. The key is user, guild for hashing'''
     if platform == 1:
         handle_list = []
         for person_data in platform_queries.values():
             if person_data["handle"] is not None:
                 handle_list.append(person_data["handle"])
-        ranks_dict = await cf_external.generate_dict_of_rank(handle_list)
+        ranks_dict = await cf_external.generate_dict_of_rank(bot, handle_list)
 
         for (member, guild), person_data in platform_queries.items():
             handle = person_data["handle"]
@@ -72,7 +72,7 @@ async def write_role(platform_queries, platform: int):
             if handle is None:
                 continue
             handle = handle.lower()
-            role_name = await cc_external.get_user_star(handle)
+            role_name = await cc_external.get_user_star(bot, handle)
             role = get_role_with_name(guild, role_name)
             person_data["role"] = role
 
@@ -83,7 +83,7 @@ async def create_roles(guild: disnake.Guild) -> None:
         [(role.name, role) for role in await guild.fetch_roles()])
     for role_name, color in reversed(list(RANKCOLOR.items())):
         if role_name not in online_guild_role_list:
-            role = await guild.create_role(name=role_name, color=color, hoist=True)
+            await guild.create_role(name=role_name, color=color, hoist=True)
 
 
 async def delete_roles(guild: disnake.Guild) -> None:

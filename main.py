@@ -11,7 +11,6 @@ load_dotenv()
 guilds = [int(v) for v in environ.get("TEST_GUILDS").split(",")]
 bot = commands.Bot(test_guilds=guilds, intents=disnake.Intents.all())
 
-
 @tasks.loop(minutes=30)
 async def refresh_all_roles():
     '''Refresh all roles, periodically'''
@@ -40,7 +39,7 @@ async def on_ready():
 
 
 @bot.slash_command(name='help')
-async def helpme(inter: disnake.CommandInteraction):
+async def help_cmd(inter: disnake.CommandInteraction):
     '''/help: Show this help message'''
     msg = 'Here are several things I can do:'
 

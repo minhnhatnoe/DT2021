@@ -3,6 +3,7 @@ import disnake
 from src.utils import json_file
 from src.utils.constants import *
 
+
 def update_change(member: disnake.Member, update_type: int):
     '''Add user to update list. 0 is None, 1 is Codeforces, 2 is Codechef'''
     json_data = json_file.load_from_json("/update")
@@ -33,7 +34,18 @@ def get_handle(member: disnake.Member, handle_type: int):
         raise Handle(Exception("Invalid handle type"))
 
     json_data = json_file.load_from_json(file_names[handle_type])
+    if str(member.id) not in json_data:
+        return None
     return json_data[str(member.id)]
+
+
+def get_all_handle(handle_type: int):
+    '''Get the dict off all handles'''
+    if handle_type not in [1, 2]:
+        raise Handle(Exception("Invalid handle type"))
+
+    json_data = json_file.load_from_json(file_names[handle_type])
+    return json_data
 
 
 def write_handle(users, handle_type: int):

@@ -1,4 +1,5 @@
 RANKCOLOR = {
+    "Codechef 0*": 0x000000,
     "Codechef 1*": 0x000000,
     "Codechef 2*": 0x000000,
     "Codechef 3*": 0x000000,

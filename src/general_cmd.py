@@ -11,6 +11,9 @@ async def autocomplete_update(inter: disnake.ApplicationCommandInteraction, stri
     string = string.lower()
     return [choice for choice in UPDATECHOICES.keys() if string in choice.lower()]
 
+def align(name: disnake.User) -> str:
+    name = name.display_name
+    return name + " "*(20-len(name))
 
 class GeneralCommand(commands.Cog):
     "A cog for all of commands regarding general Discord stuff"
@@ -67,6 +70,20 @@ class GeneralCommand(commands.Cog):
         await guild_funcs.delete_roles(inter.guild)
         await inter.edit_original_message(content="All roles cleared")
 
+    @gen.sub_command()
+    async def dump(self, inter: disnake.CommandInteraction,
+                   choice: str = commands.Param(autocomplete=autocomplete_update)):
+        '''/gen dump: Make the bot DM you a list off all Codeforces handles'''
+        message_content: str
+        if choice in UPDATECHOICES:
+            data = user_funcs.get_all_handle(UPDATECHOICES[choice])
+            data = [(self.bot.get_user(int(user_id)), handle) for user_id, handle in data.items()]
+            message_content = '\n'.join(
+                [f"{align(user)}: {handle}" for user, handle in data])
+            message_content = '```\n' + message_content + "\n```"
+        else:
+            message_content = f"{choice} is not a valid option"
+        await inter.response.send_message(message_content)
 
 def setup(bot: commands.Bot):
     '''Add the "gen" cog'''
