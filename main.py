@@ -4,12 +4,12 @@ from datetime import datetime
 from dotenv import load_dotenv
 import disnake
 from disnake.ext import commands, tasks
-from src import keep_alive
-from src.funcs import guild_funcs
+# from src import keep_alive
+from src.utils import guild_funcs
+
 load_dotenv()
 guilds = [int(v) for v in environ.get("TEST_GUILDS").split(",")]
 bot = commands.Bot(test_guilds=guilds, intents=disnake.Intents.all())
-
 
 @tasks.loop(minutes=30)
 async def refresh_all_roles():
@@ -19,7 +19,7 @@ async def refresh_all_roles():
 
 
 @bot.event
-async def on_guild_join(guild):
+async def on_guild_join(guild: disnake.Guild):
     '''Add the bot to a guild'''
     await guild_funcs.make_roles(guild)
 
@@ -38,9 +38,9 @@ async def on_ready():
         refresh_all_roles.start()
 
 
-@bot.slash_command()
-async def helpme(inter):
-    '''/helpme: Show this help message'''
+@bot.slash_command(name='help')
+async def help_cmd(inter: disnake.CommandInteraction):
+    '''/help: Show this help message'''
     msg = 'Here are several things I can do:'
 
     command_set = bot.get_guild_slash_commands(inter.guild.id)
@@ -55,11 +55,11 @@ async def helpme(inter):
     await inter.response.send_message(msg + "```" + "\n".join(help_msg) + "```")
 
 
-bot.load_extension("src.cf_cmd")
-bot.load_extension("src.gen_cmd")
-bot.load_extension('src.codechef_cmd')
+bot.load_extension("src.codeforces_cmd")
+bot.load_extension("src.general_cmd")
+bot.load_extension("src.codechef_cmd")
 
 if __name__ == "__main__":
     load_dotenv()
-    keep_alive.keep_alive()
+    # keep_alive.keep_alive()
     bot.run(environ.get("TOKEN"))
