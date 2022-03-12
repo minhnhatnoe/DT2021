@@ -10,21 +10,26 @@ class CCApi(Exception):
 
 
 HEADERS = {
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36 Edg/99.0.1150.36"} # pylint: disable=line-too-long
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36 Edg/99.0.1150.36"}  # pylint: disable=line-too-long
 
+def bs_soup_callable(from_net: str):
+    '''BeautifulSoup Callable to use in get_net'''
+    return BeautifulSoup(from_net, features="html.parser")
 
 async def get_user_data(bot: commands.Bot, username: str) -> BeautifulSoup:
     '''Returns a soup'''
     request_url = f"https://codechef.com/users/{username}"
     try:
-        from_net = await network.get_net_cc(bot, request_url)
+        from_net = await network.get_net(
+            bot, request_url, bs_soup_callable, [])
+
     except Exception as ex_type:
         raise CCApi(Exception("Network Error")) from ex_type
-    soup = BeautifulSoup(from_net, features="html.parser")
+    soup = bs_soup_callable(from_net)
     return soup
 
 
-async def get_user_star(bot: commands.Bot, username: str):
+async def get_user_star(bot: commands.Bot, username: str) -> str:
     '''Return role name'''
     soup = await get_user_data(bot, username)
     star = soup.select('span[class="rating"]')

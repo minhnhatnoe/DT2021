@@ -21,7 +21,7 @@ def run():
 
 
 def keep_alive():
-    '''Function to be called by on_ready'''
+    '''Function to be called by main'''
     server = Thread(target=run)
     server.daemon=True
     server.start()

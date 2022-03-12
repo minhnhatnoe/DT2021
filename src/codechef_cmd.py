@@ -23,10 +23,8 @@ class CodechefCommand(commands.Cog):
         await inter.response.defer()
         user_funcs.assign_handle(user, username, 2)
         if username == "":
-            user_funcs.update_change(user, 0)
             message_content = f"{user.mention} is unlinked"
         else:
-            user_funcs.update_change(user, 2)
             message_content = f"{user.mention} is linked with Codechef account {username}"
 
         await inter.edit_original_message(content=message_content)
