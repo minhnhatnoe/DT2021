@@ -21,7 +21,7 @@ async def refresh_all_roles():
 @bot.event
 async def on_guild_join(guild: disnake.Guild):
     '''Add the bot to a guild'''
-    await guild_funcs.make_roles(guild)
+    await guild_funcs.create_roles(guild)
 
 
 @bot.event
@@ -61,5 +61,5 @@ bot.load_extension("src.codechef_cmd")
 
 if __name__ == "__main__":
     load_dotenv()
-    keep_alive.keep_alive()
+    # keep_alive.keep_alive()
     bot.run(environ.get("TOKEN"))

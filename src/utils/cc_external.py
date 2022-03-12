@@ -10,7 +10,7 @@ class CCApi(Exception):
 
 
 HEADERS = {
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36 Edg/99.0.1150.36"}
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36 Edg/99.0.1150.36"} # pylint: disable=line-too-long
 
 
 async def get_user_data(bot: commands.Bot, username: str) -> BeautifulSoup:
@@ -29,7 +29,7 @@ async def get_user_star(bot: commands.Bot, username: str):
     soup = await get_user_data(bot, username)
     star = soup.select('span[class="rating"]')
     star_text = str()
-    if (len(star) == 0):
+    if len(star) == 0:
         star_text = "0*"
     else:
         star_text = star[0].getText()

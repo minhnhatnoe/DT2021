@@ -3,17 +3,14 @@ from disnake.ext import commands
 import disnake
 from src.utils import user_funcs
 from src.utils import guild_funcs
-from src.utils.constants import *
+from src.utils.constants import UPDATECHOICES
 
 
-async def autocomplete_update(inter: disnake.ApplicationCommandInteraction, string: str):
+async def autocomplete_update(inter: disnake.CommandInteraction, string: str): # pylint: disable=unused-argument
     '''Autocomplete function for update platform choice'''
     string = string.lower()
-    return [choice for choice in UPDATECHOICES.keys() if string in choice.lower()]
+    return [choice for choice in UPDATECHOICES if string in choice.lower()]
 
-def align(name: disnake.User) -> str:
-    name = name.display_name
-    return name + " "*(20-len(name))
 
 class GeneralCommand(commands.Cog):
     "A cog for all of commands regarding general Discord stuff"
@@ -22,16 +19,16 @@ class GeneralCommand(commands.Cog):
         self.bot = bot
 
     @commands.slash_command()
-    async def gen(inter: disnake.CommandInteraction, *args):
+    async def gen(self, inter: disnake.CommandInteraction, *args):
         '''General commands family'''
 
     @gen.sub_command()
-    async def ping(inter: disnake.CommandInteraction):
+    async def ping(self, inter: disnake.CommandInteraction): # pylint: disable=no-self-use
         '''/gen ping: Get the bot's latency'''
         await inter.response.send_message(f"Pong! ({inter.bot.latency * 1000:.0f}ms)")
 
     @gen.sub_command()
-    async def update(inter: disnake.CommandInteraction, user: disnake.User,
+    async def update(self, inter: disnake.CommandInteraction, user: disnake.User, # pylint: disable=no-self-use
                      choice: str = commands.Param(autocomplete=autocomplete_update)):
         '''/gen update @<Discord>: Add someone to the handle update list'''
         message_content = str()
@@ -44,7 +41,7 @@ class GeneralCommand(commands.Cog):
         await inter.response.send_message(message_content)
 
     @gen.sub_command()
-    async def silent(inter: disnake.CommandInteraction, user: disnake.User,
+    async def silent(self, inter: disnake.CommandInteraction, user: disnake.User, # pylint: disable=no-self-use
                      choice: str = commands.Param(autocomplete=autocomplete_update)):
         '''/gen update @<Discord>: Add someone to the handle update list without mention'''
         message_content = str()
@@ -64,7 +61,7 @@ class GeneralCommand(commands.Cog):
         await inter.edit_original_message(content="All roles refreshed")
 
     @gen.sub_command()
-    async def clear(inter: disnake.CommandInteraction):
+    async def clear(self, inter: disnake.CommandInteraction): # pylint: disable=no-self-use
         '''/gen clear: Clear all roles with matching names from server'''
         await inter.response.defer()
         await guild_funcs.delete_roles(inter.guild)
@@ -74,13 +71,10 @@ class GeneralCommand(commands.Cog):
     async def dump(self, inter: disnake.CommandInteraction,
                    choice: str = commands.Param(autocomplete=autocomplete_update)):
         '''/gen dump: Make the bot DM you a list off all Codeforces handles'''
-        message_content: str
         if choice in UPDATECHOICES:
-            data = user_funcs.get_all_handle(UPDATECHOICES[choice])
-            data = [(self.bot.get_user(int(user_id)), handle) for user_id, handle in data.items()]
-            message_content = '\n'.join(
-                [f"{align(user)}: {handle}" for user, handle in data])
-            message_content = '```\n' + message_content + "\n```"
+            data_dump = user_funcs.dump_all_handle(self.bot, UPDATECHOICES[choice])
+            await inter.user.send(data_dump)
+            message_content = "Sent!"
         else:
             message_content = f"{choice} is not a valid option"
         await inter.response.send_message(message_content)
