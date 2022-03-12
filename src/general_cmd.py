@@ -1,15 +1,10 @@
 '''General commands regarding the bot'''
+from secrets import choice
 from disnake.ext import commands
 import disnake
 from src.utils import user_funcs
 from src.utils import guild_funcs
-from src.utils.constants import UPDATECHOICES
-
-
-async def autocomplete_update(inter: disnake.CommandInteraction, string: str): # pylint: disable=unused-argument
-    '''Autocomplete function for update platform choice'''
-    string = string.lower()
-    return [choice for choice in UPDATECHOICES if string in choice.lower()]
+from src.utils.constants import UPDATECHOICES, UPDATECHOICELIST
 
 
 class GeneralCommand(commands.Cog):
@@ -29,7 +24,7 @@ class GeneralCommand(commands.Cog):
 
     @gen.sub_command()
     async def update(self, inter: disnake.CommandInteraction, user: disnake.User, # pylint: disable=no-self-use
-                     choice: str = commands.Param(autocomplete=autocomplete_update)):
+                     choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/gen update @<Discord>: Add someone to the handle update list'''
         message_content = str()
         choice = choice.title()
@@ -42,7 +37,7 @@ class GeneralCommand(commands.Cog):
 
     @gen.sub_command()
     async def silent(self, inter: disnake.CommandInteraction, user: disnake.User, # pylint: disable=no-self-use
-                     choice: str = commands.Param(autocomplete=autocomplete_update)):
+                     choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/gen update @<Discord>: Add someone to the handle update list without mention'''
         message_content = str()
         choice = choice.title()
@@ -69,7 +64,7 @@ class GeneralCommand(commands.Cog):
 
     @gen.sub_command()
     async def dump(self, inter: disnake.CommandInteraction,
-                   choice: str = commands.Param(autocomplete=autocomplete_update)):
+                   choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/gen dump: Make the bot DM you a list off all Codeforces handles'''
         choice = choice.title()
         if choice in UPDATECHOICES:
