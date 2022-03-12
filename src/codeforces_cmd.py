@@ -19,7 +19,7 @@ class CodeforcesCommand(commands.Cog):
     @codeforces.sub_command()
     async def assign(self, inter: disnake.CommandInteraction,
                      user: disnake.User, handle: str = ""):
-        '''/cf assign <CF Handle>: Let the bot know your Codeforces handle. Unassign if handle is blank'''
+        '''/cf assign <CF Handle>: Link user to handle, delete if blank'''
         if handle == "":
             user_funcs.assign_handle(user, handle, 1)
             user_funcs.update_change(user, 0)
