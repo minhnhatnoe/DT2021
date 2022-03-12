@@ -17,7 +17,7 @@ for extension in EXTENSIONLIST:
 
 async def check_instance(request_url: str) -> bool:
     async with aiohttp.ClientSession() as session:
-        async with session.get(environ.get("DEPLOY_ADDRESS")) as response:
+        async with session.get(request_url) as response:
             return response.status != 200
 
 def deploy():
@@ -26,10 +26,12 @@ def deploy():
 
 def local():
     deploy_server = environ.get("DEPLOY_ADDRESS", "None")
+    check = False
     if deploy_server != "None":
-        print(f"Checking live deployment at {deploy_server}. Disable this by removing var in .env")
+        print(f"Checking live deployment at {deploy_server}. Disable this by removing the variable named DEPLOY_ADDRESS in .env!")
         check = asyncio.get_event_loop().run_until_complete(check_instance(deploy_server))
+    
     if check:
         bot.run(environ.get("TOKEN"))
     else:
-        print(f"Deployment instance active at {deploy_server}. Terminating")
+        print(f"Deployment instance active at {deploy_server}. Terminating...")
