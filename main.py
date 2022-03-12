@@ -1,19 +1,16 @@
 '''Master Bot code'''
-from os import environ
-from dotenv import load_dotenv
-import disnake
-from disnake.ext import commands
-from src import keep_alive
-
-load_dotenv()
-guilds = [int(v) for v in environ.get("TEST_GUILDS").split(",")]
-bot = commands.Bot(test_guilds=guilds, intents=disnake.Intents.all())
-
-EXTENSIONLIST = ["general_cmd", "codeforces_cmd",
-                 "codechef_cmd", "bot_extension"]
-for extension in EXTENSIONLIST:
-    bot.load_extension(f"src.{extension}")
+from sys import argv
+from src import app
 
 if __name__ == "__main__":
-    keep_alive.keep_alive()
-    bot.run(environ.get("TOKEN"))
+    if len(argv) == 1:
+        print("Local mode")
+        app.local()
+    elif len(argv) == 2:
+        if argv[1] == "deploy":
+            print("Deployment mode. Make sure bot has no other instance")
+            app.deploy()
+        else:
+            print('Run with argument "deploy" to run in deployment mode')
+    else:
+        print("Too many arguments")
