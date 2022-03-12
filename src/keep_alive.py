@@ -1,8 +1,13 @@
 '''Interaction with UptimeRobot'''
+import logging
+import sys
 from threading import Thread
 from flask import Flask
+cli = sys.modules['flask.cli']
+cli.show_server_banner = lambda *x: None
 app = Flask('')
-
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 @app.route('/')
 def main():
