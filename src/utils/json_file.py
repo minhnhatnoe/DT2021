@@ -1,10 +1,11 @@
 '''Module for working with json'''
 from os import environ
 import json
+from typing import Dict
 from dotenv import load_dotenv
 
 
-def load_from_json(filepath: str) -> dict:
+def load_from_json(filepath: str) -> Dict:
     '''Load file from json and returns dict'''
     load_dotenv()
     path = environ.get("DATAPATH")
@@ -14,7 +15,7 @@ def load_from_json(filepath: str) -> dict:
         return json_data
 
 
-def write_to_json(filepath: str, data: dict):
+def write_to_json(filepath: str, data: Dict):
     '''Write to json file'''
     load_dotenv()
     path = environ.get("DATAPATH")

@@ -1,5 +1,6 @@
 '''Codeforces API interaction'''
 import json
+from typing import Dict, List
 import disnake
 from disnake import Embed
 from disnake.ext import commands
@@ -11,11 +12,11 @@ class CFApi(Exception):
     "Base class for all exception raised from communicating with CF API"
 
 
-async def get_user_data(bot: commands.Bot, user_list):
+async def get_user_data(bot: commands.Bot, user_list: List) -> Dict:
     '''Get user data of person(s) from CF'''
     request_url = f"https://codeforces.com/api/user.info?handles={';'.join(user_list)}"
     try:
-        from_net = await network.get_net_cf(bot, request_url)
+        from_net = await network.get_net(bot, request_url, json.loads, [json.JSONDecodeError])
     except Exception as ex_type:
         raise CFApi(Exception("Network Error")) from ex_type
 
@@ -30,7 +31,7 @@ async def get_user_data(bot: commands.Bot, user_list):
     return data
 
 
-async def generate_user_embed(bot, handle: str, member: disnake.Member):
+async def generate_user_embed(bot: commands.Bot, handle: str, member: disnake.Member) -> Embed:
     '''Create an embed that represent a user'''
     data = await get_user_data(bot, [handle])
     data = data[0]

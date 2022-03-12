@@ -28,7 +28,8 @@ class CodeforcesCommand(commands.Cog):
         try:
             embed_obj = await cf_external.generate_user_embed(self.bot, handle, user)
             user_funcs.assign_handle(user, handle, 1)
-            await inter.response.send_message(f"{user.mention} introduced as {handle}", embed=embed_obj)
+            await inter.response.send_message(
+                f"{user.mention} linked with {handle}", embed=embed_obj)
         except cf_external.CFApi as inst:
             if str(inst) == "Handle Error":
                 message_content = "Error occurred. Check provided handle"
