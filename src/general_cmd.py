@@ -1,5 +1,4 @@
 '''General commands regarding the bot'''
-from secrets import choice
 from disnake.ext import commands
 import disnake
 from src.utils import user_funcs

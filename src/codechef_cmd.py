@@ -17,8 +17,8 @@ class CodechefCommand(commands.Cog):
         '''Slash command group for Codechef command'''
 
     @codechef.sub_command()
-    async def assign(self, inter: disnake.CommandInteraction,
-                     user: disnake.User, username: str = ""):  # pylint: disable=no-self-use
+    async def assign(self, inter: disnake.CommandInteraction, # pylint: disable=no-self-use
+                     user: disnake.User, username: str = ""):
         '''/cc assign <Discord user> <Codechef username>: Link user to username, delete if blank'''
         await inter.response.defer()
         user_funcs.assign_handle(user, username, 2)
