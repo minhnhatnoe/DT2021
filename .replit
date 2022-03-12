@@ -1,1 +1,1 @@
-run = "python main.py"
+run = "pip3 install -r requirements.txt; python main.py"
