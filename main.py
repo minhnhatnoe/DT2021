@@ -11,7 +11,8 @@ load_dotenv()
 guilds = [int(v) for v in environ.get("TEST_GUILDS").split(",")]
 bot = commands.Bot(test_guilds=guilds, intents=disnake.Intents.all())
 
-@tasks.loop(minutes=environ.get("REFRESH_RATE"))
+refresh_rate = int(environ.get("REFRESH_RATE"))
+@tasks.loop(minutes=refresh_rate)
 async def refresh_all_roles():
     '''Refresh all roles, periodically'''
     await guild_funcs.refresh_roles(bot=bot)
@@ -61,5 +62,5 @@ bot.load_extension("src.codechef_cmd")
 
 if __name__ == "__main__":
     load_dotenv()
-    # keep_alive.keep_alive()
+    keep_alive.keep_alive()
     bot.run(environ.get("TOKEN"))
