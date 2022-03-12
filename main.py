@@ -61,5 +61,5 @@ bot.load_extension("src.codechef_cmd")
 
 if __name__ == "__main__":
     load_dotenv()
-    keep_alive.keep_alive()
+    # keep_alive.keep_alive()
     bot.run(environ.get("TOKEN"))

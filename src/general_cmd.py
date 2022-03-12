@@ -11,10 +11,6 @@ async def autocomplete_update(inter: disnake.CommandInteraction, string: str): #
     string = string.lower()
     return [choice for choice in UPDATECHOICES if string in choice.lower()]
 
-def align(name: disnake.User) -> str:
-    '''Align strings as if using tab'''
-    name = name.display_name
-    return name + " "*(20-len(name))
 
 class GeneralCommand(commands.Cog):
     "A cog for all of commands regarding general Discord stuff"
@@ -75,13 +71,10 @@ class GeneralCommand(commands.Cog):
     async def dump(self, inter: disnake.CommandInteraction,
                    choice: str = commands.Param(autocomplete=autocomplete_update)):
         '''/gen dump: Make the bot DM you a list off all Codeforces handles'''
-        message_content: str
         if choice in UPDATECHOICES:
-            data = user_funcs.get_all_handle(UPDATECHOICES[choice])
-            data = [(self.bot.get_user(int(user_id)), handle) for user_id, handle in data.items()]
-            message_content = '\n'.join(
-                [f"{align(user)}: {handle}" for user, handle in data])
-            message_content = '```\n' + message_content + "\n```"
+            data_dump = user_funcs.dump_all_handle(self.bot, UPDATECHOICES[choice])
+            await inter.user.send(data_dump)
+            message_content = "Sent!"
         else:
             message_content = f"{choice} is not a valid option"
         await inter.response.send_message(message_content)
