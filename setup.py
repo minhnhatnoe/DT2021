@@ -29,13 +29,16 @@ def create_dotenv():
     test_guilds = input(
         "Specify test guilds for this bot (Seperated by comma): ")
     data_path = input("Specify database path (defaults to ./Data): ")
-    if data_path == "": data_path = "./Data"
+    if data_path == "":
+        data_path = "./Data"
 
     rate = input("Interval of refresh in minutes (defaults to 10min): ")
-    if rate == "": rate = 10
+    if rate == "":
+        rate = 10
 
     address = input("Input address for deployment ping (defaults to None)")
-    if address == "": address = "None"
+    if address == "":
+        address = "None"
     with open(".env", "w", encoding="utf-8") as env_file:
         env_file.write(
 f'''TOKEN = {bot_token}
