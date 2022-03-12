@@ -17,8 +17,9 @@ class CodechefCommand(commands.Cog):
         '''Slash command group for Codechef command'''
 
     @codechef.sub_command()
-    async def assign(self, inter: disnake.CommandInteraction, user: disnake.User, username: str = ""): # pylint: disable=no-self-use
-        '''/cc assign <Discord user> <Codechef username>: Assign an user to an username, delete if blank'''
+    async def assign(self, inter: disnake.CommandInteraction,
+                     user: disnake.User, username: str = ""):  # pylint: disable=no-self-use
+        '''/cc assign <Discord user> <Codechef username>: Link user to username, delete if blank'''
         await inter.response.defer()
         user_funcs.assign_handle(user, username, 2)
         if username == "":
@@ -29,6 +30,7 @@ class CodechefCommand(commands.Cog):
             message_content = f"{user.mention} is linked with Codechef account {username}"
 
         await inter.edit_original_message(content=message_content)
+
 
 def setup(bot: commands.Bot):
     '''Add the cog to bot'''

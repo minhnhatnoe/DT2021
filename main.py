@@ -11,7 +11,7 @@ load_dotenv()
 guilds = [int(v) for v in environ.get("TEST_GUILDS").split(",")]
 bot = commands.Bot(test_guilds=guilds, intents=disnake.Intents.all())
 
-@tasks.loop(minutes=30)
+@tasks.loop(minutes=environ.get("REFRESH_RATE"))
 async def refresh_all_roles():
     '''Refresh all roles, periodically'''
     await guild_funcs.refresh_roles(bot=bot)

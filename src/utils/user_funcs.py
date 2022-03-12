@@ -81,14 +81,14 @@ def write_handle(users, handle_type: int):
 async def change_role(member: disnake.Member, roles_to_add) -> None:
     '''Remove current role and add specified role if differs.
     All roles are added and removed at once to reduce request count'''
-    rm_list = list()
+    rm_list = []
     for role in member.roles:
         if role.name in RANKCOLOR and role not in roles_to_add:
             rm_list.append(role)
     if len(rm_list) != 0:
         await member.remove_roles(*rm_list)
 
-    add_list = list()
+    add_list = []
     for role in roles_to_add:
         if role not in member.roles:
             add_list.append(role)
