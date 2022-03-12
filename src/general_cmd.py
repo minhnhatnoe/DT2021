@@ -17,20 +17,12 @@ class GeneralCommand(commands.Cog):
         '''General commands family'''
 
     @gen.sub_command()
-    async def ping(self, inter: disnake.CommandInteraction): # pylint: disable=no-self-use
+    async def ping(self, inter: disnake.CommandInteraction):  # pylint: disable=no-self-use
         '''/gen ping: Get the bot's latency'''
         await inter.response.send_message(f"Pong! ({inter.bot.latency * 1000:.0f}ms)")
 
     @gen.sub_command()
-    async def update(self, inter: disnake.CommandInteraction, user: disnake.User, # pylint: disable=no-self-use
-                     choice: str = commands.Param(choices=UPDATECHOICELIST)):
-        '''/gen update @<Discord>: Add someone to the handle update list'''
-        user_funcs.update_change(user, UPDATECHOICES[choice])
-        message_content = f"{user.mention} will be updated by {choice}"
-        await inter.response.send_message(message_content)
-
-    @gen.sub_command()
-    async def silent(self, inter: disnake.CommandInteraction, user: disnake.User, # pylint: disable=no-self-use
+    async def update(self, inter: disnake.CommandInteraction, user: disnake.User,  # pylint: disable=no-self-use
                      choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/gen update @<Discord>: Add someone to the handle update list without mention'''
         user_funcs.update_change(user, UPDATECHOICES[choice])
@@ -45,7 +37,7 @@ class GeneralCommand(commands.Cog):
         await inter.edit_original_message(content="All roles refreshed")
 
     @gen.sub_command()
-    async def clear(self, inter: disnake.CommandInteraction): # pylint: disable=no-self-use
+    async def clear(self, inter: disnake.CommandInteraction):  # pylint: disable=no-self-use
         '''/gen clear: Clear all roles with matching names from server'''
         await inter.response.defer()
         await guild_funcs.delete_roles(inter.guild)
@@ -58,6 +50,7 @@ class GeneralCommand(commands.Cog):
         data_dump = user_funcs.dump_all_handle(self.bot, UPDATECHOICES[choice])
         await inter.user.send(data_dump)
         await inter.response.send_message("Sent!")
+
 
 def setup(bot: commands.Bot):
     '''Add the "gen" cog'''
