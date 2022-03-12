@@ -29,9 +29,13 @@ def create_dotenv():
     test_guilds = input(
         "Specify test guilds for this bot (Seperated by comma): ")
     data_path = input("Specify database path (defaults to ./Data): ")
+    rate = input("Interval of refresh in minutes (rcm. 10min): ")
     with open(".env", "w", encoding="utf-8") as env_file:
         env_file.write(
-            f'TOKEN = {bot_token}\nDATAPATH = {data_path}\nTEST_GUILDS = {test_guilds}')
+f'''TOKEN = {bot_token}
+DATAPATH = {data_path}
+TEST_GUILDS = {test_guilds}
+REFRESH_RATE = {rate}''')
 
 
 def data_create():

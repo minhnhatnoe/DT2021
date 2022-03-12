@@ -26,26 +26,16 @@ class GeneralCommand(commands.Cog):
     async def update(self, inter: disnake.CommandInteraction, user: disnake.User, # pylint: disable=no-self-use
                      choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/gen update @<Discord>: Add someone to the handle update list'''
-        message_content = str()
-        choice = choice.title()
-        if choice in UPDATECHOICES:
-            user_funcs.update_change(user, UPDATECHOICES[choice])
-            message_content = f"{user.mention} will be updated by {choice}"
-        else:
-            message_content = f"{choice} is not a valid option"
+        user_funcs.update_change(user, UPDATECHOICES[choice])
+        message_content = f"{user.mention} will be updated by {choice}"
         await inter.response.send_message(message_content)
 
     @gen.sub_command()
     async def silent(self, inter: disnake.CommandInteraction, user: disnake.User, # pylint: disable=no-self-use
                      choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/gen update @<Discord>: Add someone to the handle update list without mention'''
-        message_content = str()
-        choice = choice.title()
-        if choice in UPDATECHOICES:
-            user_funcs.update_change(user, UPDATECHOICES[choice])
-            message_content = f"{user.display_name} has been added to the update with {choice}"
-        else:
-            message_content = f"{choice} is not a valid option"
+        user_funcs.update_change(user, UPDATECHOICES[choice])
+        message_content = f"{user.display_name} has been added to the update with {choice}"
         await inter.response.send_message(message_content)
 
     @gen.sub_command()
@@ -66,14 +56,9 @@ class GeneralCommand(commands.Cog):
     async def dump(self, inter: disnake.CommandInteraction,
                    choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/gen dump: Make the bot DM you a list off all Codeforces handles'''
-        choice = choice.title()
-        if choice in UPDATECHOICES:
-            data_dump = user_funcs.dump_all_handle(self.bot, UPDATECHOICES[choice])
-            await inter.user.send(data_dump)
-            message_content = "Sent!"
-        else:
-            message_content = f"{choice} is not a valid option"
-        await inter.response.send_message(message_content)
+        data_dump = user_funcs.dump_all_handle(self.bot, UPDATECHOICES[choice])
+        await inter.user.send(data_dump)
+        await inter.response.send_message("Sent!")
 
 def setup(bot: commands.Bot):
     '''Add the "gen" cog'''
