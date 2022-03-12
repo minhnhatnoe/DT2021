@@ -55,8 +55,8 @@ async def help_cmd(inter: disnake.CommandInteraction):
     await inter.response.send_message(msg + "```" + "\n".join(help_msg) + "```")
 
 
-bot.load_extension("src.codeforces_cmd")
 bot.load_extension("src.general_cmd")
+bot.load_extension("src.codeforces_cmd")
 bot.load_extension("src.codechef_cmd")
 
 if __name__ == "__main__":

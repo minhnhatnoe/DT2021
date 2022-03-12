@@ -26,3 +26,5 @@ UPDATECHOICES = {
     "Codeforces": 1,
     "Codechef": 2
 }
+
+UPDATECHOICELIST = [name for name in UPDATECHOICES]
