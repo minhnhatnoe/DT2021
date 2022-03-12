@@ -9,12 +9,10 @@ class CCApi(Exception):
     "Base class for all exception raised from getting information from Codechef"
 
 
-HEADERS = {
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36 Edg/99.0.1150.36"}  # pylint: disable=line-too-long
-
 def bs_soup_callable(from_net: str):
     '''BeautifulSoup Callable to use in get_net'''
     return BeautifulSoup(from_net, features="html.parser")
+
 
 async def get_user_data(bot: commands.Bot, username: str) -> BeautifulSoup:
     '''Returns a soup'''
