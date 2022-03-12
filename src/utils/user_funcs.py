@@ -25,7 +25,11 @@ def assign_handle(member: disnake.Member, handle: str, handle_type: int):
         raise Handle(Exception("Invalid handle type"))
 
     json_data = json_file.load_from_json(file_names[handle_type])
-    json_data[str(member.id)] = handle
+    if handle == "":
+        if str(member.id) in json_data:
+            json_data.pop(str(member.id))
+    else:
+        json_data[str(member.id)] = handle
     json_file.write_to_json(file_names[handle_type], json_data)
 
 

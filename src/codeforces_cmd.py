@@ -17,8 +17,13 @@ class CodeforcesCommand(commands.Cog):
         '''cf family'''
 
     @codeforces.sub_command()
-    async def assign(self, inter: disnake.CommandInteraction, user: disnake.User, handle: str):
-        '''/cf assign <CF Handle>: Let the bot know your Codeforces handle'''
+    async def assign(self, inter: disnake.CommandInteraction, user: disnake.User, handle: str = ""):
+        '''/cf assign <CF Handle>: Let the bot know your Codeforces handle. Unassign if handle is blank'''
+        if handle == "":
+            user_funcs.assign_handle(user, handle, 1)
+            user_funcs.update_change(user, 0)
+            await inter.response.send_message(f"{user.mention} is unlinked")
+            return
         try:
             embed_obj = await cf_external.generate_user_embed(self.bot, handle, user)
             user_funcs.assign_handle(user, handle, 1)
