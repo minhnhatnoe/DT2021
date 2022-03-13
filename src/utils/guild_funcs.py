@@ -6,8 +6,8 @@ from src.utils import json_file, cf_external, cc_external, user_funcs
 from src.utils.constants import RANKCOLOR
 
 
-async def refresh_roles(bot: commands.Bot) -> None:
-    '''Refresh all roles in a guild. Provide either guildlist or bot'''
+async def refresh_roles_of_bot(bot: commands.Bot) -> None:
+    '''Refresh all roles in all guilds'''
     task_list = json_file.load_from_json("/update")
 
     # Some sets of disnake.user - guild/handle/role pairs
@@ -17,7 +17,7 @@ async def refresh_roles(bot: commands.Bot) -> None:
         guild = bot.get_guild(int(guild_id))
         if guild is None:
             continue
-        await create_roles(guild)
+        await create_roles_in_guild(guild)
         for user_id, user_choice in users.items():
             user = guild.get_member(int(user_id))
             if user is None:
@@ -26,15 +26,15 @@ async def refresh_roles(bot: commands.Bot) -> None:
 
     # Get handles of queries
     for platform in [1, 2]:
-        user_funcs.write_handle(change_queries[platform], platform)
+        user_funcs.write_handle_attr_to_dict(change_queries[platform], platform)
 
     # Get role to change of queries
     for platform in [1, 2]:
-        await write_role(bot, change_queries[platform], platform)
+        await write_role_attr_to_dict(bot, change_queries[platform], platform)
         for (user, guild), user_data in change_queries[platform].items():
             if "role" in user_data:
                 role = user_data["role"]
-                await user_funcs.change_role(user, [role])
+                await user_funcs.member_assign_role(user, [role])
 
 
 def get_role_with_name(guild: disnake.Guild, role_name: str) -> disnake.Role:
@@ -45,7 +45,7 @@ def get_role_with_name(guild: disnake.Guild, role_name: str) -> disnake.Role:
     raise Exception("Role not found")
 
 
-async def write_role(bot: commands.Bot, platform_queries: Dict, platform: int) -> None:
+async def write_role_attr_to_dict(bot: commands.Bot, platform_queries: Dict, platform: int) -> None:
     '''Recieves a dict of {(user, guild): {handle}}, add property role of disnake.Role.
     The key is user, guild for hashing'''
     handle_list = []
@@ -69,7 +69,7 @@ async def generate_dict_of_rank(bot: commands.Bot, user_list: List, handle_type:
     '''Generate a dict of handle-rank, accepting list of str only'''
     result = {}
     if handle_type == 1:
-        data = await cf_external.get_user_data(bot, user_list)
+        data = await cf_external.get_user_data_from_net(bot, user_list)
         for person in data:
             handle = person["handle"].lower()
             result[handle] = person["rank"]
@@ -77,12 +77,12 @@ async def generate_dict_of_rank(bot: commands.Bot, user_list: List, handle_type:
     elif handle_type == 2:
         for person in user_list:
             handle = person.lower()
-            result[handle] = await cc_external.get_user_star(bot, handle)
+            result[handle] = await cc_external.get_user_role_name(bot, handle)
 
     return result
 
 
-async def create_roles(guild: disnake.Guild) -> None:
+async def create_roles_in_guild(guild: disnake.Guild) -> None:
     '''Create needed roles in a guild'''
 
     fetched_data = await guild.fetch_roles()
@@ -92,7 +92,7 @@ async def create_roles(guild: disnake.Guild) -> None:
             await guild.create_role(name=role_name, color=color, hoist=True)
 
 
-async def delete_roles(guild: disnake.Guild) -> None:
+async def remove_roles_in_guild(guild: disnake.Guild) -> None:
     '''Delete roles from a discord guild. Deleted roles are specified in RANKCOLOR'''
 
     for role in guild.roles:
@@ -100,7 +100,7 @@ async def delete_roles(guild: disnake.Guild) -> None:
             await role.delete()
 
 
-def remove_guild(guild: disnake.Guild) -> None:
+def remove_guild_data(guild: disnake.Guild) -> None:
     '''Delete data abt a guild'''
 
     json_data = json_file.load_from_json("/update")

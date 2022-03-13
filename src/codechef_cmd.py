@@ -21,7 +21,7 @@ class CodechefCommand(commands.Cog):
                      user: disnake.User, username: str = ""):
         '''/cc assign <Discord user> <Codechef username>: Link user to username, delete if blank'''
         await inter.response.defer()
-        user_funcs.assign_handle(user, username, 2)
+        user_funcs.member_handle_record(user, username, 2)
         if username == "":
             message_content = f"{user.mention} is unlinked"
         else:

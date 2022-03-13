@@ -17,9 +17,9 @@ class BotExtension:
         self.bot = bot
 
     @tasks.loop(minutes=refresh_rate)
-    async def refresh_all_roles(self):
+    async def refresh_role_loop(self):
         '''Refresh all roles, periodically'''
-        await guild_funcs.refresh_roles(bot=self.bot)
+        await guild_funcs.refresh_roles_of_bot(bot=self.bot)
         print("Refreshed all guilds on: ", datetime.now())
 
     async def help_cmd(self, inter: disnake.CommandInteraction):
@@ -40,22 +40,22 @@ class BotExtension:
     async def on_ready(self):
         '''Notify the user that the bot has logged in and start to periodically refresh roles'''
         print("Logged in")
-        if not self.refresh_all_roles.is_running():  # pylint: disable=no-member
-            self.refresh_all_roles.start()  # pylint: disable=no-member
+        if not self.refresh_role_loop.is_running():  # pylint: disable=no-member
+            self.refresh_role_loop.start()  # pylint: disable=no-member
 
 
 async def on_guild_join(guild: disnake.Guild):
     '''Add the bot to a guild'''
-    await guild_funcs.create_roles(guild)
+    await guild_funcs.create_roles_in_guild(guild)
 
 
 async def on_guild_remove(guild: disnake.Guild):
     '''Remove the bot from a guild'''
-    guild_funcs.remove_guild(guild.id)
+    guild_funcs.remove_guild_data(guild.id)
 
 
 def setup(bot: commands.Bot):
-    '''Add the "cf" cog'''
+    '''Add bot listeners and help cmd'''
     bot.event(on_guild_join)
     bot.event(on_guild_remove)
 

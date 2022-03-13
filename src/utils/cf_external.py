@@ -12,7 +12,7 @@ class CFApi(Exception):
     "Base class for all exception raised from communicating with CF API"
 
 
-async def get_user_data(bot: commands.Bot, user_list: List) -> Dict:
+async def get_user_data_from_net(bot: commands.Bot, user_list: List) -> Dict:
     '''Get user data of person(s) from CF'''
     request_url = f"https://codeforces.com/api/user.info?handles={';'.join(user_list)}"
     try:
@@ -33,7 +33,7 @@ async def get_user_data(bot: commands.Bot, user_list: List) -> Dict:
 
 async def generate_user_embed(bot: commands.Bot, handle: str, member: disnake.Member) -> Embed:
     '''Create an embed that represent a user'''
-    data = await get_user_data(bot, [handle])
+    data = await get_user_data_from_net(bot, [handle])
     data = data[0]
     title = member.display_name
     color = RANKCOLOR[data["rank"]]

@@ -21,13 +21,13 @@ class CodeforcesCommand(commands.Cog):
                      user: disnake.User, handle: str = ""):
         '''/cf assign <CF Handle>: Link user to handle, delete if blank'''
         if handle == "":
-            user_funcs.assign_handle(user, handle, 1)
+            user_funcs.member_handle_record(user, handle, 1)
             await inter.response.send_message(f"{user.mention} is unlinked")
             return
 
         try:
             embed_obj = await cf_external.generate_user_embed(self.bot, handle, user)
-            user_funcs.assign_handle(user, handle, 1)
+            user_funcs.member_handle_record(user, handle, 1)
             await inter.response.send_message(
                 f"{user.mention} linked with {handle}", embed=embed_obj)
         except cf_external.CFApi as inst:
@@ -39,7 +39,7 @@ class CodeforcesCommand(commands.Cog):
     async def info(self, inter: disnake.CommandInteraction, user: disnake.User):
         '''/cf info @<Discord>: Get someone's CF handle'''
 
-        handle = user_funcs.get_handle(user, 1)
+        handle = user_funcs.member_handle_query(user, 1)
         if handle is None:
             message_content = f"{user.mention} not introduced yet"
             await inter.response.send_message(content=message_content)

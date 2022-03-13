@@ -14,7 +14,7 @@ def bs_soup_callable(from_net: str):
     return BeautifulSoup(from_net, features="html.parser")
 
 
-async def get_user_data(bot: commands.Bot, username: str) -> BeautifulSoup:
+async def get_user_data_from_net(bot: commands.Bot, username: str) -> BeautifulSoup:
     '''Returns a soup'''
     request_url = f"https://codechef.com/users/{username}"
     try:
@@ -27,9 +27,9 @@ async def get_user_data(bot: commands.Bot, username: str) -> BeautifulSoup:
     return soup
 
 
-async def get_user_star(bot: commands.Bot, username: str) -> str:
+async def get_user_role_name(bot: commands.Bot, username: str) -> str:
     '''Return role name'''
-    soup = await get_user_data(bot, username)
+    soup = await get_user_data_from_net(bot, username)
     star = soup.select('span[class="rating"]')
     star_text = str()
     if len(star) == 0:
