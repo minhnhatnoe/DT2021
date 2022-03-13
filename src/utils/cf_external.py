@@ -16,7 +16,7 @@ async def get_user_data_from_net(bot: commands.Bot, user_list: List) -> Dict:
     '''Get user data of person(s) from CF'''
     request_url = f"https://codeforces.com/api/user.info?handles={';'.join(user_list)}"
     try:
-        from_net = await network.get_net(bot, request_url, json.loads, [json.JSONDecodeError])
+        from_net = await network.get_net(bot, request_url, json.loads, json.JSONDecodeError)
     except Exception as ex_type:
         raise CFApi(Exception("Network Error")) from ex_type
 

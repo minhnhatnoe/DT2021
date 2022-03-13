@@ -19,7 +19,7 @@ async def get_user_data_from_net(bot: commands.Bot, username: str) -> BeautifulS
     request_url = f"https://codechef.com/users/{username}"
     try:
         from_net = await network.get_net(
-            bot, request_url, bs_soup_callable, [])
+            bot, request_url, bs_soup_callable)
 
     except Exception as ex_type:
         raise CCApi(Exception("Network Error")) from ex_type
