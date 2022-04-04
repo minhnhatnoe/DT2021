@@ -80,7 +80,7 @@ def write_handle_attr_to_dict(users, handle_type: int):
     '''Query a bunch of user's handle, 1 is codeforces, 2 is codechef.
     Returns a dict of user_id-handle pair. If not found value is None'''
     handle_dict = json_file.load_from_json(file_names[handle_type])
-    for (user, guild), user_data in users.items():  # pylint: disable=unused-variable
+    for (user, _), user_data in users.items():
         if str(user.id) in handle_dict:
             user_data["handle"] = handle_dict[str(user.id)]
         else:

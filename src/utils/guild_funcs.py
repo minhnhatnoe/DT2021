@@ -55,7 +55,7 @@ async def write_role_attr_to_dict(bot: commands.Bot, platform_queries: Dict, pla
 
     ranks_dict = await generate_dict_of_rank(bot, handle_list, platform)
 
-    for (member, guild), person_data in platform_queries.items():  # pylint: disable=unused-variable
+    for (_, guild), person_data in platform_queries.items():
         handle = person_data["handle"]
         if handle is None:
             continue

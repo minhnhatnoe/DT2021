@@ -38,13 +38,13 @@ def local():
     deploy_server = environ.get("DEPLOY_ADDRESS", "None")
     check: bool
     if deploy_server != "None":
-        print(
-            f"Checking live deployment at {deploy_server}. Disable this by removing the variable named DEPLOY_ADDRESS in .env!")  # pylint: disable=line-too-long
+        print(f"Checking live deployment at {deploy_server}...")
+        print("Disable this by removing the variable named DEPLOY_ADDRESS in .env!")
         async_process = check_instance(deploy_server)
         event_loop = asyncio.get_event_loop()
         check = event_loop.run_until_complete(async_process)
     else: check = True
-    
+
     if check:
         bot.run(token)
     else:

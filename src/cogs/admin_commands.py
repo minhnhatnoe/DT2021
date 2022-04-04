@@ -5,6 +5,7 @@ from src.utils import guild_funcs
 
 
 class AdminCommands(commands.Cog):
+    '''Cog for admin-only commands'''
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
@@ -24,7 +25,7 @@ class AdminCommands(commands.Cog):
             await inter.response.send_message("You're not an admin, why bother with this?")
 
     @admin.sub_command()
-    async def show(self, inter: disnake.CommandInteraction):
+    async def show(self, inter: disnake.CommandInteraction): # pylint: disable=no-self-use
         '''/admin show: Show whether the bot considers you to be an admin or not'''
         if inter.author.guild_permissions.administrator:
             await inter.response.send_message("You are an admin")

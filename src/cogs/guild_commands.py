@@ -14,7 +14,7 @@ class GuildCommand(commands.Cog):
     @commands.slash_command()
     async def guild(self, inter: disnake.CommandInteraction, *args):
         '''Guild commands family'''
-    
+
     @guild.sub_command()
     async def refresh(self, inter: disnake.CommandInteraction):
         '''/guild refresh: Refresh all color-based roles'''
