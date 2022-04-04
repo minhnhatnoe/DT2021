@@ -57,7 +57,7 @@ class BotExtension(commands.Cog):  # TODO: turn to cog
 
     @commands.slash_command()
     async def ping(self, inter: disnake.CommandInteraction):  # pylint: disable=no-self-use
-        '''/gen ping: Get the bot's latency'''
+        '''/ping: Get the bot's latency'''
         await inter.response.send_message(f"Pong! ({inter.bot.latency * 1000:.0f}ms)")
 
 
