@@ -14,7 +14,7 @@ token = environ.get("TOKEN")
 
 # EXTENSIONLIST = ["general_cmd", "codeforces_cmd",
 #                  "codechef_cmd", "bot_extension"]
-EXTENSIONLIST = ["bot_commands", "user_commands",
+EXTENSIONLIST = ["guild_commands", "user_commands",
                  "admin_commands", "bot_extension"]
 for extension in EXTENSIONLIST:
     bot.load_extension(f"src.cogs.{extension}")
