@@ -56,7 +56,7 @@ def data_create():
     path = environ.get("DATAPATH")
     for filepath in ["/update", "/cfhandle", "/cchandle"]:
         with open(f"{path}{filepath}.json", "w", encoding="utf-8") as file:
-            file.write("{}")
+            file.write(r"{}")
 
 
 if __name__ == '__main__':

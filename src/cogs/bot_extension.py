@@ -10,7 +10,7 @@ load_dotenv()
 refresh_rate = float(environ.get("REFRESH_RATE"))
 
 
-class BotExtension:
+class BotExtension(commands.Cog):
     '''Tasks and listeners'''
 
     def __init__(self, bot: commands.Bot) -> None:
@@ -22,6 +22,7 @@ class BotExtension:
         await guild_funcs.refresh_roles_of_bot(bot=self.bot)
         print("Refreshed all guilds on: ", datetime.now())
 
+    @commands.slash_command(name="help")
     async def help_cmd(self, inter: disnake.CommandInteraction):
         '''/help: Show this help message'''
         msg = 'Here are several things I can do:'
@@ -37,28 +38,29 @@ class BotExtension:
 
         await inter.response.send_message(msg + "```" + "\n".join(help_msg) + "```")
 
+    @commands.Cog.listener()
     async def on_ready(self):
         '''Notify the user that the bot has logged in and start to periodically refresh roles'''
         print("Logged in")
-        if not self.refresh_role_loop.is_running():  # pylint: disable=no-member
-            self.refresh_role_loop.start()  # pylint: disable=no-member
+        if not self.refresh_role_loop.is_running(): # pylint: disable=no-member
+            self.refresh_role_loop.start() # pylint: disable=no-member
 
+    @commands.Cog.listener()
+    async def on_guild_join(self, guild: disnake.Guild): # pylint: disable=no-self-use
+        '''Add the bot to a guild'''
+        await guild_funcs.create_roles_in_guild(guild)
 
-async def on_guild_join(guild: disnake.Guild):
-    '''Add the bot to a guild'''
-    await guild_funcs.create_roles_in_guild(guild)
+    @commands.Cog.listener()
+    async def on_guild_remove(self, guild: disnake.Guild): # pylint: disable=no-self-use
+        '''Remove the bot from a guild'''
+        guild_funcs.remove_guild_data(guild.id)
 
-
-async def on_guild_remove(guild: disnake.Guild):
-    '''Remove the bot from a guild'''
-    guild_funcs.remove_guild_data(guild.id)
+    @commands.slash_command()
+    async def ping(self, inter: disnake.CommandInteraction):
+        '''/ping: Get the bot's latency'''
+        await inter.response.send_message(f"Pong! ({self.bot.latency * 1000:.0f}ms)")
 
 
 def setup(bot: commands.Bot):
     '''Add bot listeners and help cmd'''
-    bot.event(on_guild_join)
-    bot.event(on_guild_remove)
-
-    instance = BotExtension(bot)
-    bot.event(instance.on_ready)
-    bot.slash_command(name="help")(instance.help_cmd)
+    bot.add_cog(BotExtension(bot))
