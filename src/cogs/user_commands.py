@@ -1,4 +1,4 @@
-'''General commands regarding the bot'''
+'''General commands used by people'''
 from disnake.ext import commands
 import disnake
 from src.utils import user_funcs, cf_external
@@ -14,11 +14,6 @@ class UserCommand(commands.Cog):
     @commands.slash_command()
     async def user(self, inter: disnake.CommandInteraction, *args):
         '''Commands about an user'''
-
-    @commands.slash_command()  # TODO
-    async def ping(self, inter: disnake.CommandInteraction):  # pylint: disable=no-self-use
-        '''/gen ping: Get the bot's latency'''
-        await inter.response.send_message(f"Pong! ({inter.bot.latency * 1000:.0f}ms)")
 
     @user.sub_command()
     async def update(self, inter: disnake.CommandInteraction, user: disnake.User,  # pylint: disable=no-self-use

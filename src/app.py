@@ -17,7 +17,7 @@ token = environ.get("TOKEN")
 EXTENSIONLIST = ["bot_commands", "user_commands",
                  "admin_commands", "bot_extension"]
 for extension in EXTENSIONLIST:
-    bot.load_extension(f"src.{extension}")
+    bot.load_extension(f"src.cogs.{extension}")
 
 
 async def check_instance(request_url: str) -> bool:

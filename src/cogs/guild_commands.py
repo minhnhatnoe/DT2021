@@ -1,3 +1,4 @@
+'''Module for guild commands'''
 import disnake
 from disnake.ext import commands
 from src.utils import guild_funcs, user_funcs
@@ -12,11 +13,11 @@ class GuildCommand(commands.Cog):
 
     @commands.slash_command()
     async def guild(self, inter: disnake.CommandInteraction, *args):
-        '''General commands family'''
+        '''Guild commands family'''
     
     @guild.sub_command()
     async def refresh(self, inter: disnake.CommandInteraction):
-        '''/gen refresh: Refresh all color-based roles'''
+        '''/guild refresh: Refresh all color-based roles'''
         await inter.response.defer()
         await guild_funcs.refresh_roles_of_bot(self.bot)
         await inter.edit_original_message(content="All roles refreshed")
@@ -24,7 +25,7 @@ class GuildCommand(commands.Cog):
     @guild.sub_command()
     async def dump(self, inter: disnake.CommandInteraction,
                    choice: str = commands.Param(choices=UPDATECHOICELIST)):
-        '''/gen dump: Make the bot DM you a list off all Codeforces handles'''
+        '''/guild dump: Make the bot DM you a list off all handles from a platform'''
         data_dump = user_funcs.handle_database_dump(
             self.bot, UPDATECHOICES[choice])
         await inter.user.send(data_dump)
