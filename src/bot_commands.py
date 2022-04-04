@@ -11,24 +11,17 @@ class GuildCommand(commands.Cog):
         self.bot = bot
 
     @commands.slash_command()
-    async def user(self, inter: disnake.CommandInteraction, *args):
+    async def guild(self, inter: disnake.CommandInteraction, *args):
         '''General commands family'''
     
-    @user.sub_command()
+    @guild.sub_command()
     async def refresh(self, inter: disnake.CommandInteraction):
         '''/gen refresh: Refresh all color-based roles'''
         await inter.response.defer()
         await guild_funcs.refresh_roles_of_bot(self.bot)
         await inter.edit_original_message(content="All roles refreshed")
 
-    @user.sub_command() # TODO
-    async def clear(self, inter: disnake.CommandInteraction):  # pylint: disable=no-self-use
-        '''/gen clear: Clear all roles with matching names from server'''
-        await inter.response.defer()
-        await guild_funcs.remove_roles_in_guild(inter.guild)
-        await inter.edit_original_message(content="All roles cleared")
-
-    @user.sub_command()
+    @guild.sub_command()
     async def dump(self, inter: disnake.CommandInteraction,
                    choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/gen dump: Make the bot DM you a list off all Codeforces handles'''
@@ -40,4 +33,4 @@ class GuildCommand(commands.Cog):
 
 def setup(bot: commands.Bot):
     '''Add the "gen" cog'''
-    bot.add_cog(UserCommand(bot))
+    bot.add_cog(GuildCommand(bot))

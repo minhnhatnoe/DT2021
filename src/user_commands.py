@@ -15,7 +15,7 @@ class UserCommand(commands.Cog):
     async def user(self, inter: disnake.CommandInteraction, *args):
         '''Commands about an user'''
 
-    @commands.slash_command() # TODO
+    @commands.slash_command()  # TODO
     async def ping(self, inter: disnake.CommandInteraction):  # pylint: disable=no-self-use
         '''/gen ping: Get the bot's latency'''
         await inter.response.send_message(f"Pong! ({inter.bot.latency * 1000:.0f}ms)")
@@ -30,7 +30,7 @@ class UserCommand(commands.Cog):
 
     @user.sub_command()
     async def assign(self, inter: disnake.CommandInteraction,
-                     user: disnake.User, handle: str = "", 
+                     user: disnake.User, handle: str = "",
                      choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/cf assign <CF Handle>: Link user to handle, delete if blank'''
         await inter.response.defer()
@@ -67,6 +67,8 @@ class UserCommand(commands.Cog):
         else:
             embed_obj = await cf_external.generate_user_embed(self.bot, handle, user)
             await inter.response.send_message(embed=embed_obj)
+
+
 def setup(bot: commands.Bot):
     '''Add the "gen" cog'''
     bot.add_cog(UserCommand(bot))

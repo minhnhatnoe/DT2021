@@ -61,7 +61,6 @@ def member_handle_query(member: disnake.Member, handle_type: int):
 
 def align_string(name: disnake.User) -> str:
     '''Align strings as if using tab'''
-    name = name.display_name
     return name + " "*(20-len(name))
 
 

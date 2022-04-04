@@ -12,8 +12,10 @@ guilds = [int(v) for v in environ.get("TEST_GUILDS").split(",")]
 bot = commands.Bot(test_guilds=guilds, intents=disnake.Intents.all())
 token = environ.get("TOKEN")
 
-EXTENSIONLIST = ["general_cmd", "codeforces_cmd",
-                 "codechef_cmd", "bot_extension"]
+# EXTENSIONLIST = ["general_cmd", "codeforces_cmd",
+#                  "codechef_cmd", "bot_extension"]
+EXTENSIONLIST = ["bot_commands", "user_commands",
+                 "admin_commands", "bot_extension"]
 for extension in EXTENSIONLIST:
     bot.load_extension(f"src.{extension}")
 
@@ -34,14 +36,15 @@ def deploy():
 def local():
     '''Run in local mode'''
     deploy_server = environ.get("DEPLOY_ADDRESS", "None")
-    check = False
+    check: bool
     if deploy_server != "None":
         print(
             f"Checking live deployment at {deploy_server}. Disable this by removing the variable named DEPLOY_ADDRESS in .env!")  # pylint: disable=line-too-long
         async_process = check_instance(deploy_server)
         event_loop = asyncio.get_event_loop()
         check = event_loop.run_until_complete(async_process)
-
+    else: check = True
+    
     if check:
         bot.run(token)
     else:
