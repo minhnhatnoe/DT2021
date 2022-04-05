@@ -1,5 +1,8 @@
 '''Codeforces API interaction'''
+import asyncio
 import json
+import hashlib
+import secrets
 from typing import Dict, List
 import disnake
 from disnake import Embed
@@ -53,3 +56,23 @@ async def generate_user_embed(bot: commands.Bot, handle: str, member: disnake.Me
             if data[field] != "":
                 obj.add_field(field.title(), data[field])
     return obj
+
+
+async def verify(bot: commands.Bot, member: disnake.Member, handle: str) -> bool:
+    '''Perform verification process, assuming handle exist'''
+    salt = secrets.token_bytes(16)
+    hash_str = f"{salt}{member.id}-dt2021-verify".encode("utf-8")
+    hash_val = hashlib.md5(hash_str).hexdigest()
+    await member.send(
+        f"Temporarily change your First name (English) to \
+{hash_val} in https://codeforces.com/settings/social within the next minute")
+    for _ in range(7):
+        await asyncio.sleep(10)
+        new_name = await get_user_data_from_net(bot, [handle])
+        try:
+            new_name = new_name[0]["firstName"]
+        except KeyError:
+            continue
+        if new_name == hash_val:
+            return True
+    return False

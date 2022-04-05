@@ -33,9 +33,13 @@ class UserCommand(commands.Cog):
         try:
             embed_obj = await user_functions.generate_user_embed(
                 self.bot, handle, user, choice_id)
-            user_functions.member_handle_record(user, handle, choice_id)
-            await inter.edit_original_message(
-                content=f"{user.mention} linked with {handle}", embed=embed_obj)
+            verify_result = await user_functions.verify(self.bot, user, handle, choice_id)
+            if verify_result:
+                user_functions.member_handle_record(user, handle, choice_id)
+                await inter.edit_original_message(
+                    content=f"{user.mention} linked with {handle}", embed=embed_obj)
+            else:
+                await inter.edit_original_message(content="Verification failed. Restart if needed")
 
         except codeforces_external.CFApi as inst:
             message_content: str
@@ -47,7 +51,7 @@ class UserCommand(commands.Cog):
             await inter.edit_original_message(content=f"Error occured. Error code: {str(inst)}")
 
     @user.sub_command()
-    async def unassign(self, inter: disnake.CommandInteraction, user: disnake.User, # pylint: disable=no-self-use
+    async def unassign(self, inter: disnake.CommandInteraction, user: disnake.User,  # pylint: disable=no-self-use
                        choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/user unassign: Delete user's handle'''
         choice_id = UPDATECHOICES[choice]

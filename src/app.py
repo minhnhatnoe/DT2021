@@ -20,9 +20,13 @@ for extension in EXTENSIONLIST:
 
 async def check_instance(request_url: str) -> bool:
     '''Check if live deploy version is running'''
-    async with aiohttp.ClientSession() as session:
-        async with session.get(request_url) as response:
-            return response.status != 200
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(request_url) as response:
+                return response.status != 200
+    except Exception as inst: # pylint: disable=broad-except
+        print(f"Cannot reach deploy, error code: {inst}")
+        return True
 
 
 def deploy():

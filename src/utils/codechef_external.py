@@ -54,3 +54,8 @@ async def generate_user_embed(bot: commands.Bot, handle: str, member: disnake.Me
 
     obj.add_field("Handle", handle)
     return obj
+
+
+async def verify(bot: commands.Bot, member: disnake.Member, handle: str) -> bool: # pylint: disable=unused-argument
+    '''Placeholder function until someone finds out a way to verify Codechef accounts'''
+    return True
