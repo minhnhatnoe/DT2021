@@ -1,7 +1,7 @@
 '''Module for admin-only commands in guilds'''
 import disnake
 from disnake.ext import commands
-from src.utils import guild_funcs
+from src.utils import guild_functions
 
 
 class AdminCommands(commands.Cog):
@@ -19,7 +19,7 @@ class AdminCommands(commands.Cog):
         '''/admin clear: Clear all roles with matching names from server'''
         if inter.author.guild_permissions.administrator:
             await inter.response.defer()
-            await guild_funcs.remove_roles_in_guild(inter.guild)
+            await guild_functions.remove_roles_in_guild(inter.guild)
             await inter.edit_original_message(content="All roles cleared")
         else:
             await inter.response.send_message("You're not an admin, why bother with this?")

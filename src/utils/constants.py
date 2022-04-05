@@ -27,4 +27,4 @@ UPDATECHOICES = {
     "Codechef": 2
 }
 
-UPDATECHOICELIST = list(UPDATECHOICES)
+UPDATECHOICELIST = [name for name in UPDATECHOICES if name != "None"]
