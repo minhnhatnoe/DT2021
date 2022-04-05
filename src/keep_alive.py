@@ -9,6 +9,7 @@ app = Flask('')
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
+
 @app.route('/')
 def main():
     '''The returned page'''
@@ -23,5 +24,5 @@ def run():
 def keep_alive():
     '''Function to be called by main'''
     server = Thread(target=run)
-    server.daemon=True
+    server.daemon = True
     server.start()
