@@ -1,5 +1,4 @@
 '''General commands used by people'''
-from email import message
 from disnake.ext import commands
 import disnake
 from src.utils import codeforces_external, codechef_external, user_functions
@@ -19,7 +18,7 @@ class UserCommand(commands.Cog):
     @user.sub_command()
     async def update(self, inter: disnake.CommandInteraction, user: disnake.User,  # pylint: disable=no-self-use
                      choice: str = commands.Param(choices=UPDATECHOICELIST)):
-        '''/gen update @<Discord>: Add someone to the handle update list without mention'''
+        '''/user update @<Discord>: Add someone to the handle update list without mention'''
         user_functions.user_update_choice_change(user, UPDATECHOICES[choice])
         message_content = f"{user.display_name} has been added to the update with {choice}"
         await inter.response.send_message(message_content)
@@ -28,7 +27,7 @@ class UserCommand(commands.Cog):
     async def assign(self, inter: disnake.CommandInteraction,
                      user: disnake.User, handle: str,
                      choice: str = commands.Param(choices=UPDATECHOICELIST)):
-        '''/cf assign <CF Handle>: Link user to handle'''
+        '''/user assign <CF Handle>: Link user to handle'''
         await inter.response.defer()
         choice_id = UPDATECHOICES[choice]
         try:
@@ -41,14 +40,14 @@ class UserCommand(commands.Cog):
         except codeforces_external.CFApi as inst:
             message_content: str
             if str(inst) == "Handle Error":
-                message_content = f"Check provided handle"
+                message_content = "Check provided handle"
             await inter.edit_original_message(content=message_content)
 
         except codechef_external.CCApi as inst:
             await inter.edit_original_message(content=f"Error occured. Error code: {str(inst)}")
 
     @user.sub_command()
-    async def unassign(self, inter: disnake.CommandInteraction, user: disnake.User,
+    async def unassign(self, inter: disnake.CommandInteraction, user: disnake.User, # pylint: disable=no-self-use
                        choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/user unassign: Delete user's handle'''
         choice_id = UPDATECHOICES[choice]

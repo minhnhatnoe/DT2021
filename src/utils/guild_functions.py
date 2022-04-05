@@ -26,7 +26,8 @@ async def refresh_roles_of_bot(bot: commands.Bot) -> None:
 
     # Get handles of queries
     for platform in [1, 2]:
-        user_functions.write_handle_attr_to_dict(change_queries[platform], platform)
+        user_functions.write_handle_attr_to_dict(
+            change_queries[platform], platform)
 
     # Get role to change of queries
     for platform in [1, 2]:

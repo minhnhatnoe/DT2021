@@ -42,16 +42,16 @@ class BotExtension(commands.Cog):
     async def on_ready(self):
         '''Notify the user that the bot has logged in and start to periodically refresh roles'''
         print("Logged in")
-        if not self.refresh_role_loop.is_running(): # pylint: disable=no-member
-            self.refresh_role_loop.start() # pylint: disable=no-member
+        if not self.refresh_role_loop.is_running():  # pylint: disable=no-member
+            self.refresh_role_loop.start()  # pylint: disable=no-member
 
     @commands.Cog.listener()
-    async def on_guild_join(self, guild: disnake.Guild): # pylint: disable=no-self-use
+    async def on_guild_join(self, guild: disnake.Guild):  # pylint: disable=no-self-use
         '''Add the bot to a guild'''
         await guild_functions.create_roles_in_guild(guild)
 
     @commands.Cog.listener()
-    async def on_guild_remove(self, guild: disnake.Guild): # pylint: disable=no-self-use
+    async def on_guild_remove(self, guild: disnake.Guild):  # pylint: disable=no-self-use
         '''Remove the bot from a guild'''
         guild_functions.remove_guild_data(guild.id)
 

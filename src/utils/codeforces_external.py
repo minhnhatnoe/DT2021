@@ -30,27 +30,26 @@ async def get_user_data_from_net(bot: commands.Bot, user_list: List) -> Dict:
             person["rank"] = "unrated"
     return data
 
-class CodeForcesEmbed:
-    '''Class for embed generation'''
-    async def generate_user_embed(bot: commands.Bot, handle: str, member: disnake.Member) -> Embed:
-        '''Create an embed that represent a Codeforces user'''
-        data = await get_user_data_from_net(bot, [handle])
-        data = data[0]
-        obj = Embed(
-            title=member.display_name,
-            color=RANKCOLOR[data["rank"]],
-            description=data["rank"].title())
 
-        obj.set_thumbnail(url=data["titlePhoto"])
+async def generate_user_embed(bot: commands.Bot, handle: str, member: disnake.Member) -> Embed:
+    '''Create an embed that represent a Codeforces user'''
+    data = await get_user_data_from_net(bot, [handle])
+    data = data[0]
+    obj = Embed(
+        title=member.display_name,
+        color=RANKCOLOR[data["rank"]],
+        description=data["rank"].title())
 
-        if "firstName" in data and "lastName" in data:
-            name = f'{data["firstName"]} {data["lastName"]}'
-            if name != " ":
-                obj.add_field("Name", name)
+    obj.set_thumbnail(url=data["titlePhoto"])
 
-        fields = ["handle", "country", "city", "organization", "rating"]
-        for field in fields:
-            if field in data:
-                if data[field] != "":
-                    obj.add_field(field.title(), data[field])
-        return obj
+    if "firstName" in data and "lastName" in data:
+        name = f'{data["firstName"]} {data["lastName"]}'
+        if name != " ":
+            obj.add_field("Name", name)
+
+    fields = ["handle", "country", "city", "organization", "rating"]
+    for field in fields:
+        if field in data:
+            if data[field] != "":
+                obj.add_field(field.title(), data[field])
+    return obj

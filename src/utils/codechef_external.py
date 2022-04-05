@@ -7,6 +7,7 @@ from disnake.ext import commands
 from src.utils import network
 from src.utils.constants import RANKCOLOR
 
+
 class CCApi(Exception):
     "Base class for all exception raised from getting information from Codechef"
 
@@ -42,15 +43,14 @@ async def get_user_role_name(bot: commands.Bot, username: str) -> str:
     star_text = star_text.replace('★', '*')
     return f"Codechef {star_text}"
 
-class CodeChefEmbed:
-    '''Class for Embed generation'''
-    async def generate_user_embed(bot: commands.Bot, handle: str, member: disnake.Member) -> Embed:
-        '''Generate user Embed from Codechef data'''
-        rank_text = await get_user_role_name(bot, handle)
-        obj = Embed(
-            title=member.display_name,
-            color=RANKCOLOR[rank_text],
-            description=rank_text.title())
 
-        obj.add_field("Handle", handle)
-        return obj
+async def generate_user_embed(bot: commands.Bot, handle: str, member: disnake.Member) -> Embed:
+    '''Generate user Embed from Codechef data'''
+    rank_text = await get_user_role_name(bot, handle)
+    obj = Embed(
+        title=member.display_name,
+        color=RANKCOLOR[rank_text],
+        description=rank_text.title())
+
+    obj.add_field("Handle", handle)
+    return obj

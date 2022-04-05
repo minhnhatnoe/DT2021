@@ -6,11 +6,12 @@ from disnake.ext import commands
 from src.utils.bot_funcs import Presence
 
 # To bypass codechef's anti-crawler
-HEADERS = {"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36 Edg/99.0.1150.36"}  # pylint: disable=line-too-long
+HEADERS = {
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36 Edg/99.0.1150.36"}  # pylint: disable=line-too-long
 
 
 async def get_net(bot: commands.Bot, request_url: str, trial: Callable,
-                  exception_to_catch = aiohttp.ClientPayloadError):
+                  exception_to_catch=aiohttp.ClientPayloadError):
     '''Get data with expo backoff. Catch is list of exception. Trial is function to try catch'''
 
     backoff_period = 1

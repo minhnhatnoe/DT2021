@@ -41,7 +41,8 @@ def local():
         async_process = check_instance(deploy_server)
         event_loop = asyncio.get_event_loop()
         check = event_loop.run_until_complete(async_process)
-    else: check = True
+    else:
+        check = True
 
     if check:
         bot.run(token)

@@ -2,10 +2,9 @@
 import disnake
 from disnake import Embed
 from disnake.ext import commands
-from src.utils import json_file
+from src.utils import json_file, codechef_external, codeforces_external
 from src.utils.constants import RANKCOLOR
-from src.utils.codechef_external import CodeChefEmbed
-from src.utils.codeforces_external import CodeForcesEmbed
+
 
 def user_update_choice_change(member: disnake.Member, update_type: int):
     '''Add user to update list. 0 is None, 1 is Codeforces, 2 is Codechef'''
@@ -88,12 +87,17 @@ def write_handle_attr_to_dict(users, handle_type: int):
         else:
             user_data["handle"] = None
 
-def generate_user_embed(bot: commands.Bot, handle: str, member: disnake.Member, choice_id: int) -> Embed:
-    embed_generator: function
+
+def generate_user_embed(bot: commands.Bot, handle: str,
+                        member: disnake.Member, choice_id: int) -> Embed:
+    '''Generate an user embed'''
+    # I dont know how to declare a function without pylint warning
+    embed_generator: codeforces_external.generate_user_embed
+
     if choice_id == 1:
-        embed_generator = CodeForcesEmbed.generate_user_embed
+        embed_generator = codeforces_external.generate_user_embed
     elif choice_id == 2:
-        embed_generator = CodeChefEmbed.generate_user_embed
+        embed_generator = codechef_external.generate_user_embed
     else:
         raise Exception("Invalid choice")
     return embed_generator(bot, handle, member)
