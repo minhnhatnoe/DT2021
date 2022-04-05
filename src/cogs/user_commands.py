@@ -37,7 +37,7 @@ class UserCommand(commands.Cog):
             user_functions.member_handle_record(user, handle, choice_id)
             await inter.edit_original_message(
                 content=f"{user.mention} linked with {handle}", embed=embed_obj)
-        
+
         except codeforces_external.CFApi as inst:
             message_content: str
             if str(inst) == "Handle Error":
@@ -48,24 +48,24 @@ class UserCommand(commands.Cog):
             await inter.edit_original_message(content=f"Error occured. Error code: {str(inst)}")
 
     @user.sub_command()
-    async def unassign(self, inter: disnake.CommandInteraction,
-                       user: disnake.User,
+    async def unassign(self, inter: disnake.CommandInteraction, user: disnake.User,
                        choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/user unassign: Delete user's handle'''
         choice_id = UPDATECHOICES[choice]
         user_functions.member_handle_record(user, "", choice_id)
         await inter.response.send_message(content=f"{user.mention} is unlinked")
-    
-    @user.sub_command()
-    async def info(self, inter: disnake.CommandInteraction, user: disnake.User):
-        '''/cf info @<Discord>: Get someone's CF handle'''
 
-        handle = user_functions.member_handle_query(user, 1)
+    @user.sub_command()
+    async def info(self, inter: disnake.CommandInteraction, user: disnake.User,
+                   choice: str = commands.Param(choices=UPDATECHOICELIST)):
+        '''/cf info @<Discord>: Get someone's CF handle'''
+        choice_id = UPDATECHOICES[choice]
+        handle = user_functions.member_handle_query(user, choice_id)
         if handle is None:
             message_content = f"{user.mention} not introduced yet"
             await inter.response.send_message(content=message_content)
         else:
-            embed_obj = await codeforces_external.CodeForcesEmbed.generate_user_embed(self.bot, handle, user)
+            embed_obj = await user_functions.generate_user_embed(self.bot, handle, user, choice_id)
             await inter.response.send_message(embed=embed_obj)
 
 
