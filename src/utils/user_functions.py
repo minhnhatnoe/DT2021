@@ -101,3 +101,11 @@ def generate_user_embed(bot: commands.Bot, handle: str,
     else:
         raise Exception("Invalid choice")
     return embed_generator(bot, handle, member)
+
+
+async def verify(bot: commands.Bot, member: disnake.Member, handle: str, choice_id: int) -> bool:
+    '''Perform verification process, assuming handle exist'''
+    if choice_id == 1:
+        return await codeforces_external.verify(bot, member, handle)
+    if choice_id == 2:
+        return await codechef_external.verify(bot, member, handle)
