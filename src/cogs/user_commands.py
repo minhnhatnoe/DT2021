@@ -58,7 +58,7 @@ class UserCommand(commands.Cog):
     @user.sub_command()
     async def info(self, inter: disnake.CommandInteraction, user: disnake.User,
                    choice: str = commands.Param(choices=UPDATECHOICELIST)):
-        '''/cf info @<Discord>: Get someone's CF handle'''
+        '''/user info @<Discord>: Get someone's CF handle'''
         choice_id = UPDATECHOICES[choice]
         handle = user_functions.member_handle_query(user, choice_id)
         if handle is None:
