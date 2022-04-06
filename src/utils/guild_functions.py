@@ -2,7 +2,8 @@
 from typing import Dict, List
 import disnake
 from disnake.ext import commands
-from src.utils import codechef_external, codeforces_external, json_file, user_functions
+from src.utils import user_functions, handle_functions
+from src.utils import codechef_external, codeforces_external, json_file
 from src.utils.constants import RANKCOLOR, UPDATECHOICES
 
 
@@ -14,11 +15,9 @@ async def refresh_roles_of_bot(bot: commands.Bot) -> None:
     change_queries = {key: {} for key in UPDATECHOICES.values()}
     # Get the list of users and partition them to the respective platform
     for guild_id, users in task_list.items():
-        guild = bot.get_guild(int(guild_id))
+        guild = await standardize_guild(bot, guild_id)
         if guild is None:
             continue
-        
-        await create_roles_in_guild(guild)
         for user_id, user_choice in users.items():
             user = guild.get_member(int(user_id))
             if user is None:
@@ -26,18 +25,25 @@ async def refresh_roles_of_bot(bot: commands.Bot) -> None:
             change_queries[user_choice][(user, guild)] = {}
 
     # Get handles of queries
-    for platform in [1, 2]:
-        user_functions.write_handle_attr_to_dict(
+    for platform in change_queries:
+        handle_functions.write_handle_attr_to_dict(
             change_queries[platform], platform)
 
     # Get role to change of queries
-    for platform in [1, 2]:
+    for platform in change_queries:
         await write_role_attr_to_dict(bot, change_queries[platform], platform)
         for (user, guild), user_data in change_queries[platform].items():
             if "role" in user_data:
                 role = user_data["role"]
                 await user_functions.member_assign_role(user, [role])
 
+async def standardize_guild(bot: commands.Bot, guild_id: int):
+    '''Make roles in a guild and return that guild'''
+    guild = bot.get_guild(int(guild_id))
+    if guild is None:
+        return None
+    await create_roles_in_guild(guild)
+    return guild
 
 def get_role_with_name(guild: disnake.Guild, role_name: str) -> disnake.Role:
     '''Get role with specified name from a guild. Returns disnake.Role obj'''
@@ -63,8 +69,7 @@ async def write_role_attr_to_dict(bot: commands.Bot, platform_queries: Dict, pla
             continue
         handle = handle.lower()
         role_name = ranks_dict[handle]
-        role = get_role_with_name(guild, role_name)
-        person_data["role"] = role
+        person_data["role"] = get_role_with_name(guild, role_name)
 
 
 async def generate_dict_of_rank(bot: commands.Bot, user_list: List, handle_type: int) -> Dict:

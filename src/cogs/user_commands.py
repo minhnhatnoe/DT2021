@@ -1,7 +1,8 @@
 '''General commands used by people'''
 from disnake.ext import commands
 import disnake
-from src.utils import codeforces_external, codechef_external, user_functions
+from src.utils import codeforces_external, codechef_external
+from src.utils import user_functions, handle_functions
 from src.utils.constants import UPDATECHOICES, UPDATECHOICELIST
 
 
@@ -35,7 +36,8 @@ class UserCommand(commands.Cog):
                 self.bot, handle, user, choice_id)
             verify_result = await user_functions.verify(self.bot, user, handle, choice_id)
             if verify_result:
-                user_functions.member_handle_record(user, handle, choice_id)
+                handle_functions.member_handle_record(user, handle, choice_id)
+                user_functions.user_update_choice_change(user, choice_id)
                 await inter.edit_original_message(
                     content=f"{user.mention} linked with {handle}", embed=embed_obj)
             else:
@@ -55,7 +57,8 @@ class UserCommand(commands.Cog):
                        choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/user unassign: Delete user's handle'''
         choice_id = UPDATECHOICES[choice]
-        user_functions.member_handle_record(user, "", choice_id)
+        handle_functions.member_handle_record(user, "", choice_id)
+        user_functions.user_update_choice_change(user, 0)
         await inter.response.send_message(content=f"{user.mention} is unlinked")
 
     @user.sub_command()
@@ -63,7 +66,7 @@ class UserCommand(commands.Cog):
                    choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/user info @<Discord>: Get someone's CF handle'''
         choice_id = UPDATECHOICES[choice]
-        handle = user_functions.member_handle_query(user, choice_id)
+        handle = handle_functions.member_handle_query(user, choice_id)
         if handle is None:
             message_content = f"{user.mention} not introduced yet"
             await inter.response.send_message(content=message_content)
