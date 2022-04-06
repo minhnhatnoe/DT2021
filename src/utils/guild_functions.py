@@ -17,7 +17,7 @@ async def refresh_roles_of_bot(bot: commands.Bot) -> None:
     # Get role to change of queries
     for platform in PLATFORMIDS:
         await write_role_attr_to_dict(bot, change_queries[platform], platform)
-        for (user, guild), user_data in change_queries[platform].items():
+        for (user, _), user_data in change_queries[platform].items():
             if "role" in user_data:
                 role = user_data["role"]
                 await user_functions.member_assign_role(user, [role])
@@ -31,21 +31,24 @@ async def standardize_guild(bot: commands.Bot, guild_id: int):
     await create_roles_in_guild(guild)
     return guild
 
+
 async def create_refresh_job_list(bot: commands.Bot) -> Dict:
     task_list = json_file.load_from_json("/update")
+
     # Some sets of disnake.user - guild/handle/role pairs
     change_queries = {key: {} for key in UPDATECHOICES.values()}
+
     # Get the list of users and partition them to the respective platform
     for guild_id, users in task_list.items():
         guild = await standardize_guild(bot, guild_id)
-        if guild is None:
-            continue
-        for user_id, user_choice in users.items():
-            user = guild.get_member(int(user_id))
-            if user is None:
-                continue
-            change_queries[user_choice][(user, guild)] = {}
+        if guild is not None:
+            for user_id, user_choice in users.items():
+                user = guild.get_member(int(user_id))
+                if user is not None:
+                    change_queries[user_choice][(user, guild)] = {}
+    
     return change_queries
+
 
 def get_role_with_name(guild: disnake.Guild, role_name: str) -> disnake.Role:
     '''Get role with specified name from a guild. Returns disnake.Role obj'''
