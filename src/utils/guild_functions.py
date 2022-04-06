@@ -3,7 +3,7 @@ from typing import Dict, List
 import disnake
 from disnake.ext import commands
 from src.utils import codechef_external, codeforces_external, json_file, user_functions
-from src.utils.constants import RANKCOLOR
+from src.utils.constants import RANKCOLOR, UPDATECHOICES
 
 
 async def refresh_roles_of_bot(bot: commands.Bot) -> None:
@@ -11,12 +11,13 @@ async def refresh_roles_of_bot(bot: commands.Bot) -> None:
     task_list = json_file.load_from_json("/update")
 
     # Some sets of disnake.user - guild/handle/role pairs
-    change_queries = {0: {}, 1: {}, 2: {}}
+    change_queries = {key: {} for key in UPDATECHOICES.values()}
     # Get the list of users and partition them to the respective platform
     for guild_id, users in task_list.items():
         guild = bot.get_guild(int(guild_id))
         if guild is None:
             continue
+        
         await create_roles_in_guild(guild)
         for user_id, user_choice in users.items():
             user = guild.get_member(int(user_id))

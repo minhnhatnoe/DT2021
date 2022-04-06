@@ -24,7 +24,8 @@ RANKCOLOR = {
 UPDATECHOICES = {
     "None": 0,
     "Codeforces": 1,
-    "Codechef": 2
+    "Codechef": 2,
+    "Codefun": 4
 }
 
 UPDATECHOICELIST = [name for name in UPDATECHOICES if name != "None"]
