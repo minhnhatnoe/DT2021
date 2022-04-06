@@ -2,11 +2,16 @@
 import disnake
 from disnake.ext import commands
 from src.utils import json_file
+from src.utils.constants import PLATFORMIDS
 class Handle(Exception):
     '''Class for throwing handle-related Exceptions'''
 
 
-file_names = ["", "/cfhandle", "/cchandle"]
+file_names = {
+    1: "/cfhandle",
+    2: "/cchandle",
+    4: "/cfunhandle"
+}
 
 
 def member_handle_record(member: disnake.Member, handle: str, handle_type: int):
@@ -46,12 +51,13 @@ def handle_database_dump(bot: commands.Bot, handle_type: int):
     return message_content
 
 
-def write_handle_attr_to_dict(users, handle_type: int):
+def write_handle_attr_to_dict(change_queries):
     '''Query a bunch of user's handle, 1 is codeforces, 2 is codechef.
     Returns a dict of user_id-handle pair. If not found value is None'''
-    handle_dict = json_file.load_from_json(file_names[handle_type])
-    for (user, _), user_data in users.items():
-        if str(user.id) in handle_dict:
-            user_data["handle"] = handle_dict[str(user.id)]
-        else:
-            user_data["handle"] = None
+    for handle_type in PLATFORMIDS:
+        handle_dict = json_file.load_from_json(file_names[handle_type])
+        for (user, _), user_data in change_queries[handle_type].items():
+            if str(user.id) in handle_dict:
+                user_data["handle"] = handle_dict[str(user.id)]
+            else:
+                user_data["handle"] = None

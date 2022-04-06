@@ -29,3 +29,6 @@ UPDATECHOICES = {
 }
 
 UPDATECHOICELIST = [name for name in UPDATECHOICES if name != "None"]
+
+PLATFORMIDS = [handle_type for handle_type in UPDATECHOICES.values()
+               if handle_type != 0]

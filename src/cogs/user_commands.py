@@ -42,7 +42,6 @@ class UserCommand(commands.Cog):
                     content=f"{user.mention} linked with {handle}", embed=embed_obj)
             else:
                 await inter.edit_original_message(content="Verification failed. Restart if needed")
-
         except codeforces_external.CFApi as inst:
             message_content: str
             if str(inst) == "Handle Error":
