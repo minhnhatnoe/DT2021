@@ -25,6 +25,9 @@ class CodeChef:
         "Codechef 7*": 0x000000
     }
 
+    PLATFORM_NAME = "Codechef"
+    HANDLE_FILE_NAME = "/cchandle"
+
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 

@@ -50,6 +50,8 @@ class CodeForces:
         "legendary grandmaster": 0xAA0000
     }
 
+    PLATFORM_NAME = "Codeforces"
+    HANDLE_FILE_NAME = "/cfhandle"
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 

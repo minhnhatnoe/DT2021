@@ -2,8 +2,8 @@
 import disnake
 from disnake import Embed
 from disnake.ext import commands
-from src.utils import json_file
 from src.utils.constants import RANKCOLOR, PLATFORM_CLASS
+from src.utils import json_file
 
 
 def user_update_choice_change(member: disnake.Member, update_type: int):
@@ -35,7 +35,7 @@ def generate_user_embed(bot: commands.Bot, handle: str,
                         member: disnake.Member, choice_id: int) -> Embed:
     '''Generate an user embed'''
     platform_class = PLATFORM_CLASS[choice_id](bot)
-    return platform_class(handle, member)
+    return platform_class.generate_user_embed(handle, member)
 
 
 async def verify(bot: commands.Bot, member: disnake.Member, handle: str, choice_id: int) -> bool:

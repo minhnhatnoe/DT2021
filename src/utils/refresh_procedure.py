@@ -1,10 +1,10 @@
 '''Procedure for all role refresh'''
 from typing import Dict, List
 from disnake.ext import commands
-from src.platforms import codechef_external, codeforces_external
+from src.utils.constants import PLATFORMIDS, UPDATECHOICES
+from src.platforms import codechef_external, codeforces_external, codefun_external
 from src.utils import user_functions, handle_functions, guild_functions, \
     json_file
-from src.utils.constants import PLATFORMIDS, UPDATECHOICES
 
 
 async def refresh_roles_of_bot(bot: commands.Bot) -> None:
@@ -46,24 +46,20 @@ async def write_role_attr_to_dict(bot: commands.Bot, platform_queries: Dict, pla
     The key is user, guild for hashing'''
     handle_list = []
     for person_data in platform_queries.values():
-        if person_data["handle"] is not None:
-            handle_list.append(person_data["handle"])
+        handle_list.append(person_data["handle"])
 
     ranks_dict = await generate_dict_of_rank(bot, handle_list, platform)
-
     for (_, guild), person_data in platform_queries.items():
-        handle = person_data["handle"]
-        if handle is None:
-            continue
-        handle = handle.lower()
+        handle = person_data["handle"].lower()
         role_name = ranks_dict[handle]
-        person_data["role"] = guild_functions.get_role_with_name(
-            guild, role_name)
+        person_data["role"] = \
+            guild_functions.get_role_with_name(guild, role_name)
 
 
-async def generate_dict_of_rank(bot: commands.Bot, user_list: List, handle_type: int) -> Dict:
+async def generate_dict_of_rank(bot: commands.Bot, user_list: List, handle_type: int) -> Dict: # TODO
     '''Generate a dict of handle-rank, accepting list of str only'''
     result = {}
+    # Codeforces allows bulk retrival
     if handle_type == 1:
         data = await codeforces_external.get_user_data_from_net(bot, user_list)
         for person in data:
@@ -75,4 +71,8 @@ async def generate_dict_of_rank(bot: commands.Bot, user_list: List, handle_type:
             handle = person.lower()
             result[handle] = await codechef_external.get_user_role_name(bot, handle)
 
+    elif handle_type == 4:
+        for person in user_list:
+            handle = person.lower()
+            result[handle] = await codefun_external.CodeFun(bot).get_rank(handle)
     return result

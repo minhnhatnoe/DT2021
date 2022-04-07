@@ -6,15 +6,17 @@ from src.platforms.codeforces_external import CodeForces
 PLATFORM_CLASS = {
     1: CodeForces,
     2: CodeChef,
-    3: CodeFun
+    4: CodeFun
 }
 
 RANKCOLOR = {}
 UPDATECHOICES = {"None": 0}
+HANDLE_FILES = {}
 
-for platform in PLATFORM_CLASS.values():
+for platform_id, platform in PLATFORM_CLASS.items():
     RANKCOLOR |= platform.RANKCOLOR
-    UPDATECHOICES |= platform.PLATFORM_CODE
+    UPDATECHOICES[platform.PLATFORM_NAME] = platform_id
+    HANDLE_FILES[platform_id] = platform.HANDLE_FILE_NAME
 
 UPDATECHOICELIST = [name for name in UPDATECHOICES if name != "None"]
 

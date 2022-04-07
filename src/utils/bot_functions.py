@@ -1,5 +1,4 @@
 '''Bot object functions'''
-from xmlrpc.client import Boolean
 import disnake
 from disnake.ext import commands
 
@@ -21,7 +20,7 @@ class Presence:
         '''Return self for with statements'''
         return self
 
-    async def __aexit__(self, ex_type, value, traceback) -> Boolean:
+    async def __aexit__(self, ex_type, value, traceback) -> bool:
         '''Switch back to default presence'''
         await self.presence_change("Normal as always")
         return ex_type is None
