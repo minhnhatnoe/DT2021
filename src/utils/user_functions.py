@@ -46,9 +46,13 @@ def generate_user_embed(bot: commands.Bot, handle: str,
     return embed_generator(bot, handle, member)
 
 
+PLATFORM_CLASS = {
+    1: codeforces_external.CodeForces,
+    2: codechef_external.CodeChef
+}
+
+
 async def verify(bot: commands.Bot, member: disnake.Member, handle: str, choice_id: int) -> bool:
     '''Perform verification process, assuming handle exist'''
-    if choice_id == 1:
-        return await codeforces_external.verify(bot, member, handle)
-    if choice_id == 2:
-        return await codechef_external.verify(bot, member, handle)
+    platform_class = PLATFORM_CLASS[choice_id](bot)
+    return await platform_class.verify(member, handle)

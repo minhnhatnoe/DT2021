@@ -56,6 +56,11 @@ async def generate_user_embed(bot: commands.Bot, handle: str, member: disnake.Me
     return obj
 
 
-async def verify(bot: commands.Bot, member: disnake.Member, handle: str) -> bool: # pylint: disable=unused-argument
-    '''Placeholder function until someone finds out a way to verify Codechef accounts'''
-    return True
+class CodeChef:
+    '''CodeChef-related tasks'''
+    def __init__(self, bot: commands.Bot) -> None:
+        self.bot = bot
+
+    async def verify(self, member: disnake.Member, handle: str) -> bool:  # pylint: disable=unused-argument, no-self-use
+        '''Placeholder function until someone finds out a way to verify Codechef accounts'''
+        return True

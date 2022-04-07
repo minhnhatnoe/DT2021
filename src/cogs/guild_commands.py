@@ -1,7 +1,7 @@
 '''Module for guild commands'''
 import disnake
 from disnake.ext import commands
-from src.utils import guild_functions, handle_functions
+from src.utils import handle_functions, refresh_procedure
 from src.utils.constants import UPDATECHOICES, UPDATECHOICELIST
 
 
@@ -19,7 +19,7 @@ class GuildCommand(commands.Cog):
     async def refresh(self, inter: disnake.CommandInteraction):
         '''/guild refresh: Refresh all color-based roles'''
         await inter.response.defer()
-        await guild_functions.refresh_roles_of_bot(self.bot)
+        await refresh_procedure.refresh_roles_of_bot(self.bot)
         await inter.edit_original_message(content="All roles refreshed")
 
     @guild.sub_command()
