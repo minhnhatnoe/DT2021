@@ -7,11 +7,10 @@ from typing import Dict, List
 import disnake
 from disnake import Embed
 from disnake.ext import commands
-from src.utils.constants import RANKCOLOR
 from src.utils import network
 
 
-class CFApi(Exception):
+class CodeForcesApi(Exception):
     "Base class for all exception raised from communicating with CF API"
 
 
@@ -21,11 +20,11 @@ async def get_user_data_from_net(bot: commands.Bot, user_list: List) -> Dict:
     try:
         from_net = await network.get_net(bot, request_url, json.loads, json.JSONDecodeError)
     except Exception as ex_type:
-        raise CFApi(Exception("Network Error")) from ex_type
+        raise CodeForcesApi(Exception("Network Error")) from ex_type
 
     json_data = json.loads(from_net)
     if json_data["status"] == "FAILED":
-        raise CFApi(Exception("Handle Error"))
+        raise CodeForcesApi(Exception("Handle Error"))
 
     data = json_data["result"]
     for person in data:
@@ -34,32 +33,23 @@ async def get_user_data_from_net(bot: commands.Bot, user_list: List) -> Dict:
     return data
 
 
-async def generate_user_embed(bot: commands.Bot, handle: str, member: disnake.Member) -> Embed:
-    '''Create an embed that represent a Codeforces user'''
-    data = await get_user_data_from_net(bot, [handle])
-    data = data[0]
-    obj = Embed(
-        title=member.display_name,
-        color=RANKCOLOR[data["rank"]],
-        description=data["rank"].title())
-
-    obj.set_thumbnail(url=data["titlePhoto"])
-
-    if "firstName" in data and "lastName" in data:
-        name = f'{data["firstName"]} {data["lastName"]}'
-        if name != " ":
-            obj.add_field("Name", name)
-
-    fields = ["handle", "country", "city", "organization", "rating"]
-    for field in fields:
-        if field in data:
-            if data[field] != "":
-                obj.add_field(field.title(), data[field])
-    return obj
-
-
 class CodeForces:
     '''CodeForces-related tasks'''
+
+    RANKCOLOR = {
+        "unrated": 0x000000,
+        "newbie": 0xCCCCCC,
+        "pupil": 0x77FF77,
+        "specialist": 0x77DDBB,
+        "expert": 0xAAAAFF,
+        "candidate master": 0xFF88FF,
+        "master": 0xFFCC88,
+        "international master": 0xFFBB55,
+        "grandmaster": 0xFF7777,
+        "international grandmaster": 0xFF3333,
+        "legendary grandmaster": 0xAA0000
+    }
+
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
@@ -81,3 +71,26 @@ class CodeForces:
             if new_name == hash_val:
                 return True
         return False
+
+    async def generate_user_embed(self, handle: str, member: disnake.Member) -> Embed:
+        '''Create an embed that represent a Codeforces user'''
+        data = await get_user_data_from_net(self.bot, [handle])
+        data = data[0]
+        obj = Embed(
+            title=member.display_name,
+            color=self.RANKCOLOR[data["rank"]],
+            description=data["rank"].title())
+
+        obj.set_thumbnail(url=data["titlePhoto"])
+
+        if "firstName" in data and "lastName" in data:
+            name = f'{data["firstName"]} {data["lastName"]}'
+            if name != " ":
+                obj.add_field("Name", name)
+
+        fields = ["handle", "country", "city", "organization", "rating"]
+        for field in fields:
+            if field in data:
+                if data[field] != "":
+                    obj.add_field(field.title(), data[field])
+        return obj

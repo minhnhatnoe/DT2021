@@ -1,8 +1,9 @@
 '''Procedure for all role refresh'''
 from typing import Dict, List
 from disnake.ext import commands
+from src.platforms import codechef_external, codeforces_external
 from src.utils import user_functions, handle_functions, guild_functions, \
-    codechef_external, codeforces_external, json_file
+    json_file
 from src.utils.constants import PLATFORMIDS, UPDATECHOICES
 
 

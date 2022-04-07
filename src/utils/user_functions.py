@@ -2,8 +2,8 @@
 import disnake
 from disnake import Embed
 from disnake.ext import commands
-from src.utils import json_file, codechef_external, codeforces_external
-from src.utils.constants import RANKCOLOR
+from src.utils import json_file
+from src.utils.constants import RANKCOLOR, PLATFORM_CLASS
 
 
 def user_update_choice_change(member: disnake.Member, update_type: int):
@@ -34,22 +34,8 @@ async def member_assign_role(member: disnake.Member, roles_to_add) -> None:
 def generate_user_embed(bot: commands.Bot, handle: str,
                         member: disnake.Member, choice_id: int) -> Embed:
     '''Generate an user embed'''
-    # I dont know how to declare a function without pylint warning
-    embed_generator: codeforces_external.generate_user_embed
-
-    if choice_id == 1:
-        embed_generator = codeforces_external.generate_user_embed
-    elif choice_id == 2:
-        embed_generator = codechef_external.generate_user_embed
-    else:
-        raise Exception("Invalid choice")
-    return embed_generator(bot, handle, member)
-
-
-PLATFORM_CLASS = {
-    1: codeforces_external.CodeForces,
-    2: codechef_external.CodeChef
-}
+    platform_class = PLATFORM_CLASS[choice_id](bot)
+    return platform_class(handle, member)
 
 
 async def verify(bot: commands.Bot, member: disnake.Member, handle: str, choice_id: int) -> bool:

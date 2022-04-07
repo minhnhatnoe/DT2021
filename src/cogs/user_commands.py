@@ -1,7 +1,8 @@
 '''General commands used by people'''
 from disnake.ext import commands
 import disnake
-from src.utils import codeforces_external, codechef_external
+from src.platforms import codechef_external
+from src.platforms import codeforces_external
 from src.utils import user_functions, handle_functions
 from src.utils.constants import UPDATECHOICES, UPDATECHOICELIST
 
@@ -42,13 +43,13 @@ class UserCommand(commands.Cog):
                     content=f"{user.mention} linked with {handle}", embed=embed_obj)
             else:
                 await inter.edit_original_message(content="Verification failed. Restart if needed")
-        except codeforces_external.CFApi as inst:
+        except codeforces_external.CodeForcesApi as inst:
             message_content: str
             if str(inst) == "Handle Error":
                 message_content = "Check provided handle"
             await inter.edit_original_message(content=message_content)
 
-        except codechef_external.CCApi as inst:
+        except codechef_external.CodeChefApi as inst:
             await inter.edit_original_message(content=f"Error occured. Error code: {str(inst)}")
 
     @user.sub_command()
