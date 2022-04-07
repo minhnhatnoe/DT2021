@@ -76,7 +76,7 @@ class CodeFun:
         return obj
 
 
-def process_rank(ratio: float) -> str:
+def process_rank(ratio: float) -> str: # TODO
     '''Get rank from solved problem ratio'''
     return "Codefun-Newbie"
 
