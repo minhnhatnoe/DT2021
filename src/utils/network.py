@@ -3,7 +3,7 @@ from asyncio import sleep
 from typing import Callable
 import aiohttp
 from disnake.ext import commands
-from src.utils.bot_funcs import Presence
+from src.utils.bot_functions import Presence
 
 # To bypass codechef's anti-crawler
 HEADERS = {
@@ -21,6 +21,8 @@ async def get_net(bot: commands.Bot, request_url: str, trial: Callable,
                 from_net: str
                 async with aiohttp.ClientSession(headers=HEADERS) as session:
                     async with session.get(request_url) as response:
+                        if response.status == 404:
+                            raise Exception("Not Found")
                         from_net = await response.text()
                 trial(from_net)
                 return from_net
@@ -28,6 +30,6 @@ async def get_net(bot: commands.Bot, request_url: str, trial: Callable,
                 if backoff_period >= 256:  # 9 is limit due to Discord's 900sec limit
                     raise Exception("Backoff timeout") from ex_type
                 await bot_state.presence_change(
-                    f"CF server down, waiting for {backoff_period} seconds")
+                    f"Server down, waiting for {backoff_period} seconds")
                 await sleep(backoff_period)
                 backoff_period *= 2

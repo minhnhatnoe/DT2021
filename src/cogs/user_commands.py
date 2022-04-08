@@ -1,8 +1,10 @@
 '''General commands used by people'''
 from disnake.ext import commands
 import disnake
-from src.utils import codeforces_external, codechef_external, user_functions
-from src.utils.constants import UPDATECHOICES, UPDATECHOICELIST
+from src.platforms import codechef_external
+from src.platforms import codeforces_external
+from src.utils import user_functions, handle_functions
+from src.utils.platform_class import UPDATECHOICES, UPDATECHOICELIST
 
 
 class UserCommand(commands.Cog):
@@ -35,19 +37,21 @@ class UserCommand(commands.Cog):
                 self.bot, handle, user, choice_id)
             verify_result = await user_functions.verify(self.bot, user, handle, choice_id)
             if verify_result:
-                user_functions.member_handle_record(user, handle, choice_id)
+                handle_functions.member_handle_record(user, handle, choice_id)
+                user_functions.user_update_choice_change(user, choice_id)
                 await inter.edit_original_message(
                     content=f"{user.mention} linked with {handle}", embed=embed_obj)
             else:
                 await inter.edit_original_message(content="Verification failed. Restart if needed")
-
-        except codeforces_external.CFApi as inst:
+        except codeforces_external.CodeForcesApi as inst:
             message_content: str
             if str(inst) == "Handle Error":
                 message_content = "Check provided handle"
+            else:
+                message_content = f"Error occurred, error code: {inst}"
             await inter.edit_original_message(content=message_content)
 
-        except codechef_external.CCApi as inst:
+        except codechef_external.CodeChefApi as inst:
             await inter.edit_original_message(content=f"Error occured. Error code: {str(inst)}")
 
     @user.sub_command()
@@ -55,7 +59,8 @@ class UserCommand(commands.Cog):
                        choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/user unassign: Delete user's handle'''
         choice_id = UPDATECHOICES[choice]
-        user_functions.member_handle_record(user, "", choice_id)
+        handle_functions.member_handle_record(user, "", choice_id)
+        user_functions.user_update_choice_change(user, 0)
         await inter.response.send_message(content=f"{user.mention} is unlinked")
 
     @user.sub_command()
@@ -63,7 +68,7 @@ class UserCommand(commands.Cog):
                    choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/user info @<Discord>: Get someone's CF handle'''
         choice_id = UPDATECHOICES[choice]
-        handle = user_functions.member_handle_query(user, choice_id)
+        handle = handle_functions.member_handle_query(user, choice_id)
         if handle is None:
             message_content = f"{user.mention} not introduced yet"
             await inter.response.send_message(content=message_content)

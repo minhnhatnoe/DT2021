@@ -1,10 +1,12 @@
 '''Entry point for application'''
-from os import environ
 import asyncio
+from os import environ
+
 import aiohttp
 from dotenv import load_dotenv
 import disnake
 from disnake.ext import commands
+
 from src import keep_alive
 
 load_dotenv()

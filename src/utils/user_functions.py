@@ -2,13 +2,15 @@
 import disnake
 from disnake import Embed
 from disnake.ext import commands
-from src.utils import json_file, codechef_external, codeforces_external
-from src.utils.constants import RANKCOLOR
+from src.utils.platform_class import RANKCOLOR, PLATFORM_CLASS
+from src.utils import json_file
 
 
 def user_update_choice_change(member: disnake.Member, update_type: int):
     '''Add user to update list. 0 is None, 1 is Codeforces, 2 is Codechef'''
     update_dict = json_file.load_from_json("/update")
+    if str(member.guild.id) not in update_dict:
+        update_dict[str(member.guild.id)] = {}
     update_dict[str(member.guild.id)][str(member.id)] = update_type
     json_file.write_to_json("/update", update_dict)
 
@@ -31,81 +33,14 @@ async def member_assign_role(member: disnake.Member, roles_to_add) -> None:
         await member.add_roles(*add_list)
 
 
-class Handle(Exception):
-    '''Class for throwing handle-related Exceptions'''
-
-
-file_names = ["", "/cfhandle", "/cchandle"]
-
-
-def member_handle_record(member: disnake.Member, handle: str, handle_type: int):
-    '''Assign handle to user, 1 is codeforces, 2 is codechef. Also changes update list'''
-    handle_dict = json_file.load_from_json(file_names[handle_type])
-    if handle == "":
-        if str(member.id) in handle_dict:
-            handle_dict.pop(str(member.id))
-        user_update_choice_change(member, 0)
-    else:
-        handle_dict[str(member.id)] = handle
-        user_update_choice_change(member, handle_type)
-    json_file.write_to_json(file_names[handle_type], handle_dict)
-
-
-def member_handle_query(member: disnake.Member, handle_type: int):
-    '''Query user's handle, 1 is codeforces, 2 is codechef'''
-    handle_dict = json_file.load_from_json(file_names[handle_type])
-
-    if str(member.id) not in handle_dict:
-        return None
-    return handle_dict[str(member.id)]
-
-
-def align_string(name: disnake.User) -> str:
-    '''Align strings as if using tab'''
-    return name + " "*(20-len(name))
-
-
-def handle_database_dump(bot: commands.Bot, handle_type: int):
-    '''Get a string containing all handles and respective usernames'''
-    handle_dict = json_file.load_from_json(file_names[handle_type])
-
-    message_content = '```\n'
-    for user_id, handle in handle_dict.items():
-        name = bot.get_user(int(user_id)).display_name
-        message_content += f'{align_string(name)}: {handle}\n'
-    message_content += '\n```'
-    return message_content
-
-
-def write_handle_attr_to_dict(users, handle_type: int):
-    '''Query a bunch of user's handle, 1 is codeforces, 2 is codechef.
-    Returns a dict of user_id-handle pair. If not found value is None'''
-    handle_dict = json_file.load_from_json(file_names[handle_type])
-    for (user, _), user_data in users.items():
-        if str(user.id) in handle_dict:
-            user_data["handle"] = handle_dict[str(user.id)]
-        else:
-            user_data["handle"] = None
-
-
 def generate_user_embed(bot: commands.Bot, handle: str,
                         member: disnake.Member, choice_id: int) -> Embed:
     '''Generate an user embed'''
-    # I dont know how to declare a function without pylint warning
-    embed_generator: codeforces_external.generate_user_embed
-
-    if choice_id == 1:
-        embed_generator = codeforces_external.generate_user_embed
-    elif choice_id == 2:
-        embed_generator = codechef_external.generate_user_embed
-    else:
-        raise Exception("Invalid choice")
-    return embed_generator(bot, handle, member)
+    platform_class = PLATFORM_CLASS[choice_id](bot)
+    return platform_class.generate_user_embed(handle, member)
 
 
 async def verify(bot: commands.Bot, member: disnake.Member, handle: str, choice_id: int) -> bool:
     '''Perform verification process, assuming handle exist'''
-    if choice_id == 1:
-        return await codeforces_external.verify(bot, member, handle)
-    if choice_id == 2:
-        return await codechef_external.verify(bot, member, handle)
+    platform_class = PLATFORM_CLASS[choice_id](bot)
+    return await platform_class.verify(member, handle)

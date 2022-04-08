@@ -1,8 +1,8 @@
 '''Module for guild commands'''
 import disnake
 from disnake.ext import commands
-from src.utils import guild_functions, user_functions
-from src.utils.constants import UPDATECHOICES, UPDATECHOICELIST
+from src.utils import handle_functions, refresh_procedure
+from src.utils.platform_class import UPDATECHOICES, UPDATECHOICELIST
 
 
 class GuildCommand(commands.Cog):
@@ -19,14 +19,14 @@ class GuildCommand(commands.Cog):
     async def refresh(self, inter: disnake.CommandInteraction):
         '''/guild refresh: Refresh all color-based roles'''
         await inter.response.defer()
-        await guild_functions.refresh_roles_of_bot(self.bot)
+        await refresh_procedure.refresh_roles_of_bot(self.bot)
         await inter.edit_original_message(content="All roles refreshed")
 
     @guild.sub_command()
     async def dump(self, inter: disnake.CommandInteraction,
                    choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/guild dump: Make the bot DM you a list off all handles from a platform'''
-        data_dump = user_functions.handle_database_dump(
+        data_dump = handle_functions.handle_database_dump(
             self.bot, UPDATECHOICES[choice])
         await inter.user.send(data_dump)
         await inter.response.send_message("Sent!")

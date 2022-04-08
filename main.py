@@ -2,6 +2,7 @@
 from sys import argv
 from src import app
 
+
 if __name__ == "__main__":
     if len(argv) == 1:
         print("Local mode")

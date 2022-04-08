@@ -4,7 +4,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 import disnake
 from disnake.ext import commands, tasks
-from src.utils import guild_functions
+from src.utils import guild_functions, refresh_procedure
 
 load_dotenv()
 refresh_rate = float(environ.get("REFRESH_RATE"))
@@ -19,7 +19,7 @@ class BotExtension(commands.Cog):
     @tasks.loop(minutes=refresh_rate)
     async def refresh_role_loop(self):
         '''Refresh all roles, periodically'''
-        await guild_functions.refresh_roles_of_bot(bot=self.bot)
+        await refresh_procedure.refresh_roles_of_bot(bot=self.bot)
         print("Refreshed all guilds on: ", datetime.now())
 
     @commands.slash_command(name="help")
