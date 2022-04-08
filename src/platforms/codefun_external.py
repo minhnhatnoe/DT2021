@@ -29,13 +29,9 @@ class CodeFun:
 
     PLATFORM_NAME = "Codefun"
     HANDLE_FILE_NAME = "/cfunhandle"
+
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
-
-    async def get_rank(self, handle: str):
-        data = await get_user_data_from_net(self.bot, handle)
-        rank = process_rank(data["ratio"])
-        return rank
 
     async def verify(self, member: disnake.Member, handle: str) -> bool:  # pylint: disable=unused-argument, no-self-use
         '''Initialize verification procedure'''
@@ -75,8 +71,16 @@ class CodeFun:
 
         return obj
 
+    async def generate_dict_of_rank(self, user_list) -> Dict:
+        '''Generate a rank dict from a list of usernames'''
+        result = {}
+        for person in user_list:
+            handle = person.lower()
+            data = await get_user_data_from_net(self.bot, handle)
+            result[handle] = process_rank(data["ratio"])
 
-def process_rank(ratio: float) -> str: # TODO
+
+def process_rank(ratio: float) -> str:  # TODO
     '''Get rank from solved problem ratio'''
     return "Codefun-Newbie"
 

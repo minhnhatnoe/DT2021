@@ -4,7 +4,7 @@ import disnake
 from src.platforms import codechef_external
 from src.platforms import codeforces_external
 from src.utils import user_functions, handle_functions
-from src.utils.constants import UPDATECHOICES, UPDATECHOICELIST
+from src.utils.platform_class import UPDATECHOICES, UPDATECHOICELIST
 
 
 class UserCommand(commands.Cog):
@@ -47,6 +47,8 @@ class UserCommand(commands.Cog):
             message_content: str
             if str(inst) == "Handle Error":
                 message_content = "Check provided handle"
+            else:
+                message_content = f"Error occurred, error code: {inst}"
             await inter.edit_original_message(content=message_content)
 
         except codechef_external.CodeChefApi as inst:

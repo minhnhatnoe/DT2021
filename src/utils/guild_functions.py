@@ -2,7 +2,7 @@
 import disnake
 from disnake.ext import commands
 from src.utils import json_file
-from src.utils.constants import RANKCOLOR
+from src.utils.platform_class import RANKCOLOR
 
 
 async def standardize_guild(bot: commands.Bot, guild_id: int):

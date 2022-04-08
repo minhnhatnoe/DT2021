@@ -10,29 +10,6 @@ from disnake.ext import commands
 from src.utils import network
 
 
-class CodeForcesApi(Exception):
-    "Base class for all exception raised from communicating with CF API"
-
-
-async def get_user_data_from_net(bot: commands.Bot, user_list: List) -> Dict:
-    '''Get user data of person(s) from CF'''
-    request_url = f"https://codeforces.com/api/user.info?handles={';'.join(user_list)}"
-    try:
-        from_net = await network.get_net(bot, request_url, json.loads, json.JSONDecodeError)
-    except Exception as ex_type:
-        raise CodeForcesApi(Exception("Network Error")) from ex_type
-
-    json_data = json.loads(from_net)
-    if json_data["status"] == "FAILED":
-        raise CodeForcesApi(Exception("Handle Error"))
-
-    data = json_data["result"]
-    for person in data:
-        if "rank" not in person:
-            person["rank"] = "unrated"
-    return data
-
-
 class CodeForces:
     '''CodeForces-related tasks'''
 
@@ -52,6 +29,7 @@ class CodeForces:
 
     PLATFORM_NAME = "Codeforces"
     HANDLE_FILE_NAME = "/cfhandle"
+
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
@@ -96,3 +74,37 @@ class CodeForces:
                 if data[field] != "":
                     obj.add_field(field.title(), data[field])
         return obj
+
+    async def generate_dict_of_rank(self, user_list: List):
+        '''Generate dict of rank from provided user list'''
+        result = {}
+        data = await get_user_data_from_net(self.bot, user_list)
+        for person in data:
+            handle = person["handle"].lower()
+            result[handle] = person["rank"]
+        return result
+
+
+class CodeForcesApi(Exception):
+    "Base class for all exception raised from communicating with CF API"
+
+
+async def get_user_data_from_net(bot: commands.Bot, user_list: List) -> Dict:
+    '''Get user data of person(s) from CF'''
+    if len(user_list) == 0:
+        return {}
+    request_url = f"https://codeforces.com/api/user.info?handles={';'.join(user_list)}"
+    try:
+        from_net = await network.get_net(bot, request_url, json.loads, json.JSONDecodeError)
+    except Exception as ex_type:
+        raise CodeForcesApi(Exception("Network Error")) from ex_type
+
+    json_data = json.loads(from_net)
+    if json_data["status"] == "FAILED":
+        raise CodeForcesApi(Exception(f"Handle Error: {user_list}"))
+
+    data = json_data["result"]
+    for person in data:
+        if "rank" not in person:
+            person["rank"] = "unrated"
+    return data

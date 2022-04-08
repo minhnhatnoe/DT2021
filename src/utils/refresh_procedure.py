@@ -1,8 +1,7 @@
 '''Procedure for all role refresh'''
 from typing import Dict, List
 from disnake.ext import commands
-from src.utils.constants import PLATFORMIDS, UPDATECHOICES
-from src.platforms import codechef_external, codeforces_external, codefun_external
+from src.utils.platform_class import PLATFORM_CLASS, PLATFORMIDS, UPDATECHOICES
 from src.utils import user_functions, handle_functions, guild_functions, \
     json_file
 
@@ -56,23 +55,8 @@ async def write_role_attr_to_dict(bot: commands.Bot, platform_queries: Dict, pla
             guild_functions.get_role_with_name(guild, role_name)
 
 
-async def generate_dict_of_rank(bot: commands.Bot, user_list: List, handle_type: int) -> Dict: # TODO
+async def generate_dict_of_rank(bot: commands.Bot, user_list: List, handle_type: int) -> Dict: 
+    # TODO
     '''Generate a dict of handle-rank, accepting list of str only'''
-    result = {}
-    # Codeforces allows bulk retrival
-    if handle_type == 1:
-        data = await codeforces_external.get_user_data_from_net(bot, user_list)
-        for person in data:
-            handle = person["handle"].lower()
-            result[handle] = person["rank"]
-
-    elif handle_type == 2:
-        for person in user_list:
-            handle = person.lower()
-            result[handle] = await codechef_external.get_user_role_name(bot, handle)
-
-    elif handle_type == 4:
-        for person in user_list:
-            handle = person.lower()
-            result[handle] = await codefun_external.CodeFun(bot).get_rank(handle)
-    return result
+    platform = PLATFORM_CLASS[handle_type](bot)
+    return await platform.generate_dict_of_rank(user_list)

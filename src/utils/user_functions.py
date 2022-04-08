@@ -2,13 +2,15 @@
 import disnake
 from disnake import Embed
 from disnake.ext import commands
-from src.utils.constants import RANKCOLOR, PLATFORM_CLASS
+from src.utils.platform_class import RANKCOLOR, PLATFORM_CLASS
 from src.utils import json_file
 
 
 def user_update_choice_change(member: disnake.Member, update_type: int):
     '''Add user to update list. 0 is None, 1 is Codeforces, 2 is Codechef'''
     update_dict = json_file.load_from_json("/update")
+    if str(member.guild.id) not in update_dict:
+        update_dict[str(member.guild.id)] = {}
     update_dict[str(member.guild.id)][str(member.id)] = update_type
     json_file.write_to_json("/update", update_dict)
 

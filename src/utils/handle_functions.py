@@ -1,7 +1,7 @@
 '''Things related to platform handles'''
 import disnake
 from disnake.ext import commands
-from src.utils.constants import PLATFORMIDS, HANDLE_FILES
+from src.utils.platform_class import PLATFORMIDS, HANDLE_FILES
 from src.utils import json_file
 
 
@@ -41,7 +41,7 @@ def handle_database_dump(bot: commands.Bot, handle_type: int):
     message_content = '```\n'
     for user_id, handle in handle_dict.items():
         name = bot.get_user(int(user_id)).display_name
-        message_content += f'{align_string(name)}: {handle}\n'
+        message_content += f'{name: <20}: {handle}\n'
     message_content += '\n```'
     return message_content
 
@@ -57,6 +57,6 @@ def write_handle_attr_to_dict(change_queries):
                 user_data["handle"] = handle_dict[str(user.id)]
             else:
                 rm_list.append((user, guild))
-        
+
         for i in rm_list:
             change_queries[handle_type].pop(i)

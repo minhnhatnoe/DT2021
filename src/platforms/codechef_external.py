@@ -1,5 +1,6 @@
 '''Module for fetching data from Codechef'''
 
+from typing import Dict, List
 from bs4 import BeautifulSoup
 import disnake
 from disnake import Embed
@@ -45,6 +46,14 @@ class CodeChef:
 
         obj.add_field("Handle", handle)
         return obj
+
+    async def generate_dict_of_rank(self, user_list: List) -> Dict:
+        '''Generate rank dict of user list'''
+        result = {}
+        for person in user_list:
+            handle = person.lower()
+            result[handle] = await get_user_role_name(self.bot, handle)
+        return result
 
 
 def bs_soup_callable(from_net: str):

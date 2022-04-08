@@ -2,7 +2,7 @@
 import disnake
 from disnake.ext import commands
 from src.utils import handle_functions, refresh_procedure
-from src.utils.constants import UPDATECHOICES, UPDATECHOICELIST
+from src.utils.platform_class import UPDATECHOICES, UPDATECHOICELIST
 
 
 class GuildCommand(commands.Cog):
