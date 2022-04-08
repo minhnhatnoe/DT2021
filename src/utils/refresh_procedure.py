@@ -55,8 +55,7 @@ async def write_role_attr_to_dict(bot: commands.Bot, platform_queries: Dict, pla
             guild_functions.get_role_with_name(guild, role_name)
 
 
-async def generate_dict_of_rank(bot: commands.Bot, user_list: List, handle_type: int) -> Dict: 
-    # TODO
+async def generate_dict_of_rank(bot: commands.Bot, user_list: List, handle_type: int) -> Dict:
     '''Generate a dict of handle-rank, accepting list of str only'''
     platform = PLATFORM_CLASS[handle_type](bot)
     return await platform.generate_dict_of_rank(user_list)

@@ -5,7 +5,6 @@ import hashlib
 import secrets
 from typing import Dict, List
 import disnake
-from disnake import Embed
 from disnake.ext import commands
 from src.utils import network
 from src.platforms import platform_abs
@@ -49,11 +48,11 @@ class CodeForces(platform_abs.PlatForm):
                 return True
         return False
 
-    async def generate_user_embed(self, handle: str, member: disnake.Member) -> Embed:
+    async def generate_user_embed(self, handle: str, member: disnake.Member) -> disnake.Embed:
         '''Create an embed that represent a Codeforces user'''
         data = await get_user_data_from_net(self.bot, [handle])
         data = data[0]
-        obj = Embed(
+        obj = disnake.Embed(
             title=member.display_name,
             color=self.RANKCOLOR[data["rank"]],
             description=data["rank"].title())

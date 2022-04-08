@@ -3,7 +3,6 @@
 from typing import Dict, List
 from bs4 import BeautifulSoup
 import disnake
-from disnake import Embed
 from disnake.ext import commands
 from src.utils import network
 from src.platforms import platform_abs
@@ -29,10 +28,10 @@ class CodeChef(platform_abs.PlatForm):
     PLATFORM_NAME = "Codechef"
     HANDLE_FILE_NAME = "/cchandle"
 
-    async def generate_user_embed(self, handle: str, member: disnake.Member) -> Embed:
-        '''Generate user Embed from Codechef data'''
+    async def generate_user_embed(self, handle: str, member: disnake.Member) -> disnake.Embed:
+        '''Generate user disnake.Embed from Codechef data'''
         rank_text = await get_user_role_name(self.bot, handle)
-        obj = Embed(
+        obj = disnake.Embed(
             title=member.display_name,
             color=self.RANKCOLOR[rank_text],
             description=rank_text.title())

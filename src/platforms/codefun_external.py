@@ -2,7 +2,6 @@
 import json
 from typing import Dict
 import disnake
-from disnake import Embed
 from disnake.ext import commands
 from src.utils import network
 from src.platforms import platform_abs
@@ -30,11 +29,11 @@ class CodeFun(platform_abs.PlatForm):
     PLATFORM_NAME = "Codefun"
     HANDLE_FILE_NAME = "/cfunhandle"
 
-    async def generate_user_embed(self, handle: str, member: disnake.Member) -> Embed:
+    async def generate_user_embed(self, handle: str, member: disnake.Member) -> disnake.Embed:
         '''Generate user embed from server data'''
         data = await get_user_data_from_net(self.bot, handle)
         rank = process_rank(data["ratio"])
-        obj = Embed(
+        obj = disnake.Embed(
             title=member.display_name,
             color=self.RANKCOLOR[rank],
             description=rank
@@ -70,12 +69,24 @@ class CodeFun(platform_abs.PlatForm):
             handle = person.lower()
             data = await get_user_data_from_net(self.bot, handle)
             result[handle] = process_rank(data["ratio"])
+        return result
 
-
-def process_rank(ratio: float) -> str:  # TODO
+RANKLIST = {
+    0.9: "Grandmaster",
+    0.55: "Hacker",
+    0.3755: "Master",
+    0.25: "Expert",
+    0.1: "Coder",
+    0.05: "Novice",
+    0.02: "Beginner",
+    0: "Newbie"
+}
+def process_rank(ratio: float) -> str:
     '''Get rank from solved problem ratio'''
-    return "Codefun-Newbie"
-
+    for point, name in RANKLIST.items():
+        if ratio >= point:
+            return f"Codefun-{name}"
+    raise Exception("Invalid rank")
 
 async def get_user_data_from_net(bot: commands.Bot, user: str) -> Dict:
     '''Get a person data from Codefun'''
