@@ -1,11 +1,11 @@
 '''Codefun API Interaction'''
 import json
 from typing import Dict
-from src.utils import network
 import disnake
 from disnake import Embed
 from disnake.ext import commands
-
+from src.utils import network
+from src.platforms import platform_abs
 
 class CodeFunApi(Exception):
     '''Base class for all exceptions from Codefun'''
@@ -13,7 +13,7 @@ class CodeFunApi(Exception):
         '''Class if not found'''
 
 
-class CodeFun:
+class CodeFun(platform_abs.PlatForm):
     '''Codefun-related tasks'''
 
     RANKCOLOR = {
@@ -29,14 +29,6 @@ class CodeFun:
 
     PLATFORM_NAME = "Codefun"
     HANDLE_FILE_NAME = "/cfunhandle"
-
-    def __init__(self, bot: commands.Bot) -> None:
-        self.bot = bot
-
-    async def verify(self, member: disnake.Member, handle: str) -> bool:  # pylint: disable=unused-argument, no-self-use
-        '''Initialize verification procedure'''
-        # TODO
-        return True
 
     async def generate_user_embed(self, handle: str, member: disnake.Member) -> Embed:
         '''Generate user embed from server data'''

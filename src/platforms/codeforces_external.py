@@ -8,9 +8,9 @@ import disnake
 from disnake import Embed
 from disnake.ext import commands
 from src.utils import network
+from src.platforms import platform_abs
 
-
-class CodeForces:
+class CodeForces(platform_abs.PlatForm):
     '''CodeForces-related tasks'''
 
     RANKCOLOR = {
@@ -29,9 +29,6 @@ class CodeForces:
 
     PLATFORM_NAME = "Codeforces"
     HANDLE_FILE_NAME = "/cfhandle"
-
-    def __init__(self, bot: commands.Bot) -> None:
-        self.bot = bot
 
     async def verify(self, member: disnake.Member, handle: str) -> bool:
         '''Perform verification process, assuming handle exist'''

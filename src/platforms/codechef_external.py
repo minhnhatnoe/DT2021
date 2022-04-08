@@ -6,13 +6,13 @@ import disnake
 from disnake import Embed
 from disnake.ext import commands
 from src.utils import network
-
+from src.platforms import platform_abs
 
 class CodeChefApi(Exception):
     "Base class for all exception raised from getting information from Codechef"
 
 
-class CodeChef:
+class CodeChef(platform_abs.PlatForm):
     '''CodeChef-related tasks'''
 
     RANKCOLOR = {
@@ -28,13 +28,6 @@ class CodeChef:
 
     PLATFORM_NAME = "Codechef"
     HANDLE_FILE_NAME = "/cchandle"
-
-    def __init__(self, bot: commands.Bot) -> None:
-        self.bot = bot
-
-    async def verify(self, member: disnake.Member, handle: str) -> bool:  # pylint: disable=unused-argument, no-self-use
-        '''Placeholder function until someone finds out a way to verify Codechef accounts'''
-        return True
 
     async def generate_user_embed(self, handle: str, member: disnake.Member) -> Embed:
         '''Generate user Embed from Codechef data'''
