@@ -52,10 +52,9 @@ class CodeForces(platform_abs.PlatForm):
         data = await get_user_data_from_net([handle])
         data = data[0]
         obj = disnake.Embed(
-            title=member.display_name,
+            title=member.name,
             color=self.RANKCOLOR[data["rank"]],
-            description=data["rank"].title())
-
+            description=f"{data['rank'].title()}")
         obj.set_thumbnail(url=data["titlePhoto"])
 
         if "firstName" in data and "lastName" in data:
@@ -63,11 +62,28 @@ class CodeForces(platform_abs.PlatForm):
             if name != " ":
                 obj.add_field("Name", name)
 
-        fields = ["handle", "country", "city", "organization", "rating"]
-        for field in fields:
-            if field in data:
-                if data[field] != "":
-                    obj.add_field(field.title(), data[field])
+        fields = {
+            "handle": "Handle",
+            "country": "Country",
+            "city": "City",
+            "organization": "Organization",
+            "rating": "Current Rating",
+            "maxRank": "Max Rank",
+            "maxRating": "Max Rating",
+            "contribution": "Contribution",
+            "friendOfCount": "Friends",
+        }
+        for field_key, field_name in fields.items():
+            if field_key in data:
+                if data[field_key] is float:
+                    obj.add_field(field_name, f"{data[field_key]:.2f}")
+                elif data[field_key] is str:
+                    if data[field_key]!= "":
+                        obj.add_field(field_name, data[field_key].title())
+                else:
+                    obj.add_field(field_name, data[field_key])
+        obj.add_field("Registered", f"<t:{data}:F>")
+        obj.add_field("Link", f"https://codeforces.com/profile/{handle}")
         return obj
 
     async def generate_dict_of_rank(self, user_list: List):
