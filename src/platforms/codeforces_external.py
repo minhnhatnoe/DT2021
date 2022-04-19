@@ -5,7 +5,6 @@ import hashlib
 import secrets
 from typing import Dict, List
 import disnake
-from disnake.ext import commands
 from src.utils import network
 from src.platforms import platform_abs
 
@@ -39,7 +38,7 @@ class CodeForces(platform_abs.PlatForm):
     {hash_val} in https://codeforces.com/settings/social within the next minute")
         for _ in range(7):
             await asyncio.sleep(10)
-            new_name = await get_user_data_from_net(self.bot, [handle])
+            new_name = await get_user_data_from_net([handle])
             try:
                 new_name = new_name[0]["firstName"]
             except KeyError:
@@ -50,7 +49,7 @@ class CodeForces(platform_abs.PlatForm):
 
     async def generate_user_embed(self, handle: str, member: disnake.Member) -> disnake.Embed:
         '''Create an embed that represent a Codeforces user'''
-        data = await get_user_data_from_net(self.bot, [handle])
+        data = await get_user_data_from_net([handle])
         data = data[0]
         obj = disnake.Embed(
             title=member.display_name,
@@ -74,7 +73,7 @@ class CodeForces(platform_abs.PlatForm):
     async def generate_dict_of_rank(self, user_list: List):
         '''Generate dict of rank from provided user list'''
         result = {}
-        data = await get_user_data_from_net(self.bot, user_list)
+        data = await get_user_data_from_net(user_list)
         for person in data:
             handle = person["handle"].lower()
             result[handle] = person["rank"]
@@ -85,13 +84,13 @@ class CodeForcesApi(Exception):
     "Base class for all exception raised from communicating with CF API"
 
 
-async def get_user_data_from_net(bot: commands.Bot, user_list: List) -> Dict:
+async def get_user_data_from_net(user_list: List) -> Dict:
     '''Get user data of person(s) from CF'''
     if len(user_list) == 0:
         return {}
     request_url = f"https://codeforces.com/api/user.info?handles={';'.join(user_list)}"
     try:
-        from_net = await network.get_net(bot, request_url, json.loads, json.JSONDecodeError)
+        from_net = await network.get_net(request_url, json.loads, json.JSONDecodeError)
     except Exception as ex_type:
         raise CodeForcesApi(Exception("Network Error")) from ex_type
 

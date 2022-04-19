@@ -4,6 +4,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 import disnake
 from disnake.ext import commands, tasks
+from src import cfg
 from src.utils import guild_functions, refresh_procedure
 
 load_dotenv()
@@ -13,13 +14,13 @@ refresh_rate = float(environ.get("REFRESH_RATE"))
 class BotExtension(commands.Cog):
     '''Tasks and listeners'''
 
-    def __init__(self, bot: commands.Bot) -> None:
-        self.bot = bot
+    def __init__(self) -> None:
+        '''Init the cog'''
 
     @tasks.loop(minutes=refresh_rate)
     async def refresh_role_loop(self):
         '''Refresh all roles, periodically'''
-        await refresh_procedure.refresh_roles_of_bot(bot=self.bot)
+        await refresh_procedure.refresh_roles_of_bot()
         print("Refreshed all guilds on: ", datetime.now())
 
     @commands.slash_command(name="help")
@@ -27,7 +28,7 @@ class BotExtension(commands.Cog):
         '''/help: Show this help message'''
         msg = 'Here are several things I can do:'
 
-        command_set = self.bot.get_guild_slash_commands(inter.guild.id)
+        command_set = cfg.bot.get_guild_slash_commands(inter.guild.id)
         help_msg = []
         for cmd in command_set:
             if cmd.options:
@@ -58,9 +59,9 @@ class BotExtension(commands.Cog):
     @commands.slash_command()
     async def ping(self, inter: disnake.CommandInteraction):
         '''/ping: Get the bot's latency'''
-        await inter.response.send_message(f"Pong! ({self.bot.latency * 1000:.0f}ms)")
+        await inter.response.send_message(f"Pong! ({cfg.bot.latency * 1000:.0f}ms)")
 
 
 def setup(bot: commands.Bot):
     '''Add bot listeners and help cmd'''
-    bot.add_cog(BotExtension(bot))
+    bot.add_cog(BotExtension())

@@ -3,7 +3,6 @@
 from typing import Dict, List
 from bs4 import BeautifulSoup
 import disnake
-from disnake.ext import commands
 from src.utils import network
 from src.platforms import platform_abs
 
@@ -30,7 +29,7 @@ class CodeChef(platform_abs.PlatForm):
 
     async def generate_user_embed(self, handle: str, member: disnake.Member) -> disnake.Embed:
         '''Generate user disnake.Embed from Codechef data'''
-        rank_text = await get_user_role_name(self.bot, handle)
+        rank_text = await get_user_role_name(handle)
         obj = disnake.Embed(
             title=member.display_name,
             color=self.RANKCOLOR[rank_text],
@@ -44,7 +43,7 @@ class CodeChef(platform_abs.PlatForm):
         result = {}
         for person in user_list:
             handle = person.lower()
-            result[handle] = await get_user_role_name(self.bot, handle)
+            result[handle] = await get_user_role_name(handle)
         return result
 
 
@@ -53,12 +52,12 @@ def bs_soup_callable(from_net: str):
     return BeautifulSoup(from_net, features="html.parser")
 
 
-async def get_user_data_from_net(bot: commands.Bot, username: str) -> BeautifulSoup:
+async def get_user_data_from_net(username: str) -> BeautifulSoup:
     '''Returns a soup'''
     request_url = f"https://codechef.com/users/{username}"
     try:
         from_net = await network.get_net(
-            bot, request_url, bs_soup_callable)
+            request_url, bs_soup_callable)
     except Exception as ex_type:
         raise CodeChefApi(Exception("Network Error")) from ex_type
 
@@ -66,9 +65,9 @@ async def get_user_data_from_net(bot: commands.Bot, username: str) -> BeautifulS
     return soup
 
 
-async def get_user_role_name(bot: commands.Bot, username: str) -> str:
+async def get_user_role_name(username: str) -> str:
     '''Return role name'''
-    soup = await get_user_data_from_net(bot, username)
+    soup = await get_user_data_from_net(username)
     star = soup.select('span[class="rating"]')
     star_text = str()
     if len(star) == 0:

@@ -1,9 +1,8 @@
 '''Things related to platform handles'''
 import disnake
-from disnake.ext import commands
 from src.utils.platform_class import PLATFORMIDS, HANDLE_FILES
 from src.utils import json_file
-
+from src import cfg
 
 class Handle(Exception):
     '''Class for throwing handle-related Exceptions'''
@@ -34,13 +33,13 @@ def align_string(name: disnake.User) -> str:
     return name + " "*(20-len(name))
 
 
-def handle_database_dump(bot: commands.Bot, handle_type: int):
+def handle_database_dump(handle_type: int):
     '''Get a string containing all handles and respective usernames'''
     handle_dict = json_file.load_from_json(HANDLE_FILES[handle_type])
 
     message_content = '```\n'
     for user_id, handle in handle_dict.items():
-        name = bot.get_user(int(user_id)).display_name
+        name = cfg.bot.get_user(int(user_id)).display_name
         message_content += f'{name: <20}: {handle}\n'
     message_content += '\n```'
     return message_content

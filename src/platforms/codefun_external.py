@@ -2,7 +2,6 @@
 import json
 from typing import Dict
 import disnake
-from disnake.ext import commands
 from src.utils import network
 from src.platforms import platform_abs
 
@@ -31,7 +30,7 @@ class CodeFun(platform_abs.PlatForm):
 
     async def generate_user_embed(self, handle: str, member: disnake.Member) -> disnake.Embed:
         '''Generate user embed from server data'''
-        data = await get_user_data_from_net(self.bot, handle)
+        data = await get_user_data_from_net(handle)
         rank = process_rank(data["ratio"])
         obj = disnake.Embed(
             title=member.display_name,
@@ -67,7 +66,7 @@ class CodeFun(platform_abs.PlatForm):
         result = {}
         for person in user_list:
             handle = person.lower()
-            data = await get_user_data_from_net(self.bot, handle)
+            data = await get_user_data_from_net(handle)
             result[handle] = process_rank(data["ratio"])
         return result
 
@@ -88,11 +87,11 @@ def process_rank(ratio: float) -> str:
             return f"Codefun-{name}"
     raise Exception("Invalid rank")
 
-async def get_user_data_from_net(bot: commands.Bot, user: str) -> Dict:
+async def get_user_data_from_net(user: str) -> Dict:
     '''Get a person data from Codefun'''
     request_url = f"https://codefun.vn/api/users/{user}"
     try:
-        from_net = await network.get_net(bot, request_url, json.loads, json.JSONDecodeError)
+        from_net = await network.get_net(request_url, json.loads, json.JSONDecodeError)
     except Exception as ex_type:
         if str(ex_type) == "Not Found":
             raise CodeFunApi.NotFound(

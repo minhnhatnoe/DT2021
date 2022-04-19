@@ -1,7 +1,6 @@
 '''Functions concerning users as individuals'''
 import disnake
 from disnake import Embed
-from disnake.ext import commands
 from src.utils.platform_class import RANKCOLOR, PLATFORM_CLASS
 from src.utils import json_file
 
@@ -33,14 +32,13 @@ async def member_assign_role(member: disnake.Member, roles_to_add) -> None:
         await member.add_roles(*add_list)
 
 
-def generate_user_embed(bot: commands.Bot, handle: str,
-                        member: disnake.Member, choice_id: int) -> Embed:
+def generate_user_embed(handle: str, member: disnake.Member, choice_id: int) -> Embed:
     '''Generate an user embed'''
-    platform_class = PLATFORM_CLASS[choice_id](bot)
+    platform_class = PLATFORM_CLASS[choice_id]()
     return platform_class.generate_user_embed(handle, member)
 
 
-async def verify(bot: commands.Bot, member: disnake.Member, handle: str, choice_id: int) -> bool:
+async def verify(member: disnake.Member, handle: str, choice_id: int) -> bool:
     '''Perform verification process, assuming handle exist'''
-    platform_class = PLATFORM_CLASS[choice_id](bot)
+    platform_class = PLATFORM_CLASS[choice_id]()
     return await platform_class.verify(member, handle)
