@@ -54,7 +54,7 @@ def data_create():
     from os import environ # pylint: disable=import-outside-toplevel
     load_dotenv()
     path = environ.get("DATAPATH")
-    for filepath in ["/update", "/cfhandle", "/cchandle"]:
+    for filepath in ["/update", "/cfhandle", "/cchandle", "/cfunhandle"]:
         with open(f"{path}{filepath}.json", "w", encoding="utf-8") as file:
             file.write(r"{}")
 

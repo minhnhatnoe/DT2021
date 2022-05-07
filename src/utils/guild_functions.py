@@ -1,13 +1,13 @@
 '''All functions regarding a guild'''
 import disnake
-from disnake.ext import commands
+from src import cfg
 from src.utils import json_file
 from src.utils.platform_class import RANKCOLOR
 
 
-async def standardize_guild(bot: commands.Bot, guild_id: int):
+async def standardize_guild(guild_id: int):
     '''Make roles in a guild and return that guild'''
-    guild = bot.get_guild(int(guild_id))
+    guild = cfg.bot.get_guild(int(guild_id))
     if guild is None:
         return None
     await create_roles_in_guild(guild)

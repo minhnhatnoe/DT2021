@@ -2,16 +2,15 @@
 from abc import ABC
 from typing import Dict
 import disnake
-from disnake.ext import commands
-
+from src import cfg
 class PlatForm(ABC):
     '''Abstract base class for a platform'''
     RANKCOLOR = {}
     PLATFORM_NAME = "Nothing"
     HANDLE_FILE_NAME = "/abc"
 
-    def __init__(self, bot: commands.Bot) -> None:
-        self.bot = bot
+    def __init__(self) -> None:
+        self.bot = cfg.bot
 
     async def verify(self, member: disnake.Member, handle: str) -> bool:  # pylint: disable=no-self-use,unused-argument
         '''Default verification procedure (returns True)'''

@@ -7,9 +7,6 @@ from src.utils import guild_functions
 class AdminCommands(commands.Cog):
     '''Cog for admin-only commands'''
 
-    def __init__(self, bot: commands.Bot):
-        self.bot = bot
-
     @commands.slash_command()
     async def admin(self, inter: disnake.CommandInteraction, *args):
         '''Admin cog'''
@@ -35,4 +32,4 @@ class AdminCommands(commands.Cog):
 
 def setup(bot: commands.Bot):
     '''Add the AdminCommands cog'''
-    bot.add_cog(AdminCommands(bot))
+    bot.add_cog(AdminCommands())

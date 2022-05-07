@@ -5,7 +5,6 @@ import hashlib
 import secrets
 from typing import Dict, List
 import disnake
-from disnake.ext import commands
 from src.utils import network
 from src.platforms import platform_abs
 
@@ -39,7 +38,7 @@ class CodeForces(platform_abs.PlatForm):
     {hash_val} in https://codeforces.com/settings/social within the next minute")
         for _ in range(7):
             await asyncio.sleep(10)
-            new_name = await get_user_data_from_net(self.bot, [handle])
+            new_name = await get_user_data_from_net([handle])
             try:
                 new_name = new_name[0]["firstName"]
             except KeyError:
@@ -50,13 +49,12 @@ class CodeForces(platform_abs.PlatForm):
 
     async def generate_user_embed(self, handle: str, member: disnake.Member) -> disnake.Embed:
         '''Create an embed that represent a Codeforces user'''
-        data = await get_user_data_from_net(self.bot, [handle])
+        data = await get_user_data_from_net([handle])
         data = data[0]
         obj = disnake.Embed(
-            title=member.display_name,
+            title=member.name,
             color=self.RANKCOLOR[data["rank"]],
-            description=data["rank"].title())
-
+            description=f"{data['rank'].title()}")
         obj.set_thumbnail(url=data["titlePhoto"])
 
         if "firstName" in data and "lastName" in data:
@@ -64,17 +62,39 @@ class CodeForces(platform_abs.PlatForm):
             if name != " ":
                 obj.add_field("Name", name)
 
-        fields = ["handle", "country", "city", "organization", "rating"]
-        for field in fields:
-            if field in data:
-                if data[field] != "":
-                    obj.add_field(field.title(), data[field])
+        fields = {
+            "handle": "Handle",
+            "country": "Country",
+            "city": "City",
+            "organization": "Organization",
+            "rating": "Current Rating",
+            "maxRank": "Max Rank",
+            "maxRating": "Max Rating",
+            "contribution": "Contribution",
+            "friendOfCount": "Friends",
+        }
+        for field_key, field_name in fields.items():
+            if field_key in data:
+                if isinstance(data[field_key], float):
+                    obj.add_field(field_name, f"{data[field_key]:.2f}")
+                elif isinstance(data[field_key], str):
+                    if data[field_key]!= "":
+                        obj.add_field(field_name, data[field_key].title())
+                else:
+                    obj.add_field(field_name, data[field_key])
+
+        if "registrationTimeSeconds" in data:
+            obj.add_field("Registered", f"<t:{data['registrationTimeSeconds']}:R>")
+        if "lastOnlineTimeSeconds" in data:
+            obj.add_field("Last visit", f"<t:{data['lastOnlineTimeSeconds']}:R>")
+
+        obj.add_field("Link", f"https://codeforces.com/profile/{handle}")
         return obj
 
     async def generate_dict_of_rank(self, user_list: List):
         '''Generate dict of rank from provided user list'''
         result = {}
-        data = await get_user_data_from_net(self.bot, user_list)
+        data = await get_user_data_from_net(user_list)
         for person in data:
             handle = person["handle"].lower()
             result[handle] = person["rank"]
@@ -85,13 +105,13 @@ class CodeForcesApi(Exception):
     "Base class for all exception raised from communicating with CF API"
 
 
-async def get_user_data_from_net(bot: commands.Bot, user_list: List) -> Dict:
+async def get_user_data_from_net(user_list: List) -> Dict:
     '''Get user data of person(s) from CF'''
     if len(user_list) == 0:
         return {}
     request_url = f"https://codeforces.com/api/user.info?handles={';'.join(user_list)}"
     try:
-        from_net = await network.get_net(bot, request_url, json.loads, json.JSONDecodeError)
+        from_net = await network.get_net(request_url, json.loads, json.JSONDecodeError)
     except Exception as ex_type:
         raise CodeForcesApi(Exception("Network Error")) from ex_type
 

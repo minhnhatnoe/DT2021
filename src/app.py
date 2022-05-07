@@ -7,17 +7,17 @@ from dotenv import load_dotenv
 import disnake
 from disnake.ext import commands
 
-from src import keep_alive
+from src import cfg, keep_alive
 
 load_dotenv()
 guilds = [int(v) for v in environ.get("TEST_GUILDS").split(",")]
-bot = commands.Bot(test_guilds=guilds, intents=disnake.Intents.all())
+cfg.bot = commands.Bot(test_guilds=guilds, intents=disnake.Intents.all())
 token = environ.get("TOKEN")
 
 EXTENSIONLIST = ["guild_commands", "user_commands",
                  "admin_commands", "bot_extension"]
 for extension in EXTENSIONLIST:
-    bot.load_extension(f"src.cogs.{extension}")
+    cfg.bot.load_extension(f"src.cogs.{extension}")
 
 
 async def check_instance(request_url: str) -> bool:
@@ -26,7 +26,7 @@ async def check_instance(request_url: str) -> bool:
         async with aiohttp.ClientSession() as session:
             async with session.get(request_url) as response:
                 return response.status != 200
-    except Exception as inst: # pylint: disable=broad-except
+    except Exception as inst:  # pylint: disable=broad-except
         print(f"Cannot reach deploy, error code: {inst}")
         return True
 
@@ -34,7 +34,7 @@ async def check_instance(request_url: str) -> bool:
 def deploy():
     '''Run in deploy mode'''
     keep_alive.keep_alive()
-    bot.run(token)
+    cfg.bot.run(token)
 
 
 def local():
@@ -51,6 +51,6 @@ def local():
         check = True
 
     if check:
-        bot.run(token)
+        cfg.bot.run(token)
     else:
         print(f"Deployment instance active at {deploy_server}. Terminating...")

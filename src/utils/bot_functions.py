@@ -1,20 +1,21 @@
 '''Bot object functions'''
 import disnake
 from disnake.ext import commands
-
+from src import cfg
 
 class Presence:
     '''Presence change'''
 
-    def __init__(self, bot: commands.Bot):
+    def __init__(self):
         '''Write bot var'''
-        self.bot = bot
+        self.state: str
 
     async def presence_change(self, state: str) -> None:
         '''Change shown presence of bot'''
+        self.state = state
         game = disnake.Game(state)
-        if self.bot is commands.Bot:
-            await self.bot.change_presence(status=disnake.Status.idle, activity=game)
+        if cfg.bot is commands.Bot:
+            await cfg.bot.change_presence(status=disnake.Status.idle, activity=game)
 
     async def __aenter__(self):
         '''Return self for with statements'''
