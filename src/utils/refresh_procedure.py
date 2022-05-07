@@ -1,4 +1,5 @@
 '''Procedure for all role refresh'''
+from datetime import datetime
 from typing import Dict, List
 from src.utils.platform_class import PLATFORM_CLASS, PLATFORMIDS, UPDATECHOICES
 from src.utils import user_functions, handle_functions, guild_functions, \
@@ -7,7 +8,6 @@ from src.utils import user_functions, handle_functions, guild_functions, \
 
 async def refresh_roles_of_bot() -> None:
     '''Refresh all roles in all guilds'''
-
     change_queries = await create_refresh_job_list()
     handle_functions.write_handle_attr_to_dict(change_queries)
 
@@ -18,6 +18,7 @@ async def refresh_roles_of_bot() -> None:
             if "role" in user_data:
                 role = user_data["role"]
                 await user_functions.member_assign_role(user, [role])
+    print("Refreshed all guilds on: ", datetime.now())
 
 
 async def create_refresh_job_list() -> Dict:

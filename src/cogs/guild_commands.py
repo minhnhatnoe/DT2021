@@ -17,14 +17,14 @@ class GuildCommand(commands.Cog):
         '''Guild commands family'''
 
     @guild.sub_command()
-    async def refresh(self, inter: disnake.CommandInteraction):
+    async def refresh(self, inter: disnake.CommandInteraction): # pylint: disable=no-self-use
         '''/guild refresh: Refresh all color-based roles'''
         await inter.response.defer()
         await refresh_procedure.refresh_roles_of_bot()
         await inter.edit_original_message(content="All roles refreshed")
 
     @guild.sub_command()
-    async def dump(self, inter: disnake.CommandInteraction,
+    async def dump(self, inter: disnake.CommandInteraction, # pylint: disable=no-self-use
                    choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/guild dump: Make the bot DM you a list off all handles from a platform'''
         data_dump = handle_functions.handle_database_dump(UPDATECHOICES[choice])

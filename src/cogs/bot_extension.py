@@ -1,6 +1,5 @@
 '''Events and tasks to be run by the bot'''
 from os import environ
-from datetime import datetime
 from dotenv import load_dotenv
 import disnake
 from disnake.ext import commands, tasks
@@ -18,13 +17,12 @@ class BotExtension(commands.Cog):
         '''Init the cog'''
 
     @tasks.loop(minutes=refresh_rate)
-    async def refresh_role_loop(self):
+    async def refresh_role_loop(self): # pylint: disable=no-self-use
         '''Refresh all roles, periodically'''
         await refresh_procedure.refresh_roles_of_bot()
-        print("Refreshed all guilds on: ", datetime.now())
 
     @commands.slash_command(name="help")
-    async def help_cmd(self, inter: disnake.CommandInteraction):
+    async def help_cmd(self, inter: disnake.CommandInteraction): # pylint: disable=no-self-use
         '''/help: Show this help message'''
         msg = 'Here are several things I can do:'
 
@@ -57,7 +55,7 @@ class BotExtension(commands.Cog):
         guild_functions.remove_guild_data(guild.id)
 
     @commands.slash_command()
-    async def ping(self, inter: disnake.CommandInteraction):
+    async def ping(self, inter: disnake.CommandInteraction): # pylint: disable=no-self-use
         '''/ping: Get the bot's latency'''
         await inter.response.send_message(f"Pong! ({cfg.bot.latency * 1000:.0f}ms)")
 

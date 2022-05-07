@@ -50,15 +50,15 @@ class CodeFun(platform_abs.PlatForm):
             "score": "Total score",
             "solved": "Solved problems count",
             "rank": "Global rank",
-            "ratio": "Solved problem ratio"
         }
         for field_key, field_name in fields.items():
             if field_key in data:
-                if data[field_key] is float:
+                if isinstance(data[field_key], float):
                     obj.add_field(field_name, f"{data[field_key]:.2f}")
                 elif data[field_key] != "":
                     obj.add_field(field_name, data[field_key])
 
+        obj.add_field("Solved in pool", f"{data['ratio']:.0%}")
         return obj
 
     async def generate_dict_of_rank(self, user_list) -> Dict:
