@@ -30,7 +30,7 @@ class GuildCommand(commands.Cog):
         data_dump = handle_functions.handle_database_dump(UPDATECHOICES[choice])
         await inter.user.send(data_dump)
         await inter.response.send_message("Sent!")
-
+        # TODO: Only from the used guild
 
 def setup(bot: commands.Bot):
     '''Add the "gen" cog'''

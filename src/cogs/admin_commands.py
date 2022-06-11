@@ -33,3 +33,5 @@ class AdminCommands(commands.Cog):
 def setup(bot: commands.Bot):
     '''Add the AdminCommands cog'''
     bot.add_cog(AdminCommands())
+
+# TODO: Change server configs
