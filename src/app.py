@@ -9,16 +9,6 @@ from disnake.ext import commands
 
 from src import cfg, keep_alive
 
-load_dotenv()
-guilds = [int(v) for v in environ.get("TEST_GUILDS").split(",")]
-cfg.bot = commands.Bot(test_guilds=guilds, intents=disnake.Intents.all())
-token = environ.get("TOKEN")
-
-EXTENSIONLIST = ["guild_commands", "user_commands",
-                 "admin_commands", "bot_extension"]
-for extension in EXTENSIONLIST:
-    cfg.bot.load_extension(f"src.cogs.{extension}")
-
 
 async def check_instance(request_url: str) -> bool:
     '''Check if live deploy version is running'''
@@ -31,14 +21,8 @@ async def check_instance(request_url: str) -> bool:
         return True
 
 
-def deploy():
-    '''Run in deploy mode'''
-    keep_alive.keep_alive()
-    cfg.bot.run(token)
-
-
-def local():
-    '''Run in local mode'''
+def check_deploy_running():
+    '''Check if the deployment version is currently running'''
     deploy_server = environ.get("DEPLOY_ADDRESS", "None")
     check: bool
     if deploy_server != "None":
@@ -51,6 +35,34 @@ def local():
         check = True
 
     if check:
-        cfg.bot.run(token)
+        return True
     else:
         print(f"Deployment instance active at {deploy_server}. Terminating...")
+        return False
+
+
+def load_bot():
+    '''Load the bot up'''
+    load_dotenv()
+    guilds = [int(v) for v in environ.get("TEST_GUILDS").split(",")]
+    cfg.bot = commands.Bot(test_guilds=guilds, intents=disnake.Intents.all())
+
+    EXTENSIONLIST = ["guild_commands", "user_commands",
+                     "admin_commands", "bot_extension"]
+    for extension in EXTENSIONLIST:
+        cfg.bot.load_extension(f"src.cogs.{extension}")
+
+
+def deploy():
+    '''Run in deploy mode'''
+    keep_alive.keep_alive()
+    load_bot()
+    load_dotenv()
+    cfg.bot.run(environ.get("TOKEN"))
+
+
+def local():
+    if check_deploy_running():
+        load_bot()
+        load_dotenv()
+        cfg.bot.run(environ.get("TOKEN"))
