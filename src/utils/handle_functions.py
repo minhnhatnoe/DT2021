@@ -4,6 +4,7 @@ from src.utils.platform_class import PLATFORMIDS, HANDLE_FILES
 from src.utils import json_file
 from src import cfg
 
+
 class Handle(Exception):
     '''Class for throwing handle-related Exceptions'''
 
@@ -26,11 +27,6 @@ def member_handle_query(member: disnake.Member, handle_type: int):
     if str(member.id) not in handle_dict:
         return None
     return handle_dict[str(member.id)]
-
-
-def align_string(name: disnake.User) -> str:
-    '''Align strings as if using tab'''
-    return name + " "*(20-len(name))
 
 
 def handle_database_dump(handle_type: int):

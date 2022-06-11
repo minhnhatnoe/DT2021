@@ -37,9 +37,8 @@ def check_deploy_running():
 
     if check:
         return True
-    else:
-        print(f"Deployment instance active at {deploy_server}. Terminating...")
-        return False
+    print(f"Deployment instance active at {deploy_server}. Terminating...")
+    return False
 
 
 def load_bot():
