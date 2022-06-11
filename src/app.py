@@ -23,6 +23,7 @@ async def check_instance(request_url: str) -> bool:
 
 def check_deploy_running():
     '''Check if the deployment version is currently running'''
+    load_dotenv()
     deploy_server = environ.get("DEPLOY_ADDRESS", "None")
     check: bool
     if deploy_server != "None":
