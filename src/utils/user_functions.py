@@ -16,7 +16,7 @@ def user_update_choice_change(member: disnake.Member, update_type: int):
 
 async def member_assign_role(member: disnake.Member, roles_to_add) -> None:
     '''Remove current role and add specified role if differs.
-    All roles are added and removed at once to reduce request count'''
+    All roles are added and removed in two request to reduce request count'''
     rm_list = []
     for role in member.roles:
         if role.name in RANKCOLOR and role not in roles_to_add:

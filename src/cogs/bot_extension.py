@@ -17,12 +17,12 @@ class BotExtension(commands.Cog):
         '''Init the cog'''
 
     @tasks.loop(minutes=refresh_rate)
-    async def refresh_role_loop(self): # pylint: disable=no-self-use
+    async def refresh_role_loop(self):  # pylint: disable=no-self-use
         '''Refresh all roles, periodically'''
         await refresh_procedure.refresh_roles_of_bot()
 
     @commands.slash_command(name="help")
-    async def help_cmd(self, inter: disnake.CommandInteraction): # pylint: disable=no-self-use
+    async def help_cmd(self, inter: disnake.CommandInteraction):  # pylint: disable=no-self-use
         '''/help: Show this help message'''
         msg = 'Here are several things I can do:'
 
@@ -40,7 +40,7 @@ class BotExtension(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         '''Notify the user that the bot has logged in and start to periodically refresh roles'''
-        print("Logged in")
+        print(f"Logged in as {cfg.bot.user.name}#{cfg.bot.user.discriminator}, with ping {cfg.bot.latency * 1000:.0f}ms")
         if not self.refresh_role_loop.is_running():  # pylint: disable=no-member
             self.refresh_role_loop.start()  # pylint: disable=no-member
 
@@ -55,7 +55,7 @@ class BotExtension(commands.Cog):
         guild_functions.remove_guild_data(guild.id)
 
     @commands.slash_command()
-    async def ping(self, inter: disnake.CommandInteraction): # pylint: disable=no-self-use
+    async def ping(self, inter: disnake.CommandInteraction):  # pylint: disable=no-self-use
         '''/ping: Get the bot's latency'''
         await inter.response.send_message(f"Pong! ({cfg.bot.latency * 1000:.0f}ms)")
 
