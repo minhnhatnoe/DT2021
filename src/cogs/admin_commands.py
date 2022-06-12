@@ -29,6 +29,9 @@ class AdminCommands(commands.Cog):
         else:
             await inter.response.send_message("You are not an admin")
 
+    @admin.sub_command_group()
+    async def edit(self, inter: disnake.CommandInteraction, *args):
+        '''Edit configs for a specific guild'''
 
 def setup(bot: commands.Bot):
     '''Add the AdminCommands cog'''
