@@ -4,8 +4,11 @@ from src import cfg
 from src.utils import json_file
 from src.utils.platform_class import RANKCOLOR
 
+def info_allowed(inter: disnake.CommandInteraction, choice: str) -> bool:
+    config = json_file.load_from_json("/server_config")
+    return config[str(inter.guild.id)]["info"][choice]
 
-async def standardize_guild(guild_id: int):
+async def standardize_guild(guild_id: int) -> disnake.Guild | None:
     '''Make roles in a guild and return that guild'''
     guild = cfg.bot.get_guild(int(guild_id))
     if guild is None:
