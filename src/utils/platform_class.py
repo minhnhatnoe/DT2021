@@ -12,13 +12,18 @@ PLATFORM_CLASS = {
 RANKCOLOR = {}
 UPDATECHOICES = {"None": 0}
 HANDLE_FILES = {}
-
+PLATFORMNAMES = []
 for platform_id, platform in PLATFORM_CLASS.items():
     RANKCOLOR |= platform.RANKCOLOR
     UPDATECHOICES[platform.PLATFORM_NAME] = platform_id
     HANDLE_FILES[platform_id] = platform.HANDLE_FILE_NAME
+    PLATFORMNAMES.append(platform.PLATFORM_NAME)
 
 UPDATECHOICELIST = [name for name in UPDATECHOICES if name != "None"]
 
 PLATFORMIDS = [handle_type for handle_type in UPDATECHOICES.values()
                if handle_type != 0]
+{
+    "roles": {name: False for name in PLATFORMNAMES},
+    "info": {name: False for name in PLATFORMNAMES}
+}

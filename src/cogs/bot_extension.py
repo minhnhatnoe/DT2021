@@ -4,8 +4,7 @@ from dotenv import load_dotenv
 import disnake
 from disnake.ext import commands, tasks
 from src import cfg
-from src.utils import guild_functions, refresh_procedure
-
+from src.utils import guild_functions, refresh_procedure, startup_check
 load_dotenv()
 refresh_rate = float(environ.get("REFRESH_RATE"))
 
@@ -43,6 +42,8 @@ class BotExtension(commands.Cog):
         print(f"Logged in as {cfg.bot.user.name}#{cfg.bot.user.discriminator}, with ping {cfg.bot.latency * 1000:.0f}ms")
         if not self.refresh_role_loop.is_running():  # pylint: disable=no-member
             self.refresh_role_loop.start()  # pylint: disable=no-member
+        startup_check.check_guilds_config()
+        
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild: disnake.Guild):  # pylint: disable=no-self-use
