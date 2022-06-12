@@ -24,6 +24,7 @@ async def refresh_roles_of_bot() -> None:
 async def create_refresh_job_list() -> Dict:
     '''Returns a dict of jobs'''
     task_list = json_file.load_from_json("/update")
+    configs = json_file.load_from_json("/server_config")
 
     # Some sets of disnake.user - guild/handle/role pairs
     change_queries = {key: {} for key in UPDATECHOICES.values()}
@@ -31,11 +32,17 @@ async def create_refresh_job_list() -> Dict:
     # Get the list of users and partition them to the respective platform
     for guild_id, users in task_list.items():
         guild = await guild_functions.standardize_guild(guild_id)
-        if guild is not None:
-            for user_id, user_choice in users.items():
-                user = guild.get_member(int(user_id))
-                if user is not None:
-                    change_queries[user_choice][(user, guild)] = {}
+        if guild is None: continue
+
+        for user_id, user_choice in users.items():
+            if user_choice == 0: continue
+            platform_name = PLATFORM_CLASS[user_choice].PLATFORM_NAME
+            if configs[str(guild_id)]["roles"][platform_name] is False:
+                continue
+
+            user = guild.get_member(int(user_id))
+            if user is not None:
+                change_queries[user_choice][(user, guild)] = {}
 
     return change_queries
 
