@@ -40,9 +40,9 @@ class BotExtension(commands.Cog):
     async def on_ready(self):
         '''Notify the user that the bot has logged in and start to periodically refresh roles'''
         print(
-            f'''Logged in |
-            Client: {cfg.bot.user.name}#{cfg.bot.user.discriminator} |
-            Ping {cfg.bot.latency * 1000:.0f}ms''')
+            f'Logged in \
+            | Client: {cfg.bot.user.name}#{cfg.bot.user.discriminator} \
+            | Ping {cfg.bot.latency * 1000:.0f}ms')
         if not self.refresh_role_loop.is_running():  # pylint: disable=no-member
             self.refresh_role_loop.start()  # pylint: disable=no-member
         startup_check.check_guilds_config()
