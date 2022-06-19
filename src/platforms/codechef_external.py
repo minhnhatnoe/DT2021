@@ -16,12 +16,12 @@ class CodeChef(platform_abs.PlatForm):
     RANKCOLOR = {
         "Codechef 0*": 0x000000,
         "Codechef 1*": 0x000000,
-        "Codechef 2*": 0x000000,
-        "Codechef 3*": 0x000000,
-        "Codechef 4*": 0x000000,
-        "Codechef 5*": 0x000000,
-        "Codechef 6*": 0x000000,
-        "Codechef 7*": 0x000000
+        "Codechef 2*": 0x1E7D22,
+        "Codechef 3*": 0x3366CC,
+        "Codechef 4*": 0x684273,
+        "Codechef 5*": 0xFFBF00,
+        "Codechef 6*": 0xFF7F00,
+        "Codechef 7*": 0xD0011B
     }
 
     PLATFORM_NAME = "Codechef"

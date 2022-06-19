@@ -3,7 +3,7 @@ from disnake.ext import commands
 import disnake
 from src.platforms import codechef_external
 from src.platforms import codeforces_external
-from src.utils import user_functions, handle_functions, refresh_procedure
+from src.utils import user_functions, guild_functions, handle_functions, refresh_procedure
 from src.utils.platform_class import UPDATECHOICES, UPDATECHOICELIST
 
 
@@ -70,12 +70,15 @@ class UserCommand(commands.Cog):
         '''/user info @<Discord>: Get someone's CF handle'''
         choice_id = UPDATECHOICES[choice]
         handle = handle_functions.member_handle_query(user, choice_id)
+        if guild_functions.info_allowed(inter, choice) is False:
+            await inter.response.send_message(content="This function has been disabled by an admin.")
+            return
         if handle is None:
             message_content = f"{user.mention} not introduced yet"
             await inter.response.send_message(content=message_content)
-        else:
-            embed_obj = await user_functions.generate_user_embed(handle, user, choice_id)
-            await inter.response.send_message(embed=embed_obj)
+            return
+        embed_obj = await user_functions.generate_user_embed(handle, user, choice_id)
+        await inter.response.send_message(embed=embed_obj)
 
 
 def setup(bot: commands.Bot):

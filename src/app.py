@@ -62,6 +62,7 @@ def deploy():
 
 
 def local():
+    '''Run in local mode. Check if deployment server is running before run bot'''
     if check_deploy_running():
         load_bot()
         load_dotenv()
