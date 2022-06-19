@@ -70,8 +70,9 @@ class UserCommand(commands.Cog):
         '''/user info @<Discord>: Get someone's CF handle'''
         choice_id = UPDATECHOICES[choice]
         handle = handle_functions.member_handle_query(user, choice_id)
-        if guild_functions.info_allowed(inter.guild, choice) is False:
-            await inter.response.send_message(content="This function has been disabled by an admin.")
+        if not guild_functions.info_allowed(inter.guild, choice):
+            await inter.response.send_message(content=
+                "This function has been disabled by an admin.")
             return
         if handle is None:
             message_content = f"{user.mention} not introduced yet"
