@@ -5,6 +5,7 @@ import disnake
 from src.utils import network
 from src.platforms import platform_abs
 
+
 class CodeFunApi(Exception):
     '''Base class for all exceptions from Codefun'''
     class NotFound(Exception):
@@ -70,6 +71,7 @@ class CodeFun(platform_abs.PlatForm):
             result[handle] = process_rank(data["ratio"])
         return result
 
+
 RANKLIST = {
     0.9: "Grandmaster",
     0.55: "Hacker",
@@ -80,12 +82,15 @@ RANKLIST = {
     0.02: "Beginner",
     0: "Newbie"
 }
+
+
 def process_rank(ratio: float) -> str:
     '''Get rank from solved problem ratio'''
     for point, name in RANKLIST.items():
         if ratio >= point:
             return f"Codefun-{name}"
     raise Exception("Invalid rank")
+
 
 async def get_user_data_from_net(user: str) -> Dict:
     '''Get a person data from Codefun'''

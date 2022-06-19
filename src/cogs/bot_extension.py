@@ -16,12 +16,12 @@ class BotExtension(commands.Cog):
         '''Init the cog'''
 
     @tasks.loop(minutes=refresh_rate)
-    async def refresh_role_loop(self):  # pylint: disable=no-self-use
+    async def refresh_role_loop(self):
         '''Refresh all roles, periodically'''
         await refresh_procedure.refresh_roles_of_bot()
 
     @commands.slash_command(name="help")
-    async def help_cmd(self, inter: disnake.CommandInteraction):  # pylint: disable=no-self-use
+    async def help_cmd(self, inter: disnake.CommandInteraction):
         '''/help: Show this help message'''
         msg = 'Here are several things I can do:'
 
@@ -39,24 +39,26 @@ class BotExtension(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         '''Notify the user that the bot has logged in and start to periodically refresh roles'''
-        print(f"Logged in as {cfg.bot.user.name}#{cfg.bot.user.discriminator}, with ping {cfg.bot.latency * 1000:.0f}ms")
+        print(
+            f'''Logged in |
+            Client: {cfg.bot.user.name}#{cfg.bot.user.discriminator} |
+            Ping {cfg.bot.latency * 1000:.0f}ms''')
         if not self.refresh_role_loop.is_running():  # pylint: disable=no-member
             self.refresh_role_loop.start()  # pylint: disable=no-member
         startup_check.check_guilds_config()
-        
 
     @commands.Cog.listener()
-    async def on_guild_join(self, guild: disnake.Guild):  # pylint: disable=no-self-use
+    async def on_guild_join(self, guild: disnake.Guild):
         '''Add the bot to a guild'''
         await guild_functions.create_roles_in_guild(guild)
 
     @commands.Cog.listener()
-    async def on_guild_remove(self, guild: disnake.Guild):  # pylint: disable=no-self-use
+    async def on_guild_remove(self, guild: disnake.Guild):
         '''Remove the bot from a guild'''
         guild_functions.remove_guild_data(guild.id)
 
     @commands.slash_command()
-    async def ping(self, inter: disnake.CommandInteraction):  # pylint: disable=no-self-use
+    async def ping(self, inter: disnake.CommandInteraction):
         '''/ping: Get the bot's latency'''
         await inter.response.send_message(f"Pong! ({cfg.bot.latency * 1000:.0f}ms)")
 

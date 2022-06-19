@@ -6,6 +6,7 @@ import disnake
 from src.utils import network
 from src.platforms import platform_abs
 
+
 class CodeChefApi(Exception):
     "Base class for all exception raised from getting information from Codechef"
 

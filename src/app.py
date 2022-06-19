@@ -41,14 +41,16 @@ def check_deploy_running():
     return False
 
 
+EXTENSIONLIST = ["guild_commands", "user_commands",
+                 "admin_commands", "bot_extension"]
+
+
 def load_bot():
     '''Load the bot up'''
     load_dotenv()
     guilds = [int(v) for v in environ.get("TEST_GUILDS").split(",")]
     cfg.bot = commands.Bot(test_guilds=guilds, intents=disnake.Intents.all())
 
-    EXTENSIONLIST = ["guild_commands", "user_commands",
-                     "admin_commands", "bot_extension"]
     for extension in EXTENSIONLIST:
         cfg.bot.load_extension(f"src.cogs.{extension}")
 

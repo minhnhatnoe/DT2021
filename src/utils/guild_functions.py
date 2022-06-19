@@ -11,7 +11,7 @@ def info_allowed(guild: disnake.Guild, choice: str) -> bool:
     return config[str(guild.id)]["info"][choice]
 
 
-async def role_create_allowed(guild: disnake.Guild) -> bool:
+def role_create_allowed(guild: disnake.Guild) -> bool:
     '''Check if the provided guild allows creating roles'''
     config = json_file.load_from_json("/server_config")
     return config[str(guild.id)]["make_roles"]
@@ -22,7 +22,8 @@ async def standardize_guild(guild_id: int) -> disnake.Guild | None:
     guild = cfg.bot.get_guild(int(guild_id))
     if guild is None:
         return None
-
+    if not role_create_allowed(guild):
+        return None
     await create_roles_in_guild(guild)
     return guild
 

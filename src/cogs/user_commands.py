@@ -18,7 +18,7 @@ class UserCommand(commands.Cog):
         '''Commands about an user'''
 
     @user.sub_command()
-    async def update(self, inter: disnake.CommandInteraction, user: disnake.User,  # pylint: disable=no-self-use
+    async def update(self, inter: disnake.CommandInteraction, user: disnake.User,
                      choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/user update @<Discord>: Add someone to the handle update list without mention'''
         user_functions.user_update_choice_change(user, UPDATECHOICES[choice])
@@ -27,7 +27,7 @@ class UserCommand(commands.Cog):
         await refresh_procedure.refresh_roles_of_bot()
 
     @user.sub_command()
-    async def assign(self, inter: disnake.CommandInteraction,  # pylint: disable=no-self-use
+    async def assign(self, inter: disnake.CommandInteraction,
                      user: disnake.User, handle: str,
                      choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/user assign <CF Handle>: Link user to handle'''
@@ -56,7 +56,7 @@ class UserCommand(commands.Cog):
             await inter.edit_original_message(content=f"Error occured. Error code: {str(inst)}")
 
     @user.sub_command()
-    async def unassign(self, inter: disnake.CommandInteraction, user: disnake.User,  # pylint: disable=no-self-use
+    async def unassign(self, inter: disnake.CommandInteraction, user: disnake.User,
                        choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/user unassign: Delete user's handle'''
         choice_id = UPDATECHOICES[choice]
@@ -65,7 +65,7 @@ class UserCommand(commands.Cog):
         await inter.response.send_message(content=f"{user.mention} is unlinked")
 
     @user.sub_command()
-    async def info(self, inter: disnake.CommandInteraction, user: disnake.User,  # pylint: disable=no-self-use
+    async def info(self, inter: disnake.CommandInteraction, user: disnake.User,
                    choice: str = commands.Param(choices=UPDATECHOICELIST)):
         '''/user info @<Discord>: Get someone's CF handle'''
         choice_id = UPDATECHOICES[choice]
