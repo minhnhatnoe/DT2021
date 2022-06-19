@@ -12,7 +12,7 @@ class AdminCommands(commands.Cog):
         '''Admin cog'''
 
     @admin.sub_command()
-    async def clear(self, inter: disnake.CommandInteraction):  # pylint: disable=no-self-use
+    async def clear(self, inter: disnake.CommandInteraction):
         '''/admin clear: Clear all roles with matching names from server'''
         if inter.author.guild_permissions.administrator:
             await inter.response.defer()
@@ -22,7 +22,7 @@ class AdminCommands(commands.Cog):
             await inter.response.send_message("You're not an admin, why bother with this?")
 
     @admin.sub_command()
-    async def show(self, inter: disnake.CommandInteraction):  # pylint: disable=no-self-use
+    async def show(self, inter: disnake.CommandInteraction):
         '''/admin show: Show whether the bot considers you to be an admin or not'''
         if inter.author.guild_permissions.administrator:
             await inter.response.send_message("You are an admin")
@@ -32,6 +32,7 @@ class AdminCommands(commands.Cog):
     @admin.sub_command_group()
     async def edit(self, inter: disnake.CommandInteraction, *args):
         '''Edit configs for a specific guild'''
+
 
 def setup(bot: commands.Bot):
     '''Add the AdminCommands cog'''

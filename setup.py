@@ -6,7 +6,7 @@ import platform
 def dependencies_check():
     '''Check and install dependencies'''
     try:
-        import dotenv, disnake, flask, aiohttp, bs4 # pylint: disable=import-outside-toplevel,multiple-imports,unused-import
+        import dotenv, disnake, flask, aiohttp, bs4  # pylint: disable=import-outside-toplevel,multiple-imports,unused-import
     except ImportError:
         # Determine OS, documentation: https://docs.python.org/3/library/platform.html
         running_os = platform.system()
@@ -41,7 +41,7 @@ def create_dotenv():
         address = "None"
     with open(".env", "w", encoding="utf-8") as env_file:
         env_file.write(
-f'''TOKEN = {bot_token}
+            f'''TOKEN = {bot_token}
 DATAPATH = {data_path}
 TEST_GUILDS = {test_guilds}
 REFRESH_RATE = {rate}
@@ -50,8 +50,8 @@ DEPLOY_ADDRESS = {address}''')
 
 def data_create():
     '''Create all files for database use'''
-    from dotenv import load_dotenv # pylint: disable=import-outside-toplevel
-    from os import environ # pylint: disable=import-outside-toplevel
+    from dotenv import load_dotenv  # pylint: disable=import-outside-toplevel
+    from os import environ  # pylint: disable=import-outside-toplevel
     load_dotenv()
     path = environ.get("DATAPATH")
     for filepath in ["/update", "/cfhandle", "/cchandle", "/cfunhandle"]:

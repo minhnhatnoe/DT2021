@@ -8,6 +8,7 @@ import disnake
 from src.utils import network
 from src.platforms import platform_abs
 
+
 class CodeForces(platform_abs.PlatForm):
     '''CodeForces-related tasks'''
 
@@ -78,15 +79,17 @@ class CodeForces(platform_abs.PlatForm):
                 if isinstance(data[field_key], float):
                     obj.add_field(field_name, f"{data[field_key]:.2f}")
                 elif isinstance(data[field_key], str):
-                    if data[field_key]!= "":
+                    if data[field_key] != "":
                         obj.add_field(field_name, data[field_key].title())
                 else:
                     obj.add_field(field_name, data[field_key])
 
         if "registrationTimeSeconds" in data:
-            obj.add_field("Registered", f"<t:{data['registrationTimeSeconds']}:R>")
+            obj.add_field(
+                "Registered", f"<t:{data['registrationTimeSeconds']}:R>")
         if "lastOnlineTimeSeconds" in data:
-            obj.add_field("Last visit", f"<t:{data['lastOnlineTimeSeconds']}:R>")
+            obj.add_field(
+                "Last visit", f"<t:{data['lastOnlineTimeSeconds']}:R>")
 
         obj.add_field("Link", f"https://codeforces.com/profile/{handle}")
         return obj

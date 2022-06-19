@@ -3,6 +3,7 @@ import disnake
 from disnake.ext import commands
 from src import cfg
 
+
 class Presence:
     '''Presence change'''
 

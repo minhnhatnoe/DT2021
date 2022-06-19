@@ -31,11 +31,13 @@ async def create_refresh_job_list() -> Dict:
 
     # Get the list of users and partition them to the respective platform
     for guild_id, users in task_list.items():
-        guild = await guild_functions.standardize_guild(guild_id) # TODO: Do not create roles for guilds that have disabled
-        if guild is None: continue
+        guild = await guild_functions.standardize_guild(guild_id)
+        if guild is None:
+            continue
 
         for user_id, user_choice in users.items():
-            if user_choice == 0: continue
+            if user_choice == 0:
+                continue
             platform_name = PLATFORM_CLASS[user_choice].PLATFORM_NAME
             if configs[str(guild_id)]["roles"][platform_name] is False:
                 continue

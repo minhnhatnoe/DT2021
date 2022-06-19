@@ -1,10 +1,10 @@
 '''Rituals to be done every time the bot starts (for example: check if all guilds are configured)'''
-from disnake.ext import commands
 from src import cfg
 from src.utils import json_file, platform_class
 
 
 def check_guilds_config() -> bool:
+    '''Check connected guilds whether they are configured'''
     config = json_file.load_from_json("/server_config")
     for guild in cfg.bot.guilds:
         if str(guild.id) not in config:
