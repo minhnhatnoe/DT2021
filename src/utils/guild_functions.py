@@ -4,15 +4,25 @@ from src import cfg
 from src.utils import json_file
 from src.utils.platform_class import RANKCOLOR
 
-def info_allowed(inter: disnake.CommandInteraction, choice: str) -> bool:
+
+def info_allowed(guild: disnake.Guild, choice: str) -> bool:
+    '''Check if the provided guild allows for info query'''
     config = json_file.load_from_json("/server_config")
-    return config[str(inter.guild.id)]["info"][choice]
+    return config[str(guild.id)]["info"][choice]
+
+
+async def role_create_allowed(guild: disnake.Guild) -> bool:
+    '''Check if the provided guild allows creating roles'''
+    config = json_file.load_from_json("/server_config")
+    return config[str(guild.id)]["make_roles"]
+
 
 async def standardize_guild(guild_id: int) -> disnake.Guild | None:
     '''Make roles in a guild and return that guild'''
     guild = cfg.bot.get_guild(int(guild_id))
     if guild is None:
         return None
+
     await create_roles_in_guild(guild)
     return guild
 
